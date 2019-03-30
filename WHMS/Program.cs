@@ -1,12 +1,19 @@
-﻿using System;
+﻿using Autofac;
+using WHMS.Core.Contracts;
+using WHMS.Core.Providers;
 
 namespace WHMS
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var config = new AutofacConfig();
+            var container = config.Build();
+
+            var engine = container.Resolve<IEngine>();
+            engine.Start();
+
         }
     }
 }

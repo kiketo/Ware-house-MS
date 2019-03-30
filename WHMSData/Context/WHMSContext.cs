@@ -4,7 +4,7 @@ using WHMSData.Utills;
 
 namespace WHMSData.Context
 {
-    public class WHMSContext : DbContext
+    public class WHMSContext : DbContext, IWHMSContext
     {
         public DbSet<Address> Addresses { get; set; }
 
