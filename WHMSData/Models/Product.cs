@@ -6,6 +6,8 @@ namespace WHMSData.Models
 {
     public class Product : Model
     {        
+        [Required]
+        [MaxLength(30)]
         public string Name { get; set; }
 
         public string Description { get; set; }
