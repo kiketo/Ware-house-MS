@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Context\" />
+    <Compile Remove="Migrations\20190330114412_Initial.cs" />
+    <Compile Remove="Migrations\20190330120111_Initial.cs" />
+    <Compile Remove="Migrations\20190330121537_Initial.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.3" />
   </ItemGroup>
 
 </Project>

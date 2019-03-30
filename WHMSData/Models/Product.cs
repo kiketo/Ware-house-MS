@@ -1,26 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using WHMSData.Contracts;
 
 namespace WHMSData.Models
 {
-    class Product : Model
-    {
+    public class Product : Model
+    {        
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-        public UnitType Unit { get; set; }
+        public int UnitId { get; set; }
 
-        public CategoryType Category { get; set; }
+        public Unit Unit { get; set; }
 
-        public IList<Partner> PartnersList { get; set; }
+        public int? CategoryId { get; set; }
+
+        public Category Category { get; set; }
+
+        public ICollection<Partner> Partners { get; set; }
 
         public decimal BuyPrice { get; set; }
 
         public int MarginInPercent { get; set; }
 
-        public IList<WarehouseID> WarehousesList { get; set; }
+        public ICollection<ProductWarehouse> Warehouses { get; set; }
     }
 }
