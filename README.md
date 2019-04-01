@@ -8,10 +8,16 @@ Team members: Iva Zhechkova, Kiril Kuzmanov
 
 Type of project: Warehouse Management System
 
+
+
 Features:
+
 C. - Create (Product/Order/Partner/Warehouse/Transfer)
+
 R. - Print (Order/Transfer)
+
 U. - Edit (Product/Order/Partner/Warehouse/Transfer)
+
 D. - Delete (Product/Order/Partner/Warehouse/Transfer)
 
 Create a kanban board with the following data, fill it and keep it updated:
