@@ -331,4 +331,7 @@ ASALocalRun/
 
 #Meld copied original files
 *.orig
-/WIMSystem/Models/DictionaryContainer.cs
+
+\WHMSData\Utills\Constants.cs
+
+
