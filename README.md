@@ -25,4 +25,4 @@ For the board you could use Trello or GitLab's project system.
 
 If your selected tool does not support time estimation (for example Trello), just write it in the card's description or use an addon.
 
-[](http://prntscr.com/n5xp4o)
+[](http://prntscr.com/n5xp4o)[](url)
