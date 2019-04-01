@@ -1,11 +1,14 @@
-# Warehouse MS
+**# Warehouse MS**
 
-What is the name of your team? 
+Team Name: "TEAM X"
 
-Who is your team leader? Kiril Kuzmanov
-Who are your team members? Iva Zhechkova
-What is your project going to be about? Warehouse Management System
-What features will it consist of? Explain their purpose. (Try to be as granular as possible.)
+Team leader: Kiril Kuzmanov
+
+Team members: Iva Zhechkova, Kiril Kuzmanov
+
+Type of project: Warehouse Management System
+
+Features:
 C. - Create (Product/Order/Partner/Warehouse/Transfer)
 R. - Print (Order/Transfer)
 U. - Edit (Product/Order/Partner/Warehouse/Transfer)
@@ -21,8 +24,6 @@ Estimated time it would take to unit test (in hours)
 Actual time it took to unit test (in hours)
 
 
-For the board you could use Trello or GitLab's project system.
 
-If your selected tool does not support time estimation (for example Trello), just write it in the card's description or use an addon.
 
-[DataBase Diagrame](http://prntscr.com/n5xp4o)
+[DataBase Diagram](http://prntscr.com/n5xp4o)
