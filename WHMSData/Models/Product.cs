@@ -24,7 +24,7 @@ namespace WHMSData.Models
 
         public decimal BuyPrice { get; set; }
 
-        public int MarginInPercent { get; set; }
+        public double MarginInPercent { get; set; }
 
         public ICollection<ProductWarehouse> Warehouses { get; set; }
     }
