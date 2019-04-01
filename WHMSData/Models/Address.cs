@@ -1,4 +1,5 @@
-﻿using WHMSData.Contracts;
+﻿using System.Collections.Generic;
+using WHMSData.Contracts;
 
 namespace WHMSData.Models
 {
@@ -9,5 +10,7 @@ namespace WHMSData.Models
         public int TownId { get; set; }
 
         public Town Town { get; set; }
+
+        //public ICollection<Partner> Partners { get; set; }
     }
 }

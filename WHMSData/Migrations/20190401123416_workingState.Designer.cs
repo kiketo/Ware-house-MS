@@ -10,8 +10,8 @@ using WHMSData.Context;
 namespace WHMSData.Migrations
 {
     [DbContext(typeof(WHMSContext))]
-    [Migration("20190331180525_addOrder")]
-    partial class addOrder
+    [Migration("20190401123416_workingState")]
+    partial class workingState
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -77,15 +77,15 @@ namespace WHMSData.Migrations
 
                     b.Property<DateTime>("ModifiedOn");
 
-                    b.Property<int>("PartnerID");
+                    b.Property<int>("PartnerId");
 
-                    b.Property<int>("WarehouseID");
+                    b.Property<int>("WarehouseId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PartnerID");
+                    b.HasIndex("PartnerId");
 
-                    b.HasIndex("WarehouseID");
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("Orders");
                 });
@@ -96,7 +96,7 @@ namespace WHMSData.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AddressID");
+                    b.Property<int?>("AddressId");
 
                     b.Property<DateTime>("CreatedOn");
 
@@ -112,7 +112,7 @@ namespace WHMSData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressID");
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("ProductId");
 
@@ -278,12 +278,12 @@ namespace WHMSData.Migrations
                 {
                     b.HasOne("WHMSData.Models.Partner", "Partner")
                         .WithMany("PastOrders")
-                        .HasForeignKey("PartnerID")
+                        .HasForeignKey("PartnerId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("WHMSData.Models.Warehouse", "Warehouse")
                         .WithMany()
-                        .HasForeignKey("WarehouseID")
+                        .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -291,8 +291,7 @@ namespace WHMSData.Migrations
                 {
                     b.HasOne("WHMSData.Models.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("AddressId");
 
                     b.HasOne("WHMSData.Models.Product")
                         .WithMany("Partners")

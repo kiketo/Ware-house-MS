@@ -8,6 +8,15 @@
     <Compile Remove="Migrations\20190330114412_Initial.cs" />
     <Compile Remove="Migrations\20190330120111_Initial.cs" />
     <Compile Remove="Migrations\20190330121537_Initial.cs" />
+    <Compile Remove="Migrations\20190331180525_addOrder.cs" />
+    <Compile Remove="Migrations\20190331181245_NewMig1.cs" />
+    <Compile Remove="Migrations\20190401120109_newmigr.cs" />
+    <Compile Remove="Migrations\20190401120445_migrta.cs" />
+    <Compile Remove="Migrations\20190401120705_eeee.cs" />
+    <Compile Remove="Migrations\20190401120947_newmig.cs" />
+    <Compile Remove="Migrations\20190401121118_newmig.cs" />
+    <Compile Remove="Migrations\20190401122226_newmig2.cs" />
+    <Compile Remove="Migrations\20190401122906_newmig3.cs" />
   </ItemGroup>
 
   <ItemGroup>

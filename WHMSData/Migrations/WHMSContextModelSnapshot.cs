@@ -67,17 +67,23 @@ namespace WHMSData.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Comment");
+
                     b.Property<DateTime>("CreatedOn");
 
                     b.Property<bool>("IsDeleted");
 
                     b.Property<DateTime>("ModifiedOn");
 
-                    b.Property<int>("PartnerID");
+                    b.Property<int>("PartnerId");
+
+                    b.Property<int>("WarehouseId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PartnerID");
+                    b.HasIndex("PartnerId");
+
+                    b.HasIndex("WarehouseId");
 
                     b.ToTable("Orders");
                 });
@@ -88,20 +94,23 @@ namespace WHMSData.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AddressId");
+
                     b.Property<DateTime>("CreatedOn");
 
                     b.Property<bool>("IsDeleted");
 
                     b.Property<DateTime>("ModifiedOn");
 
-                    b.Property<string>("Name")
-                        .IsRequired();
+                    b.Property<string>("Name");
 
                     b.Property<int?>("ProductId");
 
                     b.Property<decimal>("VAT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("ProductId");
 
@@ -266,13 +275,22 @@ namespace WHMSData.Migrations
             modelBuilder.Entity("WHMSData.Models.Order", b =>
                 {
                     b.HasOne("WHMSData.Models.Partner", "Partner")
+                        .WithMany("PastOrders")
+                        .HasForeignKey("PartnerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WHMSData.Models.Warehouse", "Warehouse")
                         .WithMany()
-                        .HasForeignKey("PartnerID")
+                        .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WHMSData.Models.Partner", b =>
                 {
+                    b.HasOne("WHMSData.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
                     b.HasOne("WHMSData.Models.Product")
                         .WithMany("Partners")
                         .HasForeignKey("ProductId");

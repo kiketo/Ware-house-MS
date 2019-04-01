@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WHMSData.Migrations
 {
-    public partial class addOrder : Migration
+    public partial class workingState : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,10 +22,9 @@ namespace WHMSData.Migrations
                 nullable: true);
 
             migrationBuilder.AddColumn<int>(
-                name: "AddressID",
+                name: "AddressId",
                 table: "Partners",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
 
             migrationBuilder.AddColumn<string>(
                 name: "Name",
@@ -47,22 +46,22 @@ namespace WHMSData.Migrations
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    PartnerID = table.Column<int>(nullable: false),
+                    PartnerId = table.Column<int>(nullable: false),
                     Comment = table.Column<string>(nullable: true),
-                    WarehouseID = table.Column<int>(nullable: false)
+                    WarehouseId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Orders_Partners_PartnerID",
-                        column: x => x.PartnerID,
+                        name: "FK_Orders_Partners_PartnerId",
+                        column: x => x.PartnerId,
                         principalTable: "Partners",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Orders_Warehouses_WarehouseID",
-                        column: x => x.WarehouseID,
+                        name: "FK_Orders_Warehouses_WarehouseId",
+                        column: x => x.WarehouseId,
                         principalTable: "Warehouses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -74,27 +73,27 @@ namespace WHMSData.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Partners_AddressID",
+                name: "IX_Partners_AddressId",
                 table: "Partners",
-                column: "AddressID");
+                column: "AddressId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_PartnerID",
+                name: "IX_Orders_PartnerId",
                 table: "Orders",
-                column: "PartnerID");
+                column: "PartnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_WarehouseID",
+                name: "IX_Orders_WarehouseId",
                 table: "Orders",
-                column: "WarehouseID");
+                column: "WarehouseId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Partners_Addresses_AddressID",
+                name: "FK_Partners_Addresses_AddressId",
                 table: "Partners",
-                column: "AddressID",
+                column: "AddressId",
                 principalTable: "Addresses",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Products_Orders_OrderId",
@@ -108,7 +107,7 @@ namespace WHMSData.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Partners_Addresses_AddressID",
+                name: "FK_Partners_Addresses_AddressId",
                 table: "Partners");
 
             migrationBuilder.DropForeignKey(
@@ -123,7 +122,7 @@ namespace WHMSData.Migrations
                 table: "Products");
 
             migrationBuilder.DropIndex(
-                name: "IX_Partners_AddressID",
+                name: "IX_Partners_AddressId",
                 table: "Partners");
 
             migrationBuilder.DropColumn(
@@ -131,7 +130,7 @@ namespace WHMSData.Migrations
                 table: "Products");
 
             migrationBuilder.DropColumn(
-                name: "AddressID",
+                name: "AddressId",
                 table: "Partners");
 
             migrationBuilder.DropColumn(

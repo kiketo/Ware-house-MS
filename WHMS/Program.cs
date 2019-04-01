@@ -15,6 +15,7 @@ namespace WHMS
                 var app = scope.Resolve<IEngine>();
                 app.Start();
             }
+
         }
     }
 }

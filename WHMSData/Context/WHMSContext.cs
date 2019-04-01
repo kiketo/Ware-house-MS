@@ -39,7 +39,42 @@ namespace WHMSData.Context
             modelBuilder.Entity<ProductWarehouse>()
                     .HasKey(p => new { p.ProductId, p.WarehouseId });
 
-            base.OnModelCreating(modelBuilder);
+
+            //modelBuilder.Entity<Address>()
+            //    .HasKey(k => k.Id);
+
+
+
+
+            //modelBuilder.Entity<Town>()
+            //    .HasKey(t => t.Id);
+
+
+
+
+            //modelBuilder.Entity<Order>()
+            //    .HasKey(k => k.Id);
+
+
+
+
+            //modelBuilder.Entity<Product>()
+            //    .HasKey(k => k.Id);
+
+
+
+
+            //modelBuilder.Entity<Transfer>()
+            //    .HasKey(k => k.Id);
+
+
+
+            //modelBuilder.Entity<Unit>()
+            //    .HasKey(k => k.Id);
+
+
+            //modelBuilder.Entity<Warehouse>()
+            //    .HasKey(k => k.Id);
         }
     }
 }
