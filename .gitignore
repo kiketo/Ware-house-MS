@@ -332,6 +332,6 @@ ASALocalRun/
 #Meld copied original files
 *.orig
 
-\WHMSData\Utills\Constants.cs
+WHMSData/Utills/Constants.cs
 
 
