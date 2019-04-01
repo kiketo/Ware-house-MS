@@ -12,18 +12,21 @@ namespace WHMS.Commands.Creating
         public CreateProductCommand(IWHMSContext context) : base(context)
         {
         }
-
+        // TODO product needs: name, Description, unit, category, partners, buyprice, WH
         public override string Execute(IList<string> parameters)
         {
-            var newProduct = new Product
+            var name = parameters[0];
+            var description = parameters[1];
+            var newProduct = new Product()
             {
-                //TODO
+                Name = name,
+                Description = description
             };
 
 
             this.WarehouseContext.Products.Add(newProduct);
             this.WarehouseContext.SaveChanges();
-            throw new NotImplementedException();
+            return "Success";
         }
 
 

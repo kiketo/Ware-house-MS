@@ -10,25 +10,25 @@ namespace WHMS.Core
         private const string TerminationCommand = "Exit";
         private const string NullProvidersExceptionMessage = "cannot be null.";
 
-        private IDataBase dataBase;
+
         private ICommandParser commandParser;
         private IReader reader;
         private IWriter writer;
         private IReport report;
 
-        public Engine(IDataBase dataBase,
+        public Engine(
             ICommandParser commandParser,
             IReader reader,
             IWriter writer,
             IReport report)
         {
-            this.dataBase = dataBase;
+
             this.commandParser = commandParser;
             this.reader = reader;
             this.writer = writer;
             this.report = report;
         }
-        
+
         public void Start()
         {
             while (true)

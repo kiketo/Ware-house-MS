@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using WHMS.Commands.Contracts;
 using WHMS.Core.Contracts;
 using WHMSData.Context;
 
@@ -14,6 +15,7 @@ namespace WHMS.Core.Providers
         public IContainer Build()
         {
             var containerBuilder = new ContainerBuilder();
+
             this.RegisterConvention(containerBuilder);
             this.RegisterCoreComponents(containerBuilder);
             return containerBuilder.Build();
@@ -39,7 +41,7 @@ namespace WHMS.Core.Providers
             builder.RegisterType<Engine>().As<IEngine>().SingleInstance();
             builder.RegisterType<WHMSContext>().As<IWHMSContext>().SingleInstance();
 
-            builder.RegisterType<TravellerFactory>().As<ITravellerFactory>().SingleInstance();
+            // builder.RegisterType<TravellerFactory>().As<ITravellerFactory>().SingleInstance();
             builder.RegisterType<CommandParser>().As<ICommandParser>().SingleInstance();
             builder.RegisterType<Report>().As<IReport>().SingleInstance();
 

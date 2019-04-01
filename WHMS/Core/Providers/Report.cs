@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WHMS.Core.Contracts;
 
 namespace WHMS.Core.Providers
 {
-    public class Report
+    public class Report : IReport
     {
         private StringBuilder stringBuilder;
         private DateTime start;

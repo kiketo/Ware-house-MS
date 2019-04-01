@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WHMSData.Context;
 
 namespace WHMSData.Migrations
 {
     [DbContext(typeof(WHMSContext))]
-    partial class WHMSContextModelSnapshot : ModelSnapshot
+    [Migration("20190331180525_addOrder")]
+    partial class addOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,6 +69,8 @@ namespace WHMSData.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Comment");
+
                     b.Property<DateTime>("CreatedOn");
 
                     b.Property<bool>("IsDeleted");
@@ -75,9 +79,13 @@ namespace WHMSData.Migrations
 
                     b.Property<int>("PartnerID");
 
+                    b.Property<int>("WarehouseID");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PartnerID");
+
+                    b.HasIndex("WarehouseID");
 
                     b.ToTable("Orders");
                 });
@@ -88,20 +96,23 @@ namespace WHMSData.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AddressID");
+
                     b.Property<DateTime>("CreatedOn");
 
                     b.Property<bool>("IsDeleted");
 
                     b.Property<DateTime>("ModifiedOn");
 
-                    b.Property<string>("Name")
-                        .IsRequired();
+                    b.Property<string>("Name");
 
                     b.Property<int?>("ProductId");
 
                     b.Property<decimal>("VAT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressID");
 
                     b.HasIndex("ProductId");
 
@@ -266,13 +277,23 @@ namespace WHMSData.Migrations
             modelBuilder.Entity("WHMSData.Models.Order", b =>
                 {
                     b.HasOne("WHMSData.Models.Partner", "Partner")
-                        .WithMany()
+                        .WithMany("PastOrders")
                         .HasForeignKey("PartnerID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("WHMSData.Models.Warehouse", "Warehouse")
+                        .WithMany()
+                        .HasForeignKey("WarehouseID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("WHMSData.Models.Partner", b =>
                 {
+                    b.HasOne("WHMSData.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("WHMSData.Models.Product")
                         .WithMany("Partners")
                         .HasForeignKey("ProductId");

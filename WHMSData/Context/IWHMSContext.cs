@@ -11,6 +11,8 @@ namespace WHMSData.Context
 
         DbSet<Partner> Partners { get; set; }
 
+        DbSet<Order> Orders { get; set; }
+
         DbSet<Product> Products { get; set; }
 
         DbSet<ProductWarehouse> ProductWarehouse { get; set; }

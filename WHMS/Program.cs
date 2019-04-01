@@ -10,10 +10,11 @@ namespace WHMS
         {
             var config = new AutofacConfig();
             var container = config.Build();
-
-            var engine = container.Resolve<IEngine>();
-            engine.Start();
-
+            using (var scope = container.BeginLifetimeScope())
+            {
+                var app = scope.Resolve<IEngine>();
+                app.Start();
+            }
         }
     }
 }

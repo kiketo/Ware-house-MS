@@ -24,6 +24,8 @@ namespace WHMSData.Context
 
         public DbSet<Warehouse> Warehouses { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
