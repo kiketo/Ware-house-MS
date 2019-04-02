@@ -20,16 +20,9 @@ U. - Edit (Product/Order/Partner/Warehouse/Transfer)
 
 D. - Delete (Product/Order/Partner/Warehouse/Transfer)
 
-Create a kanban board with the following data, fill it and keep it updated:
 
-Name of Feature
-Feature Owner (who will write it?)
-Estimated time it would take (in hours, don't overthink it)
-Actual time it took (in hours)
-Estimated time it would take to unit test (in hours)
-Actual time it took to unit test (in hours)
+DataBase Diagram: 
 
+(http://prntscr.com/n6dxu9)
 
-
-
-[DataBase Diagram](http://prntscr.com/n5xp4o)
+./DBDiagram.png
