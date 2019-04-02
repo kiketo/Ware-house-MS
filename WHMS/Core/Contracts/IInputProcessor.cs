@@ -4,8 +4,8 @@ using System.Text;
 
 namespace WHMS.Core.Contracts
 {
-    public interface IFactory  
+    public interface IInputProcessor
     {
-        //TODO
+        string Process(string arguments);
     }
 }

@@ -11,19 +11,19 @@ namespace WHMS.Core
         private const string NullProvidersExceptionMessage = "cannot be null.";
 
 
-        private ICommandParser commandParser;
+        private IInputProcessor inputProcessor;
         private IReader reader;
         private IWriter writer;
         private IReport report;
 
         public Engine(
-            ICommandParser commandParser,
+            IInputProcessor inputProcessor,
             IReader reader,
             IWriter writer,
             IReport report)
         {
 
-            this.commandParser = commandParser;
+            this.inputProcessor = inputProcessor;
             this.reader = reader;
             this.writer = writer;
             this.report = report;
@@ -59,11 +59,8 @@ namespace WHMS.Core
                 throw new ArgumentNullException("Command cannot be null or empty.");
             }
 
-            var command = commandParser.ParseCommand(commandAsString);
-            var parameters = commandParser.ParseParameters(commandAsString);
-
-            var executionResult = command.Execute(parameters);
-            this.report.AppendLine(executionResult);
+            var output = inputProcessor.Process(commandAsString);
+            this.report.AppendLine(output);
         }
     }
 }
