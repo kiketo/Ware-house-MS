@@ -25,4 +25,4 @@ DataBase Diagram:
 
 (http://prntscr.com/n6dxu9)
 
-![http://prntscr.com/n6dxu9](http://prntscr.com/n6dxu9/image.png)
+./DBDiagram.png
