@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using WHMSData.Contracts;
 
 namespace WHMSData.Models
@@ -7,5 +8,7 @@ namespace WHMSData.Models
     {
         [Required]
         public string Name { get; set; }
+
+        public ICollection<Address> Addresses { get; set; }
     }
 }

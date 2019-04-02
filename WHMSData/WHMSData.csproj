@@ -17,6 +17,7 @@
     <Compile Remove="Migrations\20190401121118_newmig.cs" />
     <Compile Remove="Migrations\20190401122226_newmig2.cs" />
     <Compile Remove="Migrations\20190401122906_newmig3.cs" />
+    <Compile Remove="Models\Transfer.cs" />
   </ItemGroup>
 
   <ItemGroup>

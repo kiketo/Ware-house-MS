@@ -1,28 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.Collections.Generic;
 using WHMSData.Contracts;
+using WHMSData.Utills;
 
 namespace WHMSData.Models
 {
     public class Order : Model
     {
-        
+        public OrderType Type { get; set; }
 
         public int PartnerId { get; set; }
+
         public Partner Partner { get; set; }
 
-        public List<Product> Products { get; set; }
+        public ICollection<ProductOrderWarehouse> ProductsAndWarehouses { get; set; }
 
+        public string Comment { get; set; }
 
-
-        public string Comment { get; set; } // can be comments
-
-        public int WarehouseId { get; set; }
-        public Warehouse Warehouse { get; set; }
-
-        ////total value of products
-        //In/Out Enum or bool
+        public decimal TotalValue { get; set; }
     }
 }

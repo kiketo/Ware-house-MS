@@ -10,7 +10,7 @@ namespace WHMS.Commands.Creating
 {
     public class CreateProductCommand : BaseCommand
     {
-        public CreateProductCommand(IWHMSContext context) : base(context)
+        public CreateProductCommand(WHMSContext context) : base(context)
         {
         }
         // TODO product needs: name, Description, unit, category, partners, buyprice, WH

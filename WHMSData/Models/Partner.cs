@@ -6,15 +6,13 @@ namespace WHMSData.Models
 {
     public class Partner : Model
     {
-        
         public string Name { get; set; }
+
+        public  Address Address { get; set; }
 
         public decimal VAT { get; set; }
 
         public ICollection<Order> PastOrders { get; set; }
 
-        //public int AddressId { get; set; }
-
-        public  Address Address { get; set; }
     }
 }

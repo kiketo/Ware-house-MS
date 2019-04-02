@@ -7,12 +7,12 @@ namespace WHMS.Commands.Contracts
 {
     public abstract class BaseCommand : ICommand
     {
-        public BaseCommand(IWHMSContext context)
+        public BaseCommand(WHMSContext context)
         {
             this.WarehouseContext = context;
         }
 
-        protected IWHMSContext WarehouseContext { get; }
+        protected WHMSContext WarehouseContext { get; }
 
         public abstract string Execute(IList<string> parameters);
         

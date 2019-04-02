@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using WHMSData.Contracts;
+﻿using WHMSData.Contracts;
 
 namespace WHMSData.Models
 {

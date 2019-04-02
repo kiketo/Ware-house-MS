@@ -4,7 +4,7 @@ using WHMSData.Utills;
 
 namespace WHMSData.Context
 {
-    public class WHMSContext : DbContext, IWHMSContext
+    public class WHMSContext : DbContext
     {
         public DbSet<Address> Addresses { get; set; }
 
@@ -18,13 +18,15 @@ namespace WHMSData.Context
 
         public DbSet<Town> Towns { get; set; }
 
-        public DbSet<Transfer> Transfers { get; set; }
+        //public DbSet<Transfer> Transfers { get; set; }
 
         public DbSet<Unit> Units { get; set; }
 
         public DbSet<Warehouse> Warehouses { get; set; }
 
         public DbSet<Order> Orders { get; set; }
+
+        public DbSet<ProductOrderWarehouse> ProductOrderWarehouse { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,42 +41,8 @@ namespace WHMSData.Context
             modelBuilder.Entity<ProductWarehouse>()
                     .HasKey(p => new { p.ProductId, p.WarehouseId });
 
-
-            //modelBuilder.Entity<Address>()
-            //    .HasKey(k => k.Id);
-
-
-
-
-            //modelBuilder.Entity<Town>()
-            //    .HasKey(t => t.Id);
-
-
-
-
-            //modelBuilder.Entity<Order>()
-            //    .HasKey(k => k.Id);
-
-
-
-
-            //modelBuilder.Entity<Product>()
-            //    .HasKey(k => k.Id);
-
-
-
-
-            //modelBuilder.Entity<Transfer>()
-            //    .HasKey(k => k.Id);
-
-
-
-            //modelBuilder.Entity<Unit>()
-            //    .HasKey(k => k.Id);
-
-
-            //modelBuilder.Entity<Warehouse>()
-            //    .HasKey(k => k.Id);
+            modelBuilder.Entity<ProductOrderWarehouse>()
+                .HasKey(p => new { p.ProductId, p.OrderId, p.WarehouseId });            
         }
     }
 }
