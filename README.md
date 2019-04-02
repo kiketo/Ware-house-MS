@@ -30,4 +30,4 @@ Estimated time it would take to unit test (in hours)
 Actual time it took to unit test (in hours)
 
 
-![](https://imgur.com/CR5Z5sM.gif)
+![](https://gitlab.com/kiketo/ware-house-ms/raw/master/DBDiagramPNG.gif)
