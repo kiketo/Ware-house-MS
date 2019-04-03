@@ -20,6 +20,7 @@ U. - Edit (Product/Order/Partner/Warehouse)
 
 D. - Delete (Product/Order/Partner/Warehouse)
 
+For feature estimations please refer to the [Issue Board](https://gitlab.com/kiketo/ware-house-ms/boards)
 
 
 
