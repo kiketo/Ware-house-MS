@@ -4,6 +4,6 @@ namespace WHMS.Commands.Contracts
 {
     public interface ICommand
     {
-        string Execute(IList<string> parameters);
+        string Execute(IReadOnlyList<string> parameters);
     }
 }

@@ -2,14 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssemblyName>WHMS.Services</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WHMSData\WHMSData.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

@@ -22,6 +22,8 @@ namespace WHMS.Core.Providers
         {
             var coreAssembly = Assembly.GetExecutingAssembly();
             builder.RegisterAssemblyTypes(coreAssembly).AsImplementedInterfaces();
+            var serviceAssembly = Assembly.Load("WHMS.Services");
+            builder.RegisterAssemblyTypes(serviceAssembly).AsImplementedInterfaces();
 
             var listCommands = coreAssembly.DefinedTypes.Where(typeOf => typeOf.ImplementedInterfaces
             .Contains(typeof(ICommand))).ToList();
@@ -40,7 +42,7 @@ namespace WHMS.Core.Providers
             builder.RegisterType<WHMSContext>().AsSelf().InstancePerLifetimeScope();
 
             // builder.RegisterType<TravellerFactory>().As<ITravellerFactory>().SingleInstance();
-            builder.RegisterType<CommandParser>().As<ICommandParser>().SingleInstance();
+            builder.RegisterType<InputProcessor>().As<IInputProcessor>().SingleInstance();
             builder.RegisterType<Report>().As<IReport>().SingleInstance();
 
         }
