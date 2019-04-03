@@ -1,10 +1,10 @@
 **# Warehouse MS**
 
-Team Name: "TEAM X"
+Team Name: TEAM X, part of The Telerik Family
 
-Team leader: Kiril Kuzmanov
+Team leader: [Kiril Kuzmanov](https://gitlab.com/kiketo)
 
-Team members: Iva Zhechkova, Kiril Kuzmanov
+Team members: [Iva Zhechkova](https://gitlab.com/ihristova11), [Kiril Kuzmanov](https://gitlab.com/kiketo)
 
 Type of project: Warehouse Management System
 
@@ -30,4 +30,4 @@ Estimated time it would take to unit test (in hours)
 Actual time it took to unit test (in hours)
 
 
-![](https://gitlab.com/kiketo/ware-house-ms/raw/master/DBDiagramPNG.gif)
+![DataBase Diagram](https://gitlab.com/kiketo/ware-house-ms/raw/master/DBDiagramPNG.gif)
