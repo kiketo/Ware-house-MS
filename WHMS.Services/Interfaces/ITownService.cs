@@ -9,6 +9,6 @@ namespace WHMS.Services.Interfaces
     {
         Town Add(string townToAddName);
         Town Edit(string townToEditName);
-        void Delete(string townToDeleteName);
+        bool Delete(string townToDeleteName);
     }
 }

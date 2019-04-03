@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using WHMS.Services.Interfaces;
 using WHMSData.Context;
 using WHMSData.Models;
-using WHMS.Services.Interfaces;
 
 namespace WHMS.Services
 {
@@ -19,7 +18,7 @@ namespace WHMS.Services
 
         public Town Add(string townToAddName)
         {
-            if (this.context.Towns.FirstOrDefault(t=>t.Name==townToAddName)!=null)
+            if (this.context.Towns.FirstOrDefault(t => t.Name == townToAddName) != null)
             {
                 throw new ArgumentException($"Town `{townToAddName}` already exist!");
             }
@@ -27,8 +26,8 @@ namespace WHMS.Services
             Town townToAdd = new Town()
             {
                 Addresses = new List<Address>(),
-                CreatedOn = DateTime.Now,                
-                Name=townToAddName
+                CreatedOn = DateTime.Now,
+                Name = townToAddName
             };
 
             context.Towns.Add(townToAdd);
@@ -36,16 +35,16 @@ namespace WHMS.Services
 
             return townToAdd;
         }
-        public Town Edit (string townToEditName)
+        public Town Edit(string townToEditName)
         {
             Town townToEdit = context.Towns
                 .FirstOrDefault(t => t.Name == townToEditName);
 
-            if (townToEdit==null||townToEdit.IsDeleted)
+            if (townToEdit == null || townToEdit.IsDeleted)
             {
                 throw new ArgumentException($"Town `{townToEditName}` doesn't exist!");
             }
-                        
+
             townToEdit.Name = townToEditName;
             townToEdit.ModifiedOn = DateTime.Now;
 
@@ -54,12 +53,12 @@ namespace WHMS.Services
 
             return townToEdit;
         }
-        public void Delete (string townToDeleteName)
+        public bool Delete(string townToDeleteName)
         {
-            Town townToDelete=context.Towns
+            Town townToDelete = context.Towns
                 .FirstOrDefault(t => t.Name == townToDeleteName);
 
-            if (townToDelete == null|| townToDelete.IsDeleted)
+            if (townToDelete == null || townToDelete.IsDeleted)
             {
                 throw new ArgumentException($"Town `{townToDeleteName}` doesn't exist!");
             }
@@ -75,6 +74,7 @@ namespace WHMS.Services
 
             context.Towns.Update(townToDelete);
             context.SaveChanges();
+            return true;
         }
     }
 }
