@@ -7,7 +7,7 @@ using WHMSData.Models;
 
 namespace WHMS.Services
 {
-    public class WarehouseService
+    public class WarehouseService : IWarehouseService
     {
         private readonly WHMSContext context;
 
@@ -16,20 +16,20 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Warehouse CreateProduct(string name)
+        public Warehouse CreateWarehouse(string name)
         {
-            if (this.context.Products.Any(t => t.Name == name))
+            if (this.context.Warehouses.Any(t => t.Name == name))
             {
                 throw new ArgumentException($"Warehouse {name} already exists");
             }
-
+            List<Product> products = this.context.Products.ToList();
             var newWarehouse = new Warehouse()
             {
                 Name = name,
                 CreatedOn = DateTime.Now,
-                ModifiedOn = DateTime.Now
-                
-               // Products = new List<Product>()
+                ModifiedOn = DateTime.Now,
+                Products = products.Select(w => new ProductWarehouse { Warehouse = w }).ToList()
+               
             };
             this.context.Warehouses.Add(newWarehouse);
             this.context.SaveChanges();
@@ -50,6 +50,7 @@ namespace WHMS.Services
             this.context.SaveChanges();
             return warehousetToMod;
         }
+
         public bool DeleteWarehouse(string name)
         {
             var warehouseToDelete = this.context.Warehouses
@@ -66,18 +67,10 @@ namespace WHMS.Services
             return true;
         }
 
-        public Warehouse FindByName(string name)
+        public Warehouse GetByName(string name)
         {
             return this.context.Warehouses
                 .FirstOrDefault(u => u.Name == name);
         }
-
-        //public IReadOnlyCollection<Product> GetProducts(int skip, int take)
-        //{
-        //    return this.context.Products
-        //        .Skip(skip)
-        //        .Take(take)
-        //        .ToList();
-        //}
     }
 }

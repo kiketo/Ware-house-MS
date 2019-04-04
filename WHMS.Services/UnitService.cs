@@ -7,7 +7,7 @@ using WHMSData.Models;
 
 namespace WHMS.Services
 {
-    public class UnitService 
+    public class UnitService : IUnitService
     {
         private readonly WHMSContext context;
 
@@ -40,7 +40,7 @@ namespace WHMS.Services
             var unitToMod = this.context.Units.FirstOrDefault(t => t.UnitName == name);
             if (unitToMod == null || unitToMod.IsDeleted)
             {
-                throw new ArgumentException($"Category {name} does not exists");
+                throw new ArgumentException($"Unit {name} does not exists");
             }
             unitToMod.UnitName = name;
             unitToMod.ModifiedOn = DateTime.Now;
@@ -49,6 +49,24 @@ namespace WHMS.Services
             this.context.SaveChanges();
             return unitToMod;
         }
-        
+        public List<Unit> GetAllUnits()
+        {
+            return this.context.Units.Where(u => u.IsDeleted != true).ToList();
+        }
+        public Unit DeleteUnitName(int unitId)
+        {
+            var unitToDel = this.context.Units.FirstOrDefault(t => t.Id == unitId);
+            if (unitToDel == null || unitToDel.IsDeleted)
+            {
+                throw new ArgumentException($"Such unit does not exists");
+            }
+            unitToDel.IsDeleted = true;
+            unitToDel.ModifiedOn = DateTime.Now;
+
+            this.context.Units.Update(unitToDel);
+            this.context.SaveChanges();
+            return unitToDel;
+        }
+
     }
 }

@@ -8,7 +8,7 @@ using WHMSData.Models;
 
 namespace WHMS.Services
 {
-    public class ProductService
+    public class ProductService : IProductService
     {
         private readonly WHMSContext context;
 
@@ -23,7 +23,8 @@ namespace WHMS.Services
             {
                 throw new ArgumentException($"Product {name} already exists");
             }
-
+            //
+            List<Warehouse> wareHouses = this.context.Warehouses.ToList();
             var newProduct = new Product()
             {
                 Name = name,
@@ -32,12 +33,9 @@ namespace WHMS.Services
                 BuyPrice = 0,
                 MarginInPercent = 0,
                 SellPrice = 0,
-                Warehouses = new List<ProductWarehouse>(),
-                OrdersAndWarehouses = new List<ProductOrderWarehouse>()
-                //???TODO Warehouse, OrderProductWarehouse lists
-
-
+                Warehouses = wareHouses.Select(w => new ProductWarehouse { Warehouse = w }).ToList()
             };
+
             this.context.Products.Add(newProduct);
             this.context.SaveChanges();
 
@@ -52,12 +50,12 @@ namespace WHMS.Services
             }
             productToMod.Name = name;
             productToMod.ModifiedOn = DateTime.Now;
-
+            
             this.context.Products.Update(productToMod);
             this.context.SaveChanges();
             return productToMod;
         }
-        public bool DeleteProduct (string name)
+        public Product DeleteProduct (string name)
         {
             var productToDelete = this.context.Products
                 .FirstOrDefault(u => u.Name == name);
@@ -70,7 +68,7 @@ namespace WHMS.Services
             productToDelete.IsDeleted = true;
             this.context.Products.Update(productToDelete);
             this.context.SaveChanges();
-            return true;
+            return productToDelete;
         }
 
         public Product FindByName(string name)
@@ -78,15 +76,37 @@ namespace WHMS.Services
             return this.context.Products
                 .FirstOrDefault(u => u.Name == name);
         }
-
-        //public IReadOnlyCollection<Product> GetProducts(int skip, int take)
-        //{
-        //    return this.context.Products
-        //        .Skip(skip)
-        //        .Take(take)
-        //        .ToList();
-        //}
-
+        public void SetBuyPrice(int productId, decimal price)
+        {
+            var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
+            product.ModifiedOn = DateTime.Now;
+            product.BuyPrice = price;
+            this.context.Products.Update(product);
+            this.context.SaveChanges();
+        }
+        public void SetMargin(int productId, double newMargin)
+        {
+            var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
+            product.MarginInPercent = newMargin;
+            product.ModifiedOn = DateTime.Now;
+            this.context.Products.Update(product);
+            this.context.SaveChanges();
+        }
+        public void SetSellPrice(Product product)
+        {
+            product.SellPrice = product.BuyPrice + product.BuyPrice * (decimal)product.MarginInPercent;
+            product.ModifiedOn = DateTime.Now;
+            this.context.Products.Update(product);
+            this.context.SaveChanges();
+        }
+        public void SetSellPriceManually(int productId, decimal price)
+        {
+            var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
+            product.BuyPrice = price;
+            product.ModifiedOn = DateTime.Now;
+            this.context.Products.Update(product);
+            this.context.SaveChanges();
+        }
 
     }
 }

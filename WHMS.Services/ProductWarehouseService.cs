@@ -7,7 +7,7 @@ using WHMSData.Models;
 
 namespace WHMS.Services
 {
-    public class ProductWarehouseService
+    public class ProductWarehouseService : IProductWarehouseService
     {
         private readonly WHMSContext context;
 
@@ -52,6 +52,21 @@ namespace WHMS.Services
 
             return pairPW;
         }
+        public int GetQuantity(int productId, int warehouseId, int quantity)
+        {
+            var pairPW = this.context.ProductWarehouse
+                .Where(p => p.ProductId == productId).ToArray().Where(w => w.WarehouseId == warehouseId).FirstOrDefault();
+            if (pairPW == null)
+            {
+                throw new ArgumentException($"Product or warehouse does not exist");
+            }
+            return pairPW.Quantity;
+        }
+        public ICollection<ProductWarehouse> GetAllProductsInWarehouse(int warehouseId)
+        {
+            return this.context.ProductWarehouse.Where(w => w.WarehouseId == warehouseId).ToList();
+        }
+
 
     }
 }
