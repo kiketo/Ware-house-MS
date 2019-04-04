@@ -31,11 +31,13 @@ namespace WHMS.Services
                 ModifiedOn = DateTime.Now,
                 BuyPrice = 0,
                 MarginInPercent = 0,
-                SellPrice = 0
+                SellPrice = 0,
+                Warehouses = new List<ProductWarehouse>(),
+                OrdersAndWarehouses = new List<ProductOrderWarehouse>()
                 //???TODO Warehouse, OrderProductWarehouse lists
-                
 
-        };
+
+            };
             this.context.Products.Add(newProduct);
             this.context.SaveChanges();
 
