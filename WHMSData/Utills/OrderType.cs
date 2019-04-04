@@ -8,6 +8,5 @@ namespace WHMSData.Utills
     {
         Sell,
         Buy
-
     }
 }
