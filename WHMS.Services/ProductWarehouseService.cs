@@ -52,7 +52,7 @@ namespace WHMS.Services
 
             return pairPW;
         }
-        public int GetQuantity(int productId, int warehouseId, int quantity)
+        public int GetQuantity(int productId, int warehouseId)//, int quantity)
         {
             var pairPW = this.context.ProductWarehouse
                 .Where(p => p.ProductId == productId).ToArray().Where(w => w.WarehouseId == warehouseId).FirstOrDefault();
@@ -66,7 +66,5 @@ namespace WHMS.Services
         {
             return this.context.ProductWarehouse.Where(w => w.WarehouseId == warehouseId).ToList();
         }
-
-
     }
 }
