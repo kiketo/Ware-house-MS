@@ -42,7 +42,12 @@ namespace WHMSData.Context
                     .HasKey(p => new { p.ProductId, p.WarehouseId });
 
             modelBuilder.Entity<ProductOrderWarehouse>()
-                .HasKey(p => new { p.ProductId, p.OrderId, p.WarehouseId });            
+                .HasKey(p => new { p.ProductId, p.OrderId, p.WarehouseId });
+
+            modelBuilder.Entity<Partner>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
+
         }
     }
 }

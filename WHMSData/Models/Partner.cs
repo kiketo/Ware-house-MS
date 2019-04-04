@@ -6,6 +6,7 @@ namespace WHMSData.Models
 {
     public class Partner : Model
     {
+        [Required]
         public string Name { get; set; }
 
         public  Address Address { get; set; }

@@ -24,10 +24,10 @@ namespace WHMS.Services
             }
             if (inTown.Addresses.FirstOrDefault(a => a.Text == addressToAdd) != null)
             {
-                throw new ArgumentException($"Address {addressToAdd} in town `{town}` already exist!");
+                throw new ArgumentException($"Address `{addressToAdd}` in town `{town}` already exist!");
             }
 
-            Address newAddress = new Address()
+            Address newAddress = new Address
             {
                 CreatedOn = DateTime.Now,
                 Text = addressToAdd,
@@ -64,7 +64,7 @@ namespace WHMS.Services
             return address;
         }
 
-        public bool Delete(string town, string addressToDelete)
+        public Address Delete(string town, string addressToDelete)
         {
             Town inTown = context.Towns.FirstOrDefault(t => t.Name == town);
             if (inTown == null || inTown.IsDeleted)
@@ -84,7 +84,7 @@ namespace WHMS.Services
 
             context.SaveChanges();
 
-            return true;
+            return address;
         }
 
     }

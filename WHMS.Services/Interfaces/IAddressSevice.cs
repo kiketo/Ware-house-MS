@@ -8,6 +8,6 @@ namespace WHMS.Services.Interfaces
 
         Address Edit(string town, string addressToEdit);
 
-        bool Delete(string town, string addressToDelete);
+        Address Delete(string town, string addressToDelete);
     }
 }

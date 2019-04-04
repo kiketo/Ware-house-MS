@@ -53,7 +53,7 @@ namespace WHMS.Services
 
             return townToEdit;
         }
-        public bool Delete(string townToDeleteName)
+        public Town Delete(string townToDeleteName)
         {
             Town townToDelete = context.Towns
                 .FirstOrDefault(t => t.Name == townToDeleteName);
@@ -62,8 +62,7 @@ namespace WHMS.Services
             {
                 throw new ArgumentException($"Town `{townToDeleteName}` doesn't exist!");
             }
-
-
+            
             townToDelete.ModifiedOn = DateTime.Now;
             townToDelete.IsDeleted = true;
             foreach (var address in townToDelete.Addresses)
@@ -74,7 +73,7 @@ namespace WHMS.Services
 
             context.Towns.Update(townToDelete);
             context.SaveChanges();
-            return true;
+            return townToDelete;
         }
     }
 }
