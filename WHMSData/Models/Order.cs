@@ -12,7 +12,7 @@ namespace WHMSData.Models
 
         public Partner Partner { get; set; }
 
-        public ICollection<ProductOrderWarehouse> ProductsAndWarehouses { get; set; }
+        public ICollection<Product> Products { get; set; }
 
         public string Comment { get; set; }
 

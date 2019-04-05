@@ -26,7 +26,7 @@ namespace WHMSData.Context
 
         public DbSet<Order> Orders { get; set; }
 
-        public DbSet<ProductOrderWarehouse> ProductOrderWarehouse { get; set; }
+        //public DbSet<ProductOrderWarehouse> ProductOrderWarehouse { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -41,13 +41,8 @@ namespace WHMSData.Context
             modelBuilder.Entity<ProductWarehouse>()
                     .HasKey(p => new { p.ProductId, p.WarehouseId });
 
-            modelBuilder.Entity<ProductOrderWarehouse>()
-                .HasKey(p => new { p.ProductId, p.OrderId, p.WarehouseId });
-
-            modelBuilder.Entity<Partner>()
-                .HasIndex(p => p.Name)
-                .IsUnique();
-
+            //modelBuilder.Entity<ProductOrderWarehouse>()
+                //.HasKey(p => new { p., p.OrderId });                        
         }
     }
 }

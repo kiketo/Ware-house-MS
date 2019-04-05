@@ -111,9 +111,6 @@ namespace WHMSData.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.HasIndex("Name")
-                        .IsUnique();
-
                     b.ToTable("Partners");
                 });
 
@@ -141,6 +138,8 @@ namespace WHMSData.Migrations
                         .IsRequired()
                         .HasMaxLength(30);
 
+                    b.Property<int?>("OrderId");
+
                     b.Property<decimal>("SellPrice");
 
                     b.Property<int>("UnitId");
@@ -149,28 +148,11 @@ namespace WHMSData.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("OrderId");
+
                     b.HasIndex("UnitId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("WHMSData.Models.ProductOrderWarehouse", b =>
-                {
-                    b.Property<int>("ProductId");
-
-                    b.Property<int>("OrderId");
-
-                    b.Property<int>("WarehouseId");
-
-                    b.Property<int>("Quantity");
-
-                    b.HasKey("ProductId", "OrderId", "WarehouseId");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("WarehouseId");
-
-                    b.ToTable("ProductOrderWarehouse");
                 });
 
             modelBuilder.Entity("WHMSData.Models.ProductWarehouse", b =>
@@ -279,27 +261,13 @@ namespace WHMSData.Migrations
                         .WithMany("Products")
                         .HasForeignKey("CategoryId");
 
+                    b.HasOne("WHMSData.Models.Order")
+                        .WithMany("Products")
+                        .HasForeignKey("OrderId");
+
                     b.HasOne("WHMSData.Models.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("WHMSData.Models.ProductOrderWarehouse", b =>
-                {
-                    b.HasOne("WHMSData.Models.Order", "Order")
-                        .WithMany("ProductsAndWarehouses")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WHMSData.Models.Product", "Product")
-                        .WithMany("OrdersAndWarehouses")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WHMSData.Models.Warehouse", "Warehouse")
-                        .WithMany("ProductsAndOrders")
-                        .HasForeignKey("WarehouseId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

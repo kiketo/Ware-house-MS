@@ -5,7 +5,7 @@ using WHMSData.Models;
 
 namespace WHMS.Services.Interfaces
 {
-    public interface ICategoryService1
+    public interface ICategoryService
     {
         void AddProductToCategory(int categoryId, Product product);
         Category CreateCategory(string name);

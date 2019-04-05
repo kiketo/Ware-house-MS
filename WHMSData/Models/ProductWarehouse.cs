@@ -1,4 +1,6 @@
-﻿namespace WHMSData.Models
+﻿using System.Collections.Generic;
+
+namespace WHMSData.Models
 {
     public class ProductWarehouse
     {
@@ -9,6 +11,8 @@
         public Product Product { get; set; }
 
         public Warehouse Warehouse { get; set; }
+
+        //public ICollection<Order> Orders { get; set; }
 
         public int Quantity { get; set; }
     }

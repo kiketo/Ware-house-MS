@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WHMS.Services.Interfaces;
 using WHMSData.Context;
 using WHMSData.Models;
 
 namespace WHMS.Services
 {
-    public class CategoryService : ICategoryService1
+    public class CategoryService : ICategoryService
     {
         private readonly WHMSContext context;
 

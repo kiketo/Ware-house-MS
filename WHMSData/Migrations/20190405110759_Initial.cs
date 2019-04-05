@@ -17,7 +17,7 @@ namespace WHMSData.Migrations
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    CategoryName = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -65,7 +65,7 @@ namespace WHMSData.Migrations
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    AddressText = table.Column<string>(nullable: true),
+                    Text = table.Column<string>(nullable: true),
                     TownId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -77,6 +77,30 @@ namespace WHMSData.Migrations
                         principalTable: "Towns",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Partners",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedOn = table.Column<DateTime>(nullable: false),
+                    ModifiedOn = table.Column<DateTime>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    AddressId = table.Column<int>(nullable: true),
+                    VAT = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Partners", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Partners_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -103,7 +127,7 @@ namespace WHMSData.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Transfers",
+                name: "Orders",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -111,25 +135,20 @@ namespace WHMSData.Migrations
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    FromWarehouseId = table.Column<int>(nullable: true),
-                    ToWarehouseId = table.Column<int>(nullable: true),
-                    Comments = table.Column<string>(nullable: true)
+                    Type = table.Column<int>(nullable: false),
+                    PartnerId = table.Column<int>(nullable: false),
+                    Comment = table.Column<string>(nullable: true),
+                    TotalValue = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Transfers", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transfers_Warehouses_FromWarehouseId",
-                        column: x => x.FromWarehouseId,
-                        principalTable: "Warehouses",
+                        name: "FK_Orders_Partners_PartnerId",
+                        column: x => x.PartnerId,
+                        principalTable: "Partners",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Transfers_Warehouses_ToWarehouseId",
-                        column: x => x.ToWarehouseId,
-                        principalTable: "Warehouses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -141,13 +160,14 @@ namespace WHMSData.Migrations
                     CreatedOn = table.Column<DateTime>(nullable: false),
                     ModifiedOn = table.Column<DateTime>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 30, nullable: false),
                     Description = table.Column<string>(nullable: true),
                     UnitId = table.Column<int>(nullable: false),
                     CategoryId = table.Column<int>(nullable: true),
                     BuyPrice = table.Column<decimal>(nullable: false),
-                    MarginInPercent = table.Column<int>(nullable: false),
-                    TransferId = table.Column<int>(nullable: true)
+                    MarginInPercent = table.Column<double>(nullable: false),
+                    SellPrice = table.Column<decimal>(nullable: false),
+                    OrderId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -159,9 +179,9 @@ namespace WHMSData.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Products_Transfers_TransferId",
-                        column: x => x.TransferId,
-                        principalTable: "Transfers",
+                        name: "FK_Products_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -170,28 +190,6 @@ namespace WHMSData.Migrations
                         principalTable: "Units",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Partners",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreatedOn = table.Column<DateTime>(nullable: false),
-                    ModifiedOn = table.Column<DateTime>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    ProductId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Partners", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Partners_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -225,9 +223,14 @@ namespace WHMSData.Migrations
                 column: "TownId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Partners_ProductId",
+                name: "IX_Orders_PartnerId",
+                table: "Orders",
+                column: "PartnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Partners_AddressId",
                 table: "Partners",
-                column: "ProductId");
+                column: "AddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
@@ -235,9 +238,9 @@ namespace WHMSData.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_TransferId",
+                name: "IX_Products_OrderId",
                 table: "Products",
-                column: "TransferId");
+                column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_UnitId",
@@ -250,16 +253,6 @@ namespace WHMSData.Migrations
                 column: "WarehouseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transfers_FromWarehouseId",
-                table: "Transfers",
-                column: "FromWarehouseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Transfers_ToWarehouseId",
-                table: "Transfers",
-                column: "ToWarehouseId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Warehouses_AddressId",
                 table: "Warehouses",
                 column: "AddressId");
@@ -268,25 +261,25 @@ namespace WHMSData.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Partners");
-
-            migrationBuilder.DropTable(
                 name: "ProductWarehouse");
 
             migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
+                name: "Warehouses");
+
+            migrationBuilder.DropTable(
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Transfers");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Units");
 
             migrationBuilder.DropTable(
-                name: "Warehouses");
+                name: "Partners");
 
             migrationBuilder.DropTable(
                 name: "Addresses");

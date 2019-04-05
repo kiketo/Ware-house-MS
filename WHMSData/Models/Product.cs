@@ -30,6 +30,6 @@ namespace WHMSData.Models
 
         public ICollection<ProductWarehouse> Warehouses { get; set; }
 
-        public ICollection<ProductOrderWarehouse> OrdersAndWarehouses { get; set; }
+        //public ICollection<Order> Orders { get; set; }
     }
 }

@@ -29,7 +29,7 @@ namespace WHMS.Services
                 Name = name,
                 CreatedOn = DateTime.Now,
                 ModifiedOn = DateTime.Now,
-                Products = products.Select(w => new ProductWarehouse { Warehouse = w }).ToList()
+                Products = products.Select(w => new ProductWarehouse { Product = w }).ToList()
                
             };
             this.context.Warehouses.Add(newWarehouse);
