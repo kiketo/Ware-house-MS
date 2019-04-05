@@ -10,6 +10,6 @@ namespace WHMS.Services.Interfaces
 
         Partner Delete(string partnerName);
 
-        Partner Find(string partnerName);
+        Partner FindByName(string partnerName);
     }
 }

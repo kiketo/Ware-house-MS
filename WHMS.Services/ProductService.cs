@@ -9,7 +9,7 @@ using WHMSData.Models;
 
 namespace WHMS.Services
 {
-    public class ProductService : IProductService
+    public class ProductService //: IProductService
     {
         private readonly WHMSContext context;
 
@@ -24,7 +24,7 @@ namespace WHMS.Services
             {
                 throw new ArgumentException($"Product {name} already exists");
             }
-            //
+
             List<Warehouse> wareHouses = this.context.Warehouses.ToList();
             var newProduct = new Product()
             {
@@ -52,7 +52,6 @@ namespace WHMS.Services
             productToMod.Name = name;
             productToMod.ModifiedOn = DateTime.Now;
             
-            this.context.Products.Update(productToMod);
             this.context.SaveChanges();
             return productToMod;
         }
@@ -67,7 +66,6 @@ namespace WHMS.Services
             }
             productToDelete.ModifiedOn = DateTime.Now;
             productToDelete.IsDeleted = true;
-            this.context.Products.Update(productToDelete);
             this.context.SaveChanges();
             return productToDelete;
         }
@@ -80,9 +78,9 @@ namespace WHMS.Services
         public void SetBuyPrice(int productId, decimal price)
         {
             var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
+            //TODO proverki
             product.ModifiedOn = DateTime.Now;
             product.BuyPrice = price;
-            this.context.Products.Update(product);
             this.context.SaveChanges();
         }
         public void SetMargin(int productId, double newMargin)
@@ -90,23 +88,15 @@ namespace WHMS.Services
             var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
             product.MarginInPercent = newMargin;
             product.ModifiedOn = DateTime.Now;
-            this.context.Products.Update(product);
             this.context.SaveChanges();
         }
-        public void SetSellPrice(Product product)
-        {
-            product.SellPrice = product.BuyPrice + product.BuyPrice * (decimal)product.MarginInPercent;
-            product.ModifiedOn = DateTime.Now;
-            this.context.Products.Update(product);
-            this.context.SaveChanges();
-        }
-        public void SetSellPriceManually(int productId, decimal price)
+        public Product SetSellPrice(int productId, decimal price)
         {
             var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
             product.BuyPrice = price;
             product.ModifiedOn = DateTime.Now;
-            this.context.Products.Update(product);
             this.context.SaveChanges();
+            return product;
         }
 
     }

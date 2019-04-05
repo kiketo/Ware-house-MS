@@ -18,7 +18,7 @@ namespace WHMS.Commands.Creating
 
         public string Execute(IReadOnlyList<string> parameters)
         {
-            townService.Add(parameters[0]);
+            this.townService.Add(parameters[0]);
 
             return $"Town with name {parameters[0]} added sucsefully";
 

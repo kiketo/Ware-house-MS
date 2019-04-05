@@ -13,8 +13,6 @@ namespace WHMS
 
             var app = container.Resolve<IEngine>();
             app.Start();
-
-
         }
     }
 }

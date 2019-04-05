@@ -17,7 +17,7 @@ namespace WHMS.Services
 
         public Address Add(string town, string addressToAdd)
         {
-            Town inTown = context.Towns.FirstOrDefault(t => t.Name == town);
+            Town inTown = this.context.Towns.FirstOrDefault(t => t.Name == town);
             if (inTown == null || inTown.IsDeleted)
             {
                 throw new ArgumentException($"Town `{town}` doesn't exist!");
@@ -30,6 +30,7 @@ namespace WHMS.Services
             Address newAddress = new Address
             {
                 CreatedOn = DateTime.Now,
+                ModifiedOn=DateTime.Now,
                 Text = addressToAdd,
                 Town = inTown,
                 TownId = inTown.Id
@@ -43,7 +44,7 @@ namespace WHMS.Services
 
         public Address Edit(string town, string addressToEdit)
         {
-            Town inTown = context.Towns.FirstOrDefault(t => t.Name == town);
+            Town inTown = this.context.Towns.FirstOrDefault(t => t.Name == town);
             if (inTown == null || inTown.IsDeleted)
             {
                 throw new ArgumentException($"Town `{town}` doesn't exist!");
@@ -66,7 +67,7 @@ namespace WHMS.Services
 
         public Address Delete(string town, string addressToDelete)
         {
-            Town inTown = context.Towns.FirstOrDefault(t => t.Name == town);
+            Town inTown = this.context.Towns.FirstOrDefault(t => t.Name == town);
             if (inTown == null || inTown.IsDeleted)
             {
                 throw new ArgumentException($"Town `{town}` doesn't exist!");

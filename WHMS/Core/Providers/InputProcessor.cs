@@ -27,6 +27,7 @@ namespace WHMS.Core.Providers
 
                 try
                 {
+
                     var command = childScope.ResolveNamed<ICommand>(name);
                     return command.Execute(args);
                 }

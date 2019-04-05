@@ -47,7 +47,6 @@ namespace WHMS.Services
             warehousetToMod.Name = name;
             warehousetToMod.ModifiedOn = DateTime.Now;
 
-            this.context.Warehouses.Update(warehousetToMod);
             this.context.SaveChanges();
             return warehousetToMod;
         }
@@ -63,7 +62,6 @@ namespace WHMS.Services
             }
             warehouseToDelete.ModifiedOn = DateTime.Now;
             warehouseToDelete.IsDeleted = true;
-            this.context.Warehouses.Update(warehouseToDelete);
             this.context.SaveChanges();
             return true;
         }

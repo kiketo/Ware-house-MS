@@ -37,8 +37,8 @@ namespace WHMS.Services
                 TotalValue = totalValue
             };
 
-            context.Orders.Add(newOrder);
-            context.SaveChanges();
+            this.context.Orders.Add(newOrder);
+            this.context.SaveChanges();
             return newOrder;
         }
 
@@ -49,7 +49,7 @@ namespace WHMS.Services
             orderToEdit.Type = type;
             orderToEdit.ModifiedOn = DateTime.Now;
 
-            context.SaveChanges();
+            this.context.SaveChanges();
             return orderToEdit;
         }
 
@@ -93,7 +93,7 @@ namespace WHMS.Services
             return orderToEdit;
         }
 
-        private Order GetOrder(int orderId)
+        public Order GetOrder(int orderId)
         {
             Order orderToEdit = context.Orders.FirstOrDefault(t => t.Id == orderId);
             if (orderToEdit == null || orderToEdit.IsDeleted)
@@ -102,7 +102,5 @@ namespace WHMS.Services
             }
             return orderToEdit;
         }
-
-
     }
 }
