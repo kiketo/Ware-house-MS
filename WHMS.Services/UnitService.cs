@@ -46,7 +46,6 @@ namespace WHMS.Services
             unitToMod.UnitName = name;
             unitToMod.ModifiedOn = DateTime.Now;
 
-            this.context.Units.Update(unitToMod);
             this.context.SaveChanges();
             return unitToMod;
         }
@@ -64,7 +63,6 @@ namespace WHMS.Services
             unitToDel.IsDeleted = true;
             unitToDel.ModifiedOn = DateTime.Now;
 
-            this.context.Units.Update(unitToDel);
             this.context.SaveChanges();
             return unitToDel;
         }

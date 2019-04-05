@@ -13,7 +13,7 @@ namespace WHMS.Services
         private readonly ITownService townService;
         private readonly IAddressSevice addressSevice;
 
-        public PartnerService(WHMSContext context, ITownService townService, IAddressSevice addressSevice)
+        public PartnerService(WHMSContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.townService = townService ?? throw new ArgumentNullException(nameof(townService));
@@ -32,7 +32,7 @@ namespace WHMS.Services
                 Name = partnerName,
                 VAT = vat,
                 CreatedOn = DateTime.Now,
-                PastOrders = new List<Order>()
+                //PastOrders = new List<Order>()
             };
 
             context.Partners.Add(newPartner);
@@ -77,7 +77,7 @@ namespace WHMS.Services
             return partnerToDelete;
         }
 
-        public Partner Find (string partnerName)
+        public Partner FindByName (string partnerName)
         {
             Partner partner = context.Partners.FirstOrDefault(p => p.Name == partnerName);
             if (partner==null)
