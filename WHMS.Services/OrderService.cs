@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WHMS.Services.Interfaces;
@@ -17,12 +18,12 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Order Add(OrderType type, Partner partner, ICollection<ProductOrderWarehouse> productsWarehouses, string comment = null)
+        public Order Add(OrderType type, Partner partner, IDictionary<Product,int> products, string comment = null)
         {
             decimal totalValue = 0;
-            foreach (var productWarehouse in productsWarehouses)
+            foreach (var product in products)
             {
-                totalValue += productWarehouse.Quantity * productWarehouse.Product.SellPrice;
+                totalValue += product.Key.SellPrice * product.Value;
             }
 
             Order newOrder = new Order
@@ -31,7 +32,8 @@ namespace WHMS.Services
                 Type = type,
                 Partner = partner,
                 Comment = comment,
-                ProductsAndWarehouses = productsWarehouses,
+                ModifiedOn = DateTime.Now,
+                Products=products.Select(p=>p.Key).ToList(),
                 TotalValue = totalValue
             };
 
@@ -42,11 +44,6 @@ namespace WHMS.Services
 
         public Order EditType(int orderId, OrderType type)
         {
-            //Order orderToEdit = context.Orders.FirstOrDefault(t => t.Id == orderId);
-            //if (orderToEdit==null||orderToEdit.IsDeleted)
-            //{
-            //    throw new ArgumentException($"Order with ID: {orderId} doesn't exist!");
-            //}
             Order orderToEdit = GetOrder(orderId);
 
             orderToEdit.Type = type;
@@ -67,11 +64,18 @@ namespace WHMS.Services
             return orderToEdit;
         }
 
-        public Order EditProductsWarehouses(int orderId, ICollection<ProductOrderWarehouse> productsWarehouses)
+        public Order EditProducts(int orderId, IDictionary<Product, int> products)
         {
             Order orderToEdit = GetOrder(orderId);
 
-            orderToEdit.ProductsAndWarehouses = productsWarehouses;
+            decimal totalValue = 0;
+            foreach (var product in products)
+            {
+                totalValue += product.Key.SellPrice * product.Value;
+            }
+
+            orderToEdit.Products = products.Select(p=>p.Key).ToList();
+            orderToEdit.TotalValue = totalValue;
             orderToEdit.ModifiedOn = DateTime.Now;
 
             context.SaveChanges();
