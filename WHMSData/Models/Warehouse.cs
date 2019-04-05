@@ -12,7 +12,5 @@ namespace WHMSData.Models
         public Address Address { get; set; }
 
         public ICollection<ProductWarehouse> Products { get; set; }
-
-        //public ICollection<Order> Orders { get; set; }
     }
 }

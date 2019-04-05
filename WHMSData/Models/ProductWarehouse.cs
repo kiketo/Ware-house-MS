@@ -12,8 +12,6 @@ namespace WHMSData.Models
 
         public Warehouse Warehouse { get; set; }
 
-        //public ICollection<Order> Orders { get; set; }
-
         public int Quantity { get; set; }
     }
 }

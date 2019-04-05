@@ -18,15 +18,11 @@ namespace WHMSData.Context
 
         public DbSet<Town> Towns { get; set; }
 
-        //public DbSet<Transfer> Transfers { get; set; }
-
         public DbSet<Unit> Units { get; set; }
 
         public DbSet<Warehouse> Warehouses { get; set; }
 
         public DbSet<Order> Orders { get; set; }
-
-        //public DbSet<ProductOrderWarehouse> ProductOrderWarehouse { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -41,8 +37,6 @@ namespace WHMSData.Context
             modelBuilder.Entity<ProductWarehouse>()
                     .HasKey(p => new { p.ProductId, p.WarehouseId });
 
-            //modelBuilder.Entity<ProductOrderWarehouse>()
-                //.HasKey(p => new { p., p.OrderId });                        
         }
     }
 }

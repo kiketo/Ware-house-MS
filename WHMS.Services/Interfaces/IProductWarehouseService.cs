@@ -7,7 +7,8 @@ namespace WHMS.Services.Interfaces
     {
         ProductWarehouse AddQuantity(int productId, int warehouseId, int quantity);
         ICollection<ProductWarehouse> GetAllProductsInWarehouse(int warehouseId);
-        int GetQuantity(int productId, int warehouseId, int quantity);
+        int GetQuantity(int productId, int warehouseId);
         ProductWarehouse SubstractQuantity(int productId, int warehouseId, int quantity);
+
     }
 }

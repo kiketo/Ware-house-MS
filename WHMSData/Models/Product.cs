@@ -20,8 +20,6 @@ namespace WHMSData.Models
 
         public Category Category { get; set; }
 
-        //public ICollection<Partner> Partners { get; set; }
-
         public decimal BuyPrice { get; set; }
 
         public double MarginInPercent { get; set; }
@@ -29,7 +27,5 @@ namespace WHMSData.Models
         public decimal SellPrice { get; set; }
 
         public ICollection<ProductWarehouse> Warehouses { get; set; }
-
-        //public ICollection<Order> Orders { get; set; }
     }
 }

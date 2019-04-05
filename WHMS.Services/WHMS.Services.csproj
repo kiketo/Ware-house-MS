@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interfaces\IProductOrderWarehouseService.cs" />
+    <Compile Remove="ProductOrderWarehouseService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\WHMSData\WHMSData.csproj" />
   </ItemGroup>
 
