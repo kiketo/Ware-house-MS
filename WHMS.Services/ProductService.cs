@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using WHMS.Services.Interfaces;
+using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
 
@@ -51,11 +49,11 @@ namespace WHMS.Services
             }
             productToMod.Name = name;
             productToMod.ModifiedOn = DateTime.Now;
-            
+
             this.context.SaveChanges();
             return productToMod;
         }
-        public Product DeleteProduct (string name)
+        public Product DeleteProduct(string name)
         {
             var productToDelete = this.context.Products
                 .FirstOrDefault(u => u.Name == name);

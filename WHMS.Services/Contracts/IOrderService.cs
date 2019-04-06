@@ -2,7 +2,7 @@
 using WHMSData.Models;
 using WHMSData.Utills;
 
-namespace WHMS.Services.Interfaces
+namespace WHMS.Services.Contracts
 {
     public interface IOrderService
     {

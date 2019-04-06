@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using WHMS.Services.Interfaces;
+using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
 

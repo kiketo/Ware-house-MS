@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WHMS.Services.Interfaces;
+using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
 
@@ -10,14 +10,10 @@ namespace WHMS.Services
     public class PartnerService : IPartnerService
     {
         private readonly WHMSContext context;
-        private readonly ITownService townService;
-        private readonly IAddressSevice addressSevice;
 
         public PartnerService(WHMSContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
-            this.townService = townService ?? throw new ArgumentNullException(nameof(townService));
-            this.addressSevice = addressSevice ?? throw new ArgumentNullException(nameof(addressSevice));
         }
 
         public Partner Add(string partnerName, int vat = 0)
@@ -32,7 +28,6 @@ namespace WHMS.Services
                 Name = partnerName,
                 VAT = vat,
                 CreatedOn = DateTime.Now,
-                //PastOrders = new List<Order>()
             };
 
             this.context.Partners.Add(newPartner);

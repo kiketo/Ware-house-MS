@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WHMS.Services.Interfaces;
+using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
 using WHMSData.Utills;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using WHMSData.Models;
 
-namespace WHMS.Services.Interfaces
+namespace WHMS.Services.Contracts
 {
     public interface IProductWarehouseService
     {
