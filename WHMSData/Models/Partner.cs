@@ -15,7 +15,7 @@ namespace WHMSData.Models
 
         public decimal VAT { get; set; }
 
-        //public ICollection<Order> PastOrders { get; set; }
+        public ICollection<Order> PastOrders { get; set; }
 
     }
 }
