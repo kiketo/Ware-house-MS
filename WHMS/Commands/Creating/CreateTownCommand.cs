@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WHMS.Commands.Contracts;
-using WHMS.Services.Interfaces;
+using WHMS.Services.Contracts;
 
 namespace WHMS.Commands.Creating
 {

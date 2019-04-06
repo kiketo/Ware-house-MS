@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WHMSData.Models;
 using WHMSData.Utills;
 
@@ -18,7 +19,7 @@ namespace WHMS.Services.Contracts
 
         Order GetOrderById(int orderId);
 
-        ICollection<Order> GetOrdersByType(OrderType type);
+        ICollection<Order> GetOrdersByType(OrderType type, DateTime fromDate, DateTime toDate);
 
         ICollection<Order> GetOrdersByPartner(Partner partner);
     }

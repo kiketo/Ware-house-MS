@@ -51,7 +51,7 @@ namespace WHMS.Core.Providers
 
         private (string name, IReadOnlyList<string> args) ParseInput(string input)
         {
-            var parts = input.Split();
+            var parts = input.Split(";");
 
             return (parts[0], parts.Skip(1).ToList());
         }

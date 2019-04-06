@@ -102,11 +102,13 @@ namespace WHMS.Services
             return orderToShow;
         }
 
-        public ICollection<Order> GetOrdersByType(OrderType type)
+        public ICollection<Order> GetOrdersByType(OrderType type, DateTime fromDate, DateTime toDate)
         {
             List<Order> ordersToShow = this.context.Orders
                 .Where(o => o.Type == type)
                 .Where(o => o.IsDeleted == false)
+                .Where(o=>o.CreatedOn>=fromDate)
+                .Where(o => o.CreatedOn <= toDate)
                 .ToList();
 
             if (ordersToShow == null)
