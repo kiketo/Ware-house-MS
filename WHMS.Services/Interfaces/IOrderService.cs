@@ -15,5 +15,11 @@ namespace WHMS.Services.Interfaces
         Order EditProducts(int orderId, IDictionary<Product, int> products);
 
         Order EditComment(int orderId, string comment);
+
+        Order GetOrderById(int orderId);
+
+        ICollection<Order> GetOrdersByType(OrderType type);
+
+        ICollection<Order> GetOrdersByPartner(Partner partner);
     }
 }

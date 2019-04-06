@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using WHMS.Services.Interfaces;
@@ -18,7 +17,7 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Order Add(OrderType type, Partner partner, IDictionary<Product,int> products, string comment = null)
+        public Order Add(OrderType type, Partner partner, IDictionary<Product, int> products, string comment = null)
         {
             decimal totalValue = 0;
             foreach (var product in products)
@@ -33,7 +32,7 @@ namespace WHMS.Services
                 Partner = partner,
                 Comment = comment,
                 ModifiedOn = DateTime.Now,
-                Products=products.Select(p=>p.Key).ToList(),
+                Products = products.Select(p => p.Key).ToList(),
                 TotalValue = totalValue
             };
 
@@ -44,7 +43,7 @@ namespace WHMS.Services
 
         public Order EditType(int orderId, OrderType type)
         {
-            Order orderToEdit = GetOrder(orderId);
+            Order orderToEdit = GetOrderById(orderId);
 
             orderToEdit.Type = type;
             orderToEdit.ModifiedOn = DateTime.Now;
@@ -55,7 +54,7 @@ namespace WHMS.Services
 
         public Order EditPartner(int orderId, Partner newPartner)
         {
-            Order orderToEdit = GetOrder(orderId);
+            Order orderToEdit = GetOrderById(orderId);
 
             orderToEdit.Partner = newPartner;
             orderToEdit.ModifiedOn = DateTime.Now;
@@ -66,7 +65,7 @@ namespace WHMS.Services
 
         public Order EditProducts(int orderId, IDictionary<Product, int> products)
         {
-            Order orderToEdit = GetOrder(orderId);
+            Order orderToEdit = GetOrderById(orderId);
 
             decimal totalValue = 0;
             foreach (var product in products)
@@ -74,7 +73,7 @@ namespace WHMS.Services
                 totalValue += product.Key.SellPrice * product.Value;
             }
 
-            orderToEdit.Products = products.Select(p=>p.Key).ToList();
+            orderToEdit.Products = products.Select(p => p.Key).ToList();
             orderToEdit.TotalValue = totalValue;
             orderToEdit.ModifiedOn = DateTime.Now;
 
@@ -84,7 +83,7 @@ namespace WHMS.Services
 
         public Order EditComment(int orderId, string comment)
         {
-            Order orderToEdit = GetOrder(orderId);
+            Order orderToEdit = GetOrderById(orderId);
 
             orderToEdit.Comment = comment;
             orderToEdit.ModifiedOn = DateTime.Now;
@@ -93,14 +92,42 @@ namespace WHMS.Services
             return orderToEdit;
         }
 
-        public Order GetOrder(int orderId)
+        public Order GetOrderById(int orderId)
         {
-            Order orderToEdit = this.context.Orders.FirstOrDefault(t => t.Id == orderId);
-            if (orderToEdit == null || orderToEdit.IsDeleted)
+            Order orderToShow = this.context.Orders.FirstOrDefault(t => t.Id == orderId);
+            if (orderToShow == null || orderToShow.IsDeleted)
             {
                 throw new ArgumentException($"Order with ID: {orderId} doesn't exist!");
             }
-            return orderToEdit;
+            return orderToShow;
+        }
+
+        public ICollection<Order> GetOrdersByType(OrderType type)
+        {
+            List<Order> ordersToShow = this.context.Orders
+                .Where(o => o.Type == type)
+                .Where(o => o.IsDeleted == false)
+                .ToList();
+
+            if (ordersToShow == null)
+            {
+                throw new ArgumentException($"Order with Type: {type} doesn't exist!");
+            }
+            return ordersToShow;
+        }
+
+        public ICollection<Order> GetOrdersByPartner(Partner partner)
+        {
+            List<Order> ordersToShow = this.context.Orders
+                .Where(o => o.Partner == partner)
+                .Where(o => o.IsDeleted == false)
+                .ToList();
+
+            if (ordersToShow == null)
+            {
+                throw new ArgumentException($"Order with Type: {partner} doesn't exist!");
+            }
+            return ordersToShow;
         }
     }
 }
