@@ -60,7 +60,7 @@ namespace WHMS.Services
             orderToEdit.Partner = newPartner;
             orderToEdit.ModifiedOn = DateTime.Now;
 
-            context.SaveChanges();
+            this.context.SaveChanges();
             return orderToEdit;
         }
 
@@ -78,7 +78,7 @@ namespace WHMS.Services
             orderToEdit.TotalValue = totalValue;
             orderToEdit.ModifiedOn = DateTime.Now;
 
-            context.SaveChanges();
+            this.context.SaveChanges();
             return orderToEdit;
         }
 
@@ -89,13 +89,13 @@ namespace WHMS.Services
             orderToEdit.Comment = comment;
             orderToEdit.ModifiedOn = DateTime.Now;
 
-            context.SaveChanges();
+            this.context.SaveChanges();
             return orderToEdit;
         }
 
         public Order GetOrder(int orderId)
         {
-            Order orderToEdit = context.Orders.FirstOrDefault(t => t.Id == orderId);
+            Order orderToEdit = this.context.Orders.FirstOrDefault(t => t.Id == orderId);
             if (orderToEdit == null || orderToEdit.IsDeleted)
             {
                 throw new ArgumentException($"Order with ID: {orderId} doesn't exist!");

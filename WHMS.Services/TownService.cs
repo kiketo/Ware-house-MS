@@ -30,14 +30,15 @@ namespace WHMS.Services
                 Name = townToAddName
             };
 
-            context.Towns.Add(townToAdd);
-            context.SaveChanges();
+            this.context.Towns.Add(townToAdd);
+            this.context.SaveChanges();
 
             return townToAdd;
         }
+
         public Town Edit(string townToEditName)
         {
-            Town townToEdit = context.Towns
+            Town townToEdit = this.context.Towns
                 .FirstOrDefault(t => t.Name == townToEditName);
 
             if (townToEdit == null || townToEdit.IsDeleted)
@@ -48,14 +49,15 @@ namespace WHMS.Services
             townToEdit.Name = townToEditName;
             townToEdit.ModifiedOn = DateTime.Now;
 
-            context.Towns.Update(townToEdit);
-            context.SaveChanges();
+            this.context.Towns.Update(townToEdit);
+            this.context.SaveChanges();
 
             return townToEdit;
         }
+
         public Town Delete(string townToDeleteName)
         {
-            Town townToDelete = context.Towns
+            Town townToDelete = this.context.Towns
                 .FirstOrDefault(t => t.Name == townToDeleteName);
 
             if (townToDelete == null || townToDelete.IsDeleted)
@@ -71,8 +73,7 @@ namespace WHMS.Services
                 address.ModifiedOn = DateTime.Now;
             }
 
-            context.Towns.Update(townToDelete);
-            context.SaveChanges();
+            this.context.SaveChanges();
             return townToDelete;
         }
     }

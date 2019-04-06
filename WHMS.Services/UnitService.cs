@@ -36,6 +36,7 @@ namespace WHMS.Services
 
             return newUnit;
         }
+
         public Unit ModifyUnitName(string name)
         {
             var unitToMod = this.context.Units.FirstOrDefault(t => t.UnitName == name);
@@ -49,10 +50,12 @@ namespace WHMS.Services
             this.context.SaveChanges();
             return unitToMod;
         }
+
         public List<Unit> GetAllUnits()
         {
             return this.context.Units.Where(u => u.IsDeleted != true).ToList();
         }
+
         public Unit DeleteUnitName(int unitId)
         {
             var unitToDel = this.context.Units.FirstOrDefault(t => t.Id == unitId);

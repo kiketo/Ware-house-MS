@@ -22,7 +22,7 @@ namespace WHMS.Services
 
         public Partner Add(string partnerName, int vat = 0)
         {
-            if (context.Partners.Any(p => p.Name == partnerName))
+            if (this.context.Partners.Any(p => p.Name == partnerName))
             {
                 throw new ArgumentException($"Partner with name `{partnerName}` already exist!");
             }
@@ -35,14 +35,14 @@ namespace WHMS.Services
                 //PastOrders = new List<Order>()
             };
 
-            context.Partners.Add(newPartner);
-            context.SaveChanges();
+            this.context.Partners.Add(newPartner);
+            this.context.SaveChanges();
             return newPartner;
         }
 
         public Partner Edit(string partnerName, string newPartnerName, int newVat=0)
         {
-            Partner partnerToEdit = context.Partners.FirstOrDefault(p => p.Name == partnerName);
+            Partner partnerToEdit = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
 
             if (partnerToEdit==null)
             {
@@ -57,13 +57,13 @@ namespace WHMS.Services
             }
             partnerToEdit.ModifiedOn = DateTime.Now;
 
-            context.SaveChanges();
+            this.context.SaveChanges();
             return partnerToEdit;
         }
 
         public Partner Delete (string partnerName)
         {
-            Partner partnerToDelete = context.Partners.FirstOrDefault(p => p.Name == partnerName);
+            Partner partnerToDelete = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
 
             if (partnerToDelete == null)
             {
@@ -73,13 +73,13 @@ namespace WHMS.Services
             partnerToDelete.IsDeleted = true;
             partnerToDelete.ModifiedOn = DateTime.Now;
 
-            context.SaveChanges();
+            this.context.SaveChanges();
             return partnerToDelete;
         }
 
         public Partner FindByName (string partnerName)
         {
-            Partner partner = context.Partners.FirstOrDefault(p => p.Name == partnerName);
+            Partner partner = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
             if (partner==null)
             {
                 throw new ArgumentException($"Partner with name `{partnerName}` doesn't exist!");

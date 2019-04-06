@@ -37,7 +37,7 @@ namespace WHMS.Services
             };
 
             inTown.Addresses.Add(newAddress);
-            context.SaveChanges();
+            this.context.SaveChanges();
 
             return newAddress;
         }
@@ -60,7 +60,7 @@ namespace WHMS.Services
             address.Text = addressToEdit;
             address.ModifiedOn = DateTime.Now;
 
-            context.SaveChanges();
+            this.context.SaveChanges();
 
             return address;
         }
@@ -89,7 +89,7 @@ namespace WHMS.Services
             address.Town = inNewTown;
             address.ModifiedOn = DateTime.Now;
 
-            context.SaveChanges();
+            this.context.SaveChanges();
 
             return address;
         }
@@ -112,7 +112,7 @@ namespace WHMS.Services
             address.IsDeleted = true;
             address.ModifiedOn = DateTime.Now;
 
-            context.SaveChanges();
+            this.context.SaveChanges();
 
             return address;
         }
