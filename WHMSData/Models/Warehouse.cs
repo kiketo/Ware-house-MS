@@ -6,7 +6,9 @@ namespace WHMSData.Models
 {
     public class Warehouse : Model
     {
-        [Required]
+        [Required(ErrorMessage = "Warehouse Name is required!")]
+        [MinLength(4)]
+        [MaxLength(20)]
         public string Name { get; set; }
 
         public int AddressId { get; set; }

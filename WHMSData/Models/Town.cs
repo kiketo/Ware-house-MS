@@ -6,7 +6,9 @@ namespace WHMSData.Models
 {
     public class Town : Model
     {
-        [Required]
+        [Required(ErrorMessage = "Town Name is required!")]
+        [MinLength(4)]
+        [MaxLength(20)]
         public string Name { get; set; }
 
         public ICollection<Address> Addresses { get; set; }

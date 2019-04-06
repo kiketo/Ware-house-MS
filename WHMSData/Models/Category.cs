@@ -6,7 +6,9 @@ namespace WHMSData.Models
 {
     public class Category : Model
     {
-        [Required]
+        [Required(ErrorMessage = "Category Name is required!")]
+        [MinLength(4)]
+        [MaxLength(30)]
         public string Name { get; set; }
 
         //public ICollection<Product> Products { get; set; }
