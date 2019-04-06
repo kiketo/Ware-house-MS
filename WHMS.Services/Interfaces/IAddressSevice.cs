@@ -6,7 +6,9 @@ namespace WHMS.Services.Interfaces
     {
         Address Add(string town, string addressToAdd);
 
-        Address Edit(string town, string addressToEdit);
+        Address EditText(string town, string addressToEdit);
+
+        Address EditTown(string oldTown, string addressToEdit, string newTown);
 
         Address Delete(string town, string addressToDelete);
     }

@@ -42,7 +42,7 @@ namespace WHMS.Services
             return newAddress;
         }
 
-        public Address Edit(string town, string addressToEdit)
+        public Address EditText(string town, string addressToEdit)
         {
             Town inTown = this.context.Towns.FirstOrDefault(t => t.Name == town);
             if (inTown == null || inTown.IsDeleted)
@@ -58,6 +58,35 @@ namespace WHMS.Services
             }
 
             address.Text = addressToEdit;
+            address.ModifiedOn = DateTime.Now;
+
+            context.SaveChanges();
+
+            return address;
+        }
+
+        public Address EditTown(string oldTown, string addressToEdit, string newTown)
+        {
+            Town inTown = this.context.Towns.FirstOrDefault(t => t.Name == oldTown);
+            if (inTown == null || inTown.IsDeleted)
+            {
+                throw new ArgumentException($"Town `{oldTown}` doesn't exist!");
+            }
+
+            Address address = inTown.Addresses.FirstOrDefault(a => a.Text == addressToEdit);
+
+            if (address == null || address.IsDeleted)
+            {
+                throw new ArgumentException($"Address `{addressToEdit}` in town `{oldTown}` doesn't exist!");
+            }
+
+            Town inNewTown = this.context.Towns.FirstOrDefault(t => t.Name == newTown);
+            if (inNewTown == null || inNewTown.IsDeleted)
+            {
+                throw new ArgumentException($"Town `{newTown}` doesn't exist!");
+            }
+
+            address.Town = inNewTown;
             address.ModifiedOn = DateTime.Now;
 
             context.SaveChanges();
