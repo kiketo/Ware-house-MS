@@ -29,4 +29,10 @@
     <ProjectReference Include="..\WHMSData\WHMSData.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Commands\Listing\" />
+    <Folder Include="Commands\Modifying\" />
+    <Folder Include="Commands\Deleting\" />
+  </ItemGroup>
+
 </Project>
