@@ -24,7 +24,7 @@ namespace WHMS.Commands
                 .OfType<KeyedService>()
                 .Select(ks => ks.ServiceKey);
 
-            return "Available commands:\r\n" + string.Join("\r\n", commandNames);
+            return "\r\nAvailable commands:\r\n============\r\n" + string.Join("\r\n", commandNames)+ "\r\n============\r\nPlease use ';' for separating command parameters!";
         }
     }
 }

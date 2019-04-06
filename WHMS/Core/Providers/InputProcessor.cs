@@ -33,7 +33,7 @@ namespace WHMS.Core.Providers
                 }
                 catch (ComponentNotRegisteredException ex)
                 {
-                    return $"Tried to activate command {name} but got {ex.Message}";
+                    return $"Tried to activate command {name} but got {ex.Message} \r\n  Please use 'help' for commands preview!";
                 }
                 catch (ArgumentException ex)
                 {
