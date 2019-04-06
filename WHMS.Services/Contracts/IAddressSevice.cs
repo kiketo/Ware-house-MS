@@ -4,12 +4,12 @@ namespace WHMS.Services.Contracts
 {
     public interface IAddressSevice
     {
-        Address Add(string town, string addressToAdd);
+        Address Add(Town town, string addressToAdd);
 
-        Address EditText(string town, string addressToEdit);
+        Address EditText(Town town, string addressToEdit);
 
-        Address EditTown(string oldTown, string addressToEdit, string newTown);
+        Address EditTown(Town oldTown, string addressToEdit, Town newTown);
 
-        Address Delete(string town, string addressToDelete);
+        Address Delete(Town town, string addressToDelete);
     }
 }

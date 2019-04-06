@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
@@ -27,7 +28,7 @@ namespace WHMS.Services
                 Name = name,
                 CreatedOn = DateTime.Now,
                 ModifiedOn = DateTime.Now,
-                //Products = new List<Product>()
+                Products = new List<Product>()
             };
             this.context.Categories.Add(newCategory);
             this.context.SaveChanges();

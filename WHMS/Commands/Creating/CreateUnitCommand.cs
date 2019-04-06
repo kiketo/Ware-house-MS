@@ -18,12 +18,13 @@ namespace WHMS.Commands.Creating
         //createunit;kg
         public string Execute(IReadOnlyList<string> parameters)
         {
-            if (parameters.Count==0)
+            if (parameters.Count!=1)
             {
                 throw new ArgumentException(@"Please provide parameters: {unit}");
             }
 
-            throw new NotImplementedException();
+            var unit = unitService.CreateUnit(parameters[0]);
+            return $"Unit {unit.UnitName} was created.";
         }
 
     }

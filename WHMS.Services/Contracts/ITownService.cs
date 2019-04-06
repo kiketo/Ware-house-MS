@@ -10,5 +10,6 @@ namespace WHMS.Services.Contracts
         Town Add(string townToAddName);
         Town Edit(string townToEditName);
         Town Delete(string townToDeleteName);
+        Town GetTown(string townToGetName);
     }
 }

@@ -5,8 +5,6 @@ using WHMS.Services.Contracts;
 
 namespace WHMS.Commands.Creating
 {
-
-    //just for testing purposes
     public class CreateTownCommand : ICommand
     {
         private readonly ITownService townService;
@@ -16,12 +14,16 @@ namespace WHMS.Commands.Creating
             this.townService = townService ?? throw new ArgumentNullException(nameof(townService));
         }
 
+        //createtown;Sofia
         public string Execute(IReadOnlyList<string> parameters)
         {
-            this.townService.Add(parameters[0]);
+            if (parameters.Count != 1)
+            {
+                throw new ArgumentException(@"Please provide parameters: {Town}");
+            }
 
-            return $"Town with name {parameters[0]} added sucsefully";
-
+            var town = this.townService.Add(parameters[0]);
+            return $"Town {town.Name} was created.";
         }
     }
 }

@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Commands\Creating\CreateTownCommand.cs" />
     <Compile Remove="Core\Contracts\ICommandParser.cs" />
     <Compile Remove="Core\Providers\CommandParser.cs" />
   </ItemGroup>

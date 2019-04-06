@@ -15,16 +15,12 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Address Add(string town, string addressToAdd)
+        public Address Add(Town town, string addressToAdd)
         {
-            Town inTown = this.context.Towns.FirstOrDefault(t => t.Name == town);
-            if (inTown == null || inTown.IsDeleted)
+            
+            if (town.Addresses!=null&&town.Addresses.FirstOrDefault(a => a.Text == addressToAdd) != null)
             {
-                throw new ArgumentException($"Town `{town}` doesn't exist!");
-            }
-            if (inTown.Addresses.FirstOrDefault(a => a.Text == addressToAdd) != null)
-            {
-                throw new ArgumentException($"Address `{addressToAdd}` in town `{town}` already exist!");
+                throw new ArgumentException($"Address `{addressToAdd}` in town `{town.Name}` already exist!");
             }
 
             Address newAddress = new Address
@@ -32,25 +28,20 @@ namespace WHMS.Services
                 CreatedOn = DateTime.Now,
                 ModifiedOn=DateTime.Now,
                 Text = addressToAdd,
-                Town = inTown,
-                TownId = inTown.Id
+                Town = town,
+                TownId = town.Id
             };
 
-            inTown.Addresses.Add(newAddress);
+            town.Addresses.Add(newAddress);
+            this.context.Addresses.Add(newAddress);
             this.context.SaveChanges();
 
             return newAddress;
         }
 
-        public Address EditText(string town, string addressToEdit)
+        public Address EditText(Town town, string addressToEdit)
         {
-            Town inTown = this.context.Towns.FirstOrDefault(t => t.Name == town);
-            if (inTown == null || inTown.IsDeleted)
-            {
-                throw new ArgumentException($"Town `{town}` doesn't exist!");
-            }
-
-            Address address = inTown.Addresses.FirstOrDefault(a => a.Text == addressToEdit);
+            Address address = town.Addresses.FirstOrDefault(a => a.Text == addressToEdit);
 
             if (address == null || address.IsDeleted)
             {
@@ -65,28 +56,16 @@ namespace WHMS.Services
             return address;
         }
 
-        public Address EditTown(string oldTown, string addressToEdit, string newTown)
+        public Address EditTown(Town oldTown, string addressToEdit, Town newTown)
         {
-            Town inTown = this.context.Towns.FirstOrDefault(t => t.Name == oldTown);
-            if (inTown == null || inTown.IsDeleted)
-            {
-                throw new ArgumentException($"Town `{oldTown}` doesn't exist!");
-            }
-
-            Address address = inTown.Addresses.FirstOrDefault(a => a.Text == addressToEdit);
+            Address address = oldTown.Addresses.FirstOrDefault(a => a.Text == addressToEdit);
 
             if (address == null || address.IsDeleted)
             {
                 throw new ArgumentException($"Address `{addressToEdit}` in town `{oldTown}` doesn't exist!");
             }
 
-            Town inNewTown = this.context.Towns.FirstOrDefault(t => t.Name == newTown);
-            if (inNewTown == null || inNewTown.IsDeleted)
-            {
-                throw new ArgumentException($"Town `{newTown}` doesn't exist!");
-            }
-
-            address.Town = inNewTown;
+            address.Town = newTown;
             address.ModifiedOn = DateTime.Now;
 
             this.context.SaveChanges();
@@ -94,15 +73,9 @@ namespace WHMS.Services
             return address;
         }
 
-        public Address Delete(string town, string addressToDelete)
+        public Address Delete(Town town, string addressToDelete)
         {
-            Town inTown = this.context.Towns.FirstOrDefault(t => t.Name == town);
-            if (inTown == null || inTown.IsDeleted)
-            {
-                throw new ArgumentException($"Town `{town}` doesn't exist!");
-            }
-
-            Address address = inTown.Addresses.FirstOrDefault(a => a.Text == addressToDelete);
+            Address address = town.Addresses.FirstOrDefault(a => a.Text == addressToDelete);
 
             if (address == null || address.IsDeleted)
             {

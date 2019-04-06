@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WHMS.Services.Contracts;
@@ -25,8 +26,9 @@ namespace WHMS.Services
 
             Town townToAdd = new Town()
             {
-                Addresses = new List<Address>(),
+                Addresses = new List<Address> { new Address()},
                 CreatedOn = DateTime.Now,
+                ModifiedOn=DateTime.Now,
                 Name = townToAddName
             };
 
@@ -49,7 +51,6 @@ namespace WHMS.Services
             townToEdit.Name = townToEditName;
             townToEdit.ModifiedOn = DateTime.Now;
 
-            this.context.Towns.Update(townToEdit);
             this.context.SaveChanges();
 
             return townToEdit;
@@ -75,6 +76,20 @@ namespace WHMS.Services
 
             this.context.SaveChanges();
             return townToDelete;
+        }
+
+        public Town GetTown(string townToGetName)
+        {
+            Town townToGet = this.context.Towns
+                .Include(a=>a.Addresses)
+                .FirstOrDefault(t => t.Name == townToGetName);
+
+            if (townToGet == null || townToGet.IsDeleted)
+            {
+                throw new ArgumentException($"Town `{townToGet}` doesn't exist!");
+            }
+            
+            return townToGet;
         }
     }
 }

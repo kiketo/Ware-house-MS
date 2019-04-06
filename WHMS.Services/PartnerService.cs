@@ -28,6 +28,7 @@ namespace WHMS.Services
                 Name = partnerName,
                 VAT = vat,
                 CreatedOn = DateTime.Now,
+                ModifiedOn=DateTime.Now
             };
 
             this.context.Partners.Add(newPartner);
