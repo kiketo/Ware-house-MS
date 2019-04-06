@@ -49,7 +49,7 @@ namespace WHMS.Services
             this.context.SaveChanges();
             return categoryToMod;
         }
-        public bool DeleteCategory(string name) //TODO
+        public Category DeleteCategory(string name) //TODO
         {
             var categoryToDelete = this.context.Products
                 .FirstOrDefault(u => u.Name == name);
@@ -61,7 +61,7 @@ namespace WHMS.Services
             categoryToDelete.ModifiedOn = DateTime.Now;
             categoryToDelete.IsDeleted = true;
             this.context.SaveChanges();
-            return true;
+            return categoryToDelete;
         }
         //public void AddProductToCategory(int categoryId, Product product)
         //{

@@ -9,7 +9,7 @@ using WHMSData.Models;
 
 namespace WHMS.Services
 {
-    public class ProductService //: IProductService
+    public class ProductService : IProductService
     {
         private readonly WHMSContext context;
 
@@ -75,20 +75,24 @@ namespace WHMS.Services
             return this.context.Products
                 .FirstOrDefault(u => u.Name == name);
         }
-        public void SetBuyPrice(int productId, decimal price)
+        public Product SetBuyPrice(int productId, decimal price)
         {
             var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
             //TODO proverki
             product.ModifiedOn = DateTime.Now;
             product.BuyPrice = price;
             this.context.SaveChanges();
+
+            return product;
         }
-        public void SetMargin(int productId, double newMargin)
+        public Product SetMargin(int productId, double newMargin)
         {
             var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
             product.MarginInPercent = newMargin;
             product.ModifiedOn = DateTime.Now;
             this.context.SaveChanges();
+
+            return product;
         }
         public Product SetSellPrice(int productId, decimal price)
         {

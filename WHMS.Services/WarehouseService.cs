@@ -37,6 +37,7 @@ namespace WHMS.Services
 
             return newWarehouse;
         }
+
         public Warehouse ModifyWarehouseName(string name)
         {
             var warehousetToMod = this.context.Warehouses.FirstOrDefault(t => t.Name == name);
@@ -51,7 +52,7 @@ namespace WHMS.Services
             return warehousetToMod;
         }
 
-        public bool DeleteWarehouse(string name)
+        public Warehouse DeleteWarehouse(string name)
         {
             var warehouseToDelete = this.context.Warehouses
                 .FirstOrDefault(u => u.Name == name);
@@ -63,7 +64,7 @@ namespace WHMS.Services
             warehouseToDelete.ModifiedOn = DateTime.Now;
             warehouseToDelete.IsDeleted = true;
             this.context.SaveChanges();
-            return true;
+            return warehouseToDelete;
         }
 
         public Warehouse GetByName(string name)
