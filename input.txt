@@ -7,4 +7,8 @@ createpartner;Partner3;Yambol;Grafa
 createpartner;Partner3
 createpartner;Partner4;BG123456789
 createpartner;Partner4
-createpartner;Partner5;WrongVat123456789
+createpartner;Partner5;WrongVat1234567
+createtown;Sofia
+modifyaddress;Yambol;Grafa
+modifyaddress;Yambol;Grafa;Rakovska
+modifyaddress;Yambol;Rakovska;Sofia;Grafa

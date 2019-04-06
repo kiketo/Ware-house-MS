@@ -39,16 +39,16 @@ namespace WHMS.Services
             return newAddress;
         }
 
-        public Address EditText(Town town, string addressToEdit)
+        public Address EditText(Town town, string oldAddress, string newAddress)
         {
-            Address address = town.Addresses.FirstOrDefault(a => a.Text == addressToEdit);
+            Address address = town.Addresses.FirstOrDefault(a => a.Text == oldAddress);
 
             if (address == null || address.IsDeleted)
             {
-                throw new ArgumentException($"Address `{addressToEdit}` in town `{town.Name}` doesn't exist!");
+                throw new ArgumentException($"Address `{oldAddress}` in town `{town.Name}` doesn't exist!");
             }
 
-            address.Text = addressToEdit;
+            address.Text = newAddress;
             address.ModifiedOn = DateTime.Now;
 
             this.context.SaveChanges();
@@ -56,21 +56,21 @@ namespace WHMS.Services
             return address;
         }
 
-        public Address EditTown(Town oldTown, string addressToEdit, Town newTown)
+        public Address EditTown(Town oldTown, string address, Town newTown)
         {
-            Address address = oldTown.Addresses.FirstOrDefault(a => a.Text == addressToEdit);
+            Address addressToEdit = oldTown.Addresses.FirstOrDefault(a => a.Text == address);
 
-            if (address == null || address.IsDeleted)
+            if (addressToEdit == null || addressToEdit.IsDeleted)
             {
                 throw new ArgumentException($"Address `{addressToEdit}` in town `{oldTown.Name}` doesn't exist!");
             }
 
-            address.Town = newTown;
-            address.ModifiedOn = DateTime.Now;
+            addressToEdit.Town = newTown;
+            addressToEdit.ModifiedOn = DateTime.Now;
 
             this.context.SaveChanges();
 
-            return address;
+            return addressToEdit;
         }
 
         public Address Delete(Town town, string addressToDelete)

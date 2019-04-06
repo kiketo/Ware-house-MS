@@ -38,17 +38,17 @@ namespace WHMS.Services
             return townToAdd;
         }
 
-        public Town Edit(string townToEditName)
+        public Town Edit(string oldTownName, string newTownName)
         {
             Town townToEdit = this.context.Towns
-                .FirstOrDefault(t => t.Name == townToEditName);
+                .FirstOrDefault(t => t.Name == oldTownName);
 
             if (townToEdit == null || townToEdit.IsDeleted)
             {
-                throw new ArgumentException($"Town `{townToEditName}` doesn't exist!");
+                throw new ArgumentException($"Town `{oldTownName}` doesn't exist!");
             }
 
-            townToEdit.Name = townToEditName;
+            townToEdit.Name = newTownName;
             townToEdit.ModifiedOn = DateTime.Now;
 
             this.context.SaveChanges();

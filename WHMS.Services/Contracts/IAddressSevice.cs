@@ -6,9 +6,9 @@ namespace WHMS.Services.Contracts
     {
         Address Add(Town town, string addressToAdd);
 
-        Address EditText(Town town, string addressToEdit);
+        Address EditText(Town town, string oldAddress, string newAddress);
 
-        Address EditTown(Town oldTown, string addressToEdit, Town newTown);
+        Address EditTown(Town oldTown, string address, Town newTown);
 
         Address Delete(Town town, string addressToDelete);
 
