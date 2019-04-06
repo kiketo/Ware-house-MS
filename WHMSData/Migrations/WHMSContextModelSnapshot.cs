@@ -110,7 +110,8 @@ namespace WHMSData.Migrations
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<decimal>("VAT");
+                    b.Property<string>("VAT")
+                        .HasMaxLength(11);
 
                     b.HasKey("Id");
 

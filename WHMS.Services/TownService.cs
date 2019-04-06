@@ -26,7 +26,7 @@ namespace WHMS.Services
 
             Town townToAdd = new Town()
             {
-                Addresses = new List<Address> { new Address()},
+                Addresses = new List<Address>(),
                 CreatedOn = DateTime.Now,
                 ModifiedOn=DateTime.Now,
                 Name = townToAddName
@@ -86,7 +86,7 @@ namespace WHMS.Services
 
             if (townToGet == null || townToGet.IsDeleted)
             {
-                throw new ArgumentException($"Town `{townToGet}` doesn't exist!");
+                throw new ArgumentException($"Town `{townToGetName}` doesn't exist!");
             }
             
             return townToGet;

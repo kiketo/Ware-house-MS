@@ -45,7 +45,7 @@ namespace WHMS.Services
 
             if (address == null || address.IsDeleted)
             {
-                throw new ArgumentException($"Address `{addressToEdit}` in town `{town}` doesn't exist!");
+                throw new ArgumentException($"Address `{addressToEdit}` in town `{town.Name}` doesn't exist!");
             }
 
             address.Text = addressToEdit;
@@ -62,7 +62,7 @@ namespace WHMS.Services
 
             if (address == null || address.IsDeleted)
             {
-                throw new ArgumentException($"Address `{addressToEdit}` in town `{oldTown}` doesn't exist!");
+                throw new ArgumentException($"Address `{addressToEdit}` in town `{oldTown.Name}` doesn't exist!");
             }
 
             address.Town = newTown;
@@ -79,13 +79,25 @@ namespace WHMS.Services
 
             if (address == null || address.IsDeleted)
             {
-                throw new ArgumentException($"Address `{addressToDelete}` in town `{town}` doesn't exist!");
+                throw new ArgumentException($"Address `{addressToDelete}` in town `{town.Name}` doesn't exist!");
             }
 
             address.IsDeleted = true;
             address.ModifiedOn = DateTime.Now;
 
             this.context.SaveChanges();
+
+            return address;
+        }
+
+        public Address GetAddress(Town town, string addressToGet)
+        {
+            Address address = town.Addresses.FirstOrDefault(a => a.Text == addressToGet);
+
+            if (address == null || address.IsDeleted)
+            {
+                throw new ArgumentException($"Address `{addressToGet}` in town `{town.Name}` doesn't exist!");
+            }
 
             return address;
         }

@@ -36,7 +36,6 @@ namespace WHMSData.Context
         {
             modelBuilder.Entity<ProductWarehouse>()
                     .HasKey(p => new { p.ProductId, p.WarehouseId });
-
         }
     }
 }

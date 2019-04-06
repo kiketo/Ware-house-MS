@@ -11,5 +11,7 @@ namespace WHMS.Services.Contracts
         Address EditTown(Town oldTown, string addressToEdit, Town newTown);
 
         Address Delete(Town town, string addressToDelete);
+
+        Address GetAddress(Town town, string addressToGet);
     }
 }

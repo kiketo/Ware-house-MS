@@ -1,0 +1,10 @@
+createtown;Yambol
+createaddress;Yambol;Grafa
+createpartner;Partner1;Yambol;Grafa;BG123456789
+createpartner;Partner1
+createpartner;Partner2
+createpartner;Partner3;Yambol;Grafa
+createpartner;Partner3
+createpartner;Partner4;BG123456789
+createpartner;Partner4
+createpartner;Partner5;WrongVat123456789

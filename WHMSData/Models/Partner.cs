@@ -13,7 +13,8 @@ namespace WHMSData.Models
 
         public  Address Address { get; set; }
 
-        public decimal VAT { get; set; }
+        [StringLength(11)]
+        public string VAT { get; set; }
 
         public ICollection<Order> PastOrders { get; set; }
 

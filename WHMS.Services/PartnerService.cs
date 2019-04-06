@@ -16,16 +16,18 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Partner Add(string partnerName, int vat = 0)
+        public Partner Add(string partnerName, Address address=null, string vat = null)
         {
-            if (this.context.Partners.Any(p => p.Name == partnerName))
+            if (this.context.Partners.FirstOrDefault(p => p.Name == partnerName)!=null)
             {
                 throw new ArgumentException($"Partner with name `{partnerName}` already exist!");
             }
             
+
             Partner newPartner = new Partner
             {
                 Name = partnerName,
+                Address=address,
                 VAT = vat,
                 CreatedOn = DateTime.Now,
                 ModifiedOn=DateTime.Now
@@ -36,7 +38,7 @@ namespace WHMS.Services
             return newPartner;
         }
 
-        public Partner Edit(string partnerName, string newPartnerName, int newVat=0)
+        public Partner Edit(string partnerName, string newPartnerName, string newVat=null)
         {
             Partner partnerToEdit = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
 
@@ -47,7 +49,7 @@ namespace WHMS.Services
 
             partnerToEdit.Name = newPartnerName;
 
-            if (newVat!=0)
+            if (newVat!=null)
             {
                 partnerToEdit.VAT = newVat;
             }

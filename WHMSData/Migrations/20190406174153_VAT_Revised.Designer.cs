@@ -10,8 +10,8 @@ using WHMSData.Context;
 namespace WHMSData.Migrations
 {
     [DbContext(typeof(WHMSContext))]
-    [Migration("20190406142433_OneToMany_Corection")]
-    partial class OneToMany_Corection
+    [Migration("20190406174153_VAT_Revised")]
+    partial class VAT_Revised
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -112,7 +112,8 @@ namespace WHMSData.Migrations
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<decimal>("VAT");
+                    b.Property<string>("VAT")
+                        .HasMaxLength(11);
 
                     b.HasKey("Id");
 

@@ -17,13 +17,9 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Order Add(OrderType type, Partner partner, IDictionary<Product, int> products, string comment = null)
+        public Order Add(OrderType type, Partner partner, Product product, int qty, string comment = null)
         {
-            decimal totalValue = 0;
-            foreach (var product in products)
-            {
-                totalValue += product.Key.SellPrice * product.Value;
-            }
+            decimal totalValue = product.SellPrice * qty;
 
             Order newOrder = new Order
             {
@@ -32,7 +28,7 @@ namespace WHMS.Services
                 Partner = partner,
                 Comment = comment,
                 ModifiedOn = DateTime.Now,
-                Products = products.Select(p => p.Key).ToList(),
+                Products = new List<Product> { product },
                 TotalValue = totalValue
             };
 
@@ -63,17 +59,15 @@ namespace WHMS.Services
             return orderToEdit;
         }
 
-        public Order EditProducts(int orderId, IDictionary<Product, int> products)
+        public Order AddProduct(int orderId, Product product, int qty)
         {
             Order orderToEdit = GetOrderById(orderId);
 
-            decimal totalValue = 0;
-            foreach (var product in products)
-            {
-                totalValue += product.Key.SellPrice * product.Value;
-            }
+            decimal totalValue = orderToEdit.TotalValue;
 
-            orderToEdit.Products = products.Select(p => p.Key).ToList();
+            totalValue += product.SellPrice * qty;
+
+            orderToEdit.Products.Add(product);
             orderToEdit.TotalValue = totalValue;
             orderToEdit.ModifiedOn = DateTime.Now;
 
@@ -107,7 +101,7 @@ namespace WHMS.Services
             List<Order> ordersToShow = this.context.Orders
                 .Where(o => o.Type == type)
                 .Where(o => o.IsDeleted == false)
-                .Where(o=>o.CreatedOn>=fromDate)
+                .Where(o => o.CreatedOn >= fromDate)
                 .Where(o => o.CreatedOn <= toDate)
                 .ToList();
 
