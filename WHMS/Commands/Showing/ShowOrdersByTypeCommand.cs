@@ -6,7 +6,7 @@ using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 using WHMSData.Utills;
 
-namespace WHMS.Commands.Listing
+namespace WHMS.Commands.Showing
 {
     public class ShowOrdersByTypeCommand : ICommand
     {
