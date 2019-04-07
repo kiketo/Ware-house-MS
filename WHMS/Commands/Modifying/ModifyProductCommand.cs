@@ -21,7 +21,7 @@ namespace WHMS.Commands.Modifying
         public string Execute(IReadOnlyList<string> parameters) //whatToModify, nameofproductTobeModified 
         {
             var toModifyParameter = parameters[0];
-            var productToModify = this.productService.GetProduct(parameters[1]);
+            var productToModify = this.productService.FindByName(parameters[1]);
             if (productToModify == null)
             {
                 throw new ArgumentException($"Product with name {parameters[1]} does not exist ");
@@ -49,7 +49,7 @@ namespace WHMS.Commands.Modifying
                     productToModify = this.productService.SetMargin(productToModify.Id, newMargin);
                     return $"Product {productToModify.Name} price was changed to {productToModify.MarginInPercent}";
                 case "category":
-                    var category = this.categoryService.GetCategory(parameters[2]);
+                    var category = this.categoryService.FindByName(parameters[2]);
                     if (category == productToModify.Category)
                     {
                         throw new ArgumentException($"Product {productToModify.Name} is already assigned in category {category.Name}");

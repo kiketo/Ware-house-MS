@@ -64,7 +64,7 @@ namespace WHMS.Services
 
             if (productToDelete == null || productToDelete.IsDeleted)
             {
-                throw new ArgumentException($"Town `{name}` doesn't exist!");
+                throw new ArgumentException($"Product `{name}` doesn't exist!");
             }
             productToDelete.ModifiedOn = DateTime.Now;
             productToDelete.IsDeleted = true;
@@ -74,13 +74,21 @@ namespace WHMS.Services
 
         public Product FindByName(string name)
         {
-            return this.context.Products
+            var product = this.context.Products
                 .FirstOrDefault(u => u.Name == name);
+            if (product == null || product.IsDeleted)
+            {
+                throw new ArgumentException($"Product `{name}` doesn't exist!");
+            }
+            return product;
         }
         public Product SetBuyPrice(int productId, decimal price)
         {
             var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
-            //TODO proverki
+            if (product == null || product.IsDeleted)
+            {
+                throw new ArgumentException($"Product does not exist!");
+            }
             product.ModifiedOn = DateTime.Now;
             product.BuyPrice = price;
             this.context.SaveChanges();
@@ -90,6 +98,10 @@ namespace WHMS.Services
         public Product SetMargin(int productId, double newMargin)
         {
             var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
+            if (product == null || product.IsDeleted)
+            {
+                throw new ArgumentException($"Product does not exist!");
+            }
             product.MarginInPercent = newMargin;
             product.ModifiedOn = DateTime.Now;
             this.context.SaveChanges();
@@ -99,20 +111,20 @@ namespace WHMS.Services
         public Product SetSellPrice(int productId, decimal price)
         {
             var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
+            if (product == null || product.IsDeleted)
+            {
+                throw new ArgumentException($"Product does not exist!");
+            }
             product.BuyPrice = price;
             product.ModifiedOn = DateTime.Now;
             this.context.SaveChanges();
             return product;
         }
-        public Product GetProduct(string name)
-        {
-            return this.context.Products.Where(p => p.Name == name).FirstOrDefault();
-        }
 
         public ICollection<Product> ProductsByCategory(Category category)
         {
-            var productByCategory = this.context.Products.Where(p => p.Category == category).ToList();
-            return productByCategory;
+            var productsByCategory = this.context.Products.Where(p => p.Category == category).ToList();
+            return productsByCategory;
         }
     }
 }

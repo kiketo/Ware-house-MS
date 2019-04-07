@@ -17,7 +17,7 @@ namespace WHMS.Commands.Showing
         }
         public string Execute(IReadOnlyList<string> parameters)
         {
-            var category = this.categoryService.GetCategory(parameters[0]);
+            var category = this.categoryService.FindByName(parameters[0]);
             if (category == null)
             {
                 throw new ArgumentException($"There is no category with name {parameters[0]}");

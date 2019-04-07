@@ -71,7 +71,12 @@ namespace WHMS.Services
         }
         public Unit GetUnit(string name)
         {
-            return this.context.Units.Where(u => u.UnitName == name).FirstOrDefault();
+            var unit = this.context.Units.Where(u => u.UnitName == name).FirstOrDefault();
+            if (unit == null || unit.IsDeleted)
+            {
+                throw new ArgumentException($"Unit with name {name} does not exist");
+            }
+            return unit;
         }
 
     }

@@ -31,7 +31,7 @@ namespace WHMS.Commands.Creating
             {
                 unit = this.unitService.CreateUnit(parameters[1]);
             }
-            var category = this.categoryService.GetCategory(parameters[2]);
+            var category = this.categoryService.FindByName(parameters[2]);
             if (category == null)
             {
                 category = this.categoryService.CreateCategory(parameters[2]);

@@ -77,7 +77,7 @@ namespace WHMS.Services
 
         public Partner FindByName (string partnerName)
         {
-            Partner partner = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
+            var partner = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
             if (partner==null)
             {
                 throw new ArgumentException($"Partner with name `{partnerName}` doesn't exist!");

@@ -67,13 +67,14 @@ namespace WHMS.Services
 
         public Category FindByName(string name)
         {
-            return this.context.Categories
+            var category = this.context.Categories
                 .FirstOrDefault(u => u.Name == name);
+            if (category == null || category.IsDeleted)
+            {
+                throw new ArgumentException($"Category {name} does not exist!");
+            }
+            return category;
         }
 
-        public Category GetCategory(string name)
-        {
-            return this.context.Categories.Where(c => c.Name == name).FirstOrDefault();
-        }
     }
 }

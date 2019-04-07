@@ -22,8 +22,18 @@ namespace WHMS.Commands.Creating
         }
         public string Execute(IReadOnlyList<string> parameters)
         {
-            //OrderType type, Partner partner, Product product, int qty, string comment = null)
-           //testing perposes: this.orderService.Add(OrderType.Buy, this.partnerService.FindByName("partner"), this.productService.GetProduct("sirene"), 1);
+            OrderType orderType = (OrderType)Enum.Parse(typeof(OrderType),parameters[0],true);
+            var partner = this.partnerService.FindByName(parameters[1]);
+            var product = this.productService.FindByName(parameters[2]);
+            int quantity;
+            if (int.TryParse(parameters[3], out quantity))
+            {
+                throw new ArgumentException($"{parameters[2]} is not a number");
+            }
+            var comment = parameters[4];
+            var order = this.orderService.Add(orderType, partner, product, quantity, comment);
+
+
             return "";
         }
     }
