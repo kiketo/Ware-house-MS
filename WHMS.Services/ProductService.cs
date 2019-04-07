@@ -126,5 +126,14 @@ namespace WHMS.Services
             var productsByCategory = this.context.Products.Where(p => p.Category == category).ToList();
             return productsByCategory;
         }
+        public Product GetProductById(int productId)
+        {
+            var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
+            if (product == null || product.IsDeleted)
+            {
+                throw new ArgumentException($"Product does not exist!");
+            }
+            return product;
+        }
     }
 }

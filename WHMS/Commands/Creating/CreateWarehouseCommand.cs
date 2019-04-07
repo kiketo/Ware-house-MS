@@ -9,15 +9,22 @@ namespace WHMS.Commands.Creating
     public class CreateWarehouseCommand :ICommand
     {
         IWarehouseService warehouseService;
-        public CreateWarehouseCommand(IWarehouseService warehouseService)
+        ITownService townService;
+        IAddressSevice addressService;
+        public CreateWarehouseCommand(IWarehouseService warehouseService, ITownService townService, IAddressSevice addressService)
         {
             this.warehouseService = warehouseService;
+            this.townService = townService;
+            this.addressService = addressService;
         }
 
-        public string Execute(IReadOnlyList<string> parameters) // TODO Add address option
+        public string Execute(IReadOnlyList<string> parameters) // TODO Add address option name/town/address
         {
             var name = parameters[0];
-            var warehouse = this.warehouseService.CreateWarehouse(name);
+            var city = this.townService.GetTown(parameters[1]);
+            var addressText = parameters[2];
+            var address = this.addressService.GetAddress(city, addressText);
+            var warehouse = this.warehouseService.CreateWarehouse(name,address );
             return $"Warehouse {warehouse.Name} was created";
         }
     }

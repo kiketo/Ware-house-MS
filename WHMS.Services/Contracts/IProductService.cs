@@ -14,5 +14,6 @@ namespace WHMS.Services.Contracts
         Product SetMargin(int productId, double newMargin);
         Product SetSellPrice(int productId, decimal price);
         ICollection<Product> ProductsByCategory(Category category);
+        Product GetProductById(int productId);
     }
 }

@@ -30,7 +30,8 @@ namespace WHMS.Services
                 Address=address,
                 VAT = vat,
                 CreatedOn = DateTime.Now,
-                ModifiedOn=DateTime.Now
+                ModifiedOn=DateTime.Now,
+                PastOrders = new List<Order>()
             };
 
             this.context.Partners.Add(newPartner);
@@ -63,7 +64,7 @@ namespace WHMS.Services
         {
             Partner partnerToDelete = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
 
-            if (partnerToDelete == null)
+            if (partnerToDelete == null || partnerToDelete.IsDeleted)
             {
                 throw new ArgumentException($"Partner with name `{partnerName}` doesn't exist!");
             }
@@ -78,7 +79,7 @@ namespace WHMS.Services
         public Partner FindByName (string partnerName)
         {
             var partner = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
-            if (partner==null)
+            if (partner==null || partner.IsDeleted)
             {
                 throw new ArgumentException($"Partner with name `{partnerName}` doesn't exist!");
             }

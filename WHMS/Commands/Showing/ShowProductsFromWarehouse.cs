@@ -34,12 +34,13 @@ namespace WHMS.Commands.Showing
             else
             {
                 var sb = new StringBuilder();
-                sb.AppendLine("Product Name\tQuantity\tWarehouse");
-                foreach (var product in productList)
+                sb.AppendLine($"Product Name\tQuantity In {warehouse.Name}");
+                foreach (var pw in productList)
                 {
-                    sb.AppendLine(product.Product.Name);
-                    sb.Append(product.Quantity);
-                    sb.Append(product.Warehouse.Name);
+                    sb.Append(this.productService.GetProductById(pw.ProductId).Name);
+                    sb.Append("\t");
+                    sb.Append(pw.Quantity);
+                    sb.AppendLine();
                 }
                 sb.AppendLine();
                 return sb.ToString();

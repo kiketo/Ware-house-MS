@@ -36,7 +36,6 @@ namespace WHMS.Commands.Showing
                 {
                     sb.AppendLine(product.Name);
                 }
-                sb.AppendLine();
                 return sb.ToString();
             }
         }

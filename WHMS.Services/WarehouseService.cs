@@ -17,7 +17,7 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Warehouse CreateWarehouse(string name)
+        public Warehouse CreateWarehouse(string name, Address address)
         {
             if (this.context.Warehouses.Any(t => t.Name == name))
             {
@@ -29,8 +29,9 @@ namespace WHMS.Services
                 Name = name,
                 CreatedOn = DateTime.Now,
                 ModifiedOn = DateTime.Now,
-                Products = products.Select(w => new ProductWarehouse { Product = w }).ToList()
-               
+                Products = products.Select(w => new ProductWarehouse { Product = w }).ToList(),
+                Address = address
+
             };
             this.context.Warehouses.Add(newWarehouse);
             this.context.SaveChanges();
@@ -69,9 +70,13 @@ namespace WHMS.Services
 
         public Warehouse GetByName(string name)
         {
-
-            return this.context.Warehouses
+            var warehouse = this.context.Warehouses
                 .FirstOrDefault(u => u.Name == name);
+            if (warehouse == null || warehouse.IsDeleted)
+            {
+                throw new ArgumentException($"Warehouse {name} does not exists");
+            }
+            return warehouse;
         }
 
     }

@@ -4,7 +4,7 @@ namespace WHMS.Services.Contracts
 {
     public interface IWarehouseService
     {
-        Warehouse CreateWarehouse(string name);
+        Warehouse CreateWarehouse(string name, Address address);
 
         Warehouse ModifyWarehouseName(string name);
 
