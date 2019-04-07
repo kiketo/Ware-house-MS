@@ -11,5 +11,6 @@ namespace WHMS.Services.Contracts
         Product SetBuyPrice(int productId, decimal price);
         Product SetMargin(int productId, double newMargin);
         Product SetSellPrice(int productId, decimal price);
+        Product GetProduct(string name);
     }
 }

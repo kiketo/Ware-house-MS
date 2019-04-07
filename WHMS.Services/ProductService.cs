@@ -103,6 +103,10 @@ namespace WHMS.Services
             this.context.SaveChanges();
             return product;
         }
+        public Product GetProduct(string name)
+        {
+            return this.context.Products.Where(p => p.Name == name).FirstOrDefault();
+        }
 
     }
 }
