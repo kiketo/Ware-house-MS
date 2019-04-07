@@ -9,5 +9,6 @@ namespace WHMS.Services.Contracts
         Unit DeleteUnitName(int unitId);
         List<Unit> GetAllUnits();
         Unit ModifyUnitName(string name);
+        Unit GetUnit(string name);
     }
 }

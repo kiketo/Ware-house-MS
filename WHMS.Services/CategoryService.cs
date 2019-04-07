@@ -71,6 +71,9 @@ namespace WHMS.Services
                 .FirstOrDefault(u => u.Name == name);
         }
 
-
+        public Category GetCategory(string name)
+        {
+            return this.context.Categories.Where(c => c.Name == name).FirstOrDefault();
+        }
     }
 }

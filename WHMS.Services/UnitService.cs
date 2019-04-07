@@ -69,6 +69,10 @@ namespace WHMS.Services
             this.context.SaveChanges();
             return unitToDel;
         }
+        public Unit GetUnit(string name)
+        {
+            return this.context.Units.Where(u => u.UnitName == name).FirstOrDefault();
+        }
 
     }
 }

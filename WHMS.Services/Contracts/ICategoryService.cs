@@ -11,5 +11,7 @@ namespace WHMS.Services.Contracts
         Category DeleteCategory(string name);
 
         Category FindByName(string name);
+
+        Category GetCategory(string name);
     }
 }

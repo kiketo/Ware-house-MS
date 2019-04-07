@@ -16,23 +16,26 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Product CreateProduct(string name)
+        public Product CreateProduct(string name, Unit unit, Category category, decimal buyPrice, double margin, string description)
         {
             if (this.context.Products.Any(t => t.Name == name))
             {
                 throw new ArgumentException($"Product {name} already exists");
             }
-
+            var sellPrice = buyPrice + buyPrice * (decimal)margin;
             List<Warehouse> wareHouses = this.context.Warehouses.ToList();
             var newProduct = new Product()
             {
                 Name = name,
+                Unit = unit,
+                Category = category,
                 CreatedOn = DateTime.Now,
                 ModifiedOn = DateTime.Now,
-                BuyPrice = 0,
-                MarginInPercent = 0,
-                SellPrice = 0,
-                Warehouses = wareHouses.Select(w => new ProductWarehouse { Warehouse = w }).ToList()
+                BuyPrice = buyPrice,
+                MarginInPercent = margin,
+                SellPrice = sellPrice,
+                Warehouses = wareHouses.Select(w => new ProductWarehouse { Warehouse = w }).ToList(),
+                Description = description
             };
 
             this.context.Products.Add(newProduct);

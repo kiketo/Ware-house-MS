@@ -4,7 +4,7 @@ namespace WHMS.Services.Contracts
 {
     public interface IProductService
     {
-        Product CreateProduct(string name);
+        Product CreateProduct(string name, Unit unit, Category category, decimal buyPrice, double margin, string description);
         Product ModifyProductName(string name);
         Product DeleteProduct(string name);
         Product FindByName(string name);
