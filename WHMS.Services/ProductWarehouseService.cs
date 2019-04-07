@@ -66,9 +66,9 @@ namespace WHMS.Services
             return pairPW.Quantity;
         }
 
-        public ICollection<ProductWarehouse> GetAllProductsInWarehouse(int warehouseId)
+        public ICollection<ProductWarehouse> GetAllProductsInWarehouseWithQuantityOverZero(int warehouseId)
         {
-            return this.context.ProductWarehouse.Where(w => w.WarehouseId == warehouseId).ToList();
+            return this.context.ProductWarehouse.Where(w => w.WarehouseId == warehouseId).ToList().Where(p=>p.Quantity !=0).ToList();
         }
     }
 }

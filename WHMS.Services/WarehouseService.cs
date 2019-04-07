@@ -69,8 +69,10 @@ namespace WHMS.Services
 
         public Warehouse GetByName(string name)
         {
+
             return this.context.Warehouses
                 .FirstOrDefault(u => u.Name == name);
         }
+
     }
 }

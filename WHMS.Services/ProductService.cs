@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using WHMS.Services.Contracts;
@@ -108,5 +109,10 @@ namespace WHMS.Services
             return this.context.Products.Where(p => p.Name == name).FirstOrDefault();
         }
 
+        public ICollection<Product> ProductsByCategory(Category category)
+        {
+            var productByCategory = this.context.Products.Where(p => p.Category == category).ToList();
+            return productByCategory;
+        }
     }
 }

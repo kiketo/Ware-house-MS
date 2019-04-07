@@ -1,4 +1,6 @@
-﻿using WHMSData.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using WHMSData.Models;
 
 namespace WHMS.Services.Contracts
 {
@@ -12,5 +14,6 @@ namespace WHMS.Services.Contracts
         Product SetMargin(int productId, double newMargin);
         Product SetSellPrice(int productId, decimal price);
         Product GetProduct(string name);
+        ICollection<Product> ProductsByCategory(Category category);
     }
 }
