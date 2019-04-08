@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WHMS.Services.Contracts;
@@ -19,7 +20,15 @@ namespace WHMS.Services
 
         public Order Add(OrderType type, Partner partner, Product product, int qty, string comment = null)
         {
-            decimal totalValue = product.SellPrice * qty;
+            decimal totalValue;
+            if (type==OrderType.Buy)
+            {
+                totalValue = product.BuyPrice * qty;
+            }
+            else
+            {
+                totalValue = product.SellPrice * qty;
+            }
 
             Order newOrder = new Order
             {
@@ -103,11 +112,13 @@ namespace WHMS.Services
                 .Where(o => o.IsDeleted == false)
                 .Where(o => o.CreatedOn >= fromDate)
                 .Where(o => o.CreatedOn <= toDate)
+                .Include(p=>p.Partner)
+                .Include(p=>p.Products)
                 .ToList();
 
-            if (ordersToShow == null)
+            if (ordersToShow.Count == 0)
             {
-                throw new ArgumentException($"Order with Type: {type} doesn't exist!");
+                throw new ArgumentException($"Order with Type: {type} doesn't exist from date {fromDate} to date {toDate}!");
             }
             return ordersToShow;
         }
@@ -117,9 +128,11 @@ namespace WHMS.Services
             List<Order> ordersToShow = this.context.Orders
                 .Where(o => o.Partner == partner)
                 .Where(o => o.IsDeleted == false)
+                .Include(p => p.Partner)
+                .Include(p => p.Products)
                 .ToList();
 
-            if (ordersToShow == null)
+            if (ordersToShow.Count == 0)
             {
                 throw new ArgumentException($"Order with Type: {partner} doesn't exist!");
             }

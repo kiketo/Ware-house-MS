@@ -23,7 +23,7 @@ namespace WHMS.Services
             {
                 throw new ArgumentException($"Product {name} already exists");
             }
-            var sellPrice = buyPrice + buyPrice * (decimal)margin;
+            decimal sellPrice = buyPrice*(100+(decimal)margin)/100;
             List<Warehouse> wareHouses = this.context.Warehouses.ToList();
             var newProduct = new Product()
             {
