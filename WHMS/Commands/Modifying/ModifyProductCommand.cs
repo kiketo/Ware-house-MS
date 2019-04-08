@@ -18,7 +18,7 @@ namespace WHMS.Commands.Modifying
             this.unitService = unitService;
         }
 
-        public string Execute(IReadOnlyList<string> parameters) //whatToModify, nameofproductTobeModified 
+        public string Execute(IReadOnlyList<string> parameters) //whatToModify, nameofproductTobeModified, new parameter
         {
             var toModifyParameter = parameters[0];
             var productToModify = this.productService.FindByName(parameters[1]);
@@ -73,7 +73,7 @@ namespace WHMS.Commands.Modifying
                     productToModify.Unit = unit;
                     return $"Product {productToModify.Name} unit type was changed to {productToModify.Unit.UnitName}";
                 default:
-                    return "";
+                    return $"Parameter '{parameters[0]}' is not valid. Plase specify: name, buyprice, margin, category or unit.";
             }
         }
     }

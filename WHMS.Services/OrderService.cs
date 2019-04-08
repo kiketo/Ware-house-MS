@@ -59,7 +59,7 @@ namespace WHMS.Services
             return orderToEdit;
         }
 
-        public Order AddProduct(int orderId, Product product, int qty)
+        public Order AddProductToOrder(int orderId, Product product, int qty)
         {
             Order orderToEdit = GetOrderById(orderId);
 

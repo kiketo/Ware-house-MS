@@ -13,7 +13,7 @@ namespace WHMS.Services.Contracts
 
         Order EditPartner(int orderId, Partner newPartner);
 
-        Order AddProduct(int orderId, Product product, int qty);
+        Order AddProductToOrder(int orderId, Product product, int qty);
 
         Order EditComment(int orderId, string comment);
 

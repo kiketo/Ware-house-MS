@@ -2,50 +2,48 @@
 using System.Collections.Generic;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
-using WHMSData.Utills;
 
-namespace WHMS.Commands.Creating
+namespace WHMS.Commands.Modifying
 {
-    public class CreateOrderCommand : ICommand
+    public class AddProductToOrder : ICommand
     {
         private IOrderService orderService;
         private IProductService productService;
-        private IPartnerService partnerService;
         private IProductWarehouseService productWarehouseService;
         private IWarehouseService warehouseService;
 
-        public CreateOrderCommand(
+        public AddProductToOrder(
             IOrderService orderService,
             IProductService productService,
-            IPartnerService partnerService,
             IProductWarehouseService productWarehouseService,
             IWarehouseService warehouseService)
         {
             this.orderService = orderService;
             this.productService = productService;
-            this.partnerService = partnerService;
             this.productWarehouseService = productWarehouseService;
             this.warehouseService = warehouseService;
         }
-        public string Execute(IReadOnlyList<string> parameters) //type,partner,product,quantity,warehouse, comment
+
+        //orderId,product,quantity,warehouse
+        public string Execute(IReadOnlyList<string> parameters)
         {
-            OrderType orderType;
-            if (!Enum.TryParse(parameters[0].ToLower(), true, out orderType))
+            int orderId;
+            if (!int.TryParse(parameters[0], out orderId))
             {
-                throw new ArgumentException($"Order type '{parameters[0]}' is not valid. Should be 'buy' or 'sell'.");
+                throw new ArgumentException($"{parameters[0]} is not a valid order ID.");
             }
-            var partner = this.partnerService.FindByName(parameters[1]);
 
-            var product = this.productService.FindByName(parameters[2]);
+            var order = orderService.GetOrderById(orderId);
+            var product = this.productService.FindByName(parameters[1]);
             int quantity;
-            if (!int.TryParse(parameters[3], out quantity))
+            if (!int.TryParse(parameters[2], out quantity))
             {
-                throw new ArgumentException($"{parameters[3]} is not a valid quantity.");
+                throw new ArgumentException($"{parameters[2]} is not a valid quantity.");
             }
 
-            var warehouse = this.warehouseService.GetByName(parameters[4]);
+            var warehouse = this.warehouseService.GetByName(parameters[3]);
             var inStock = this.productWarehouseService.GetQuantity(product.Id, warehouse.Id);
-            if (orderType.Equals("sell"))
+            if (order.Type.Equals("sell"))
             {
                 if (inStock < quantity)
                 {
@@ -57,17 +55,11 @@ namespace WHMS.Commands.Creating
             {
                 this.productWarehouseService.AddQuantity(product.Id, warehouse.Id, quantity);
             }
-            string comment=null;
-            if (parameters.Count == 6)
-            {
-                comment = parameters[5];
-            }
-            var order = this.orderService.Add(orderType, partner, product, quantity, comment);
-            partner.PastOrders.Add(order);
 
-            
+            orderService.AddProductToOrder(orderId, product, quantity);
 
-            return $"Order with ID: {order.Id} was created.";
+
+            return $"Product: {product.Name} was added to Order with ID: {order.Id}.";
         }
     }
 }
