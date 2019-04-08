@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WHMS.Services.Contracts;
@@ -78,7 +79,9 @@ namespace WHMS.Services
 
         public Partner FindByName (string partnerName)
         {
-            var partner = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
+            var partner = this.context.Partners
+                .Include(p=>p.PastOrders)
+                .FirstOrDefault(p => p.Name == partnerName);
             if (partner==null || partner.IsDeleted)
             {
                 throw new ArgumentException($"Partner with name `{partnerName}` doesn't exist!");
