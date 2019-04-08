@@ -5,6 +5,7 @@ using System.Linq;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WHMS.Services
 {
@@ -74,7 +75,8 @@ namespace WHMS.Services
 
         public Product FindByName(string name)
         {
-            var product = this.context.Products
+            Product product = this.context.Products
+                .Include(p=>p.Category)
                 .FirstOrDefault(u => u.Name == name);
             if (product == null || product.IsDeleted)
             {

@@ -7,5 +7,7 @@ namespace WHMS.Core.Contracts
     public interface IWriter
     {
         void WriteLine(string text);
+        void WriteLine();
+        ConsoleKeyInfo ReadKey();
     }
 }

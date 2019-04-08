@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using WHMS.Commands.Contracts;
+using WHMS.Core.Contracts;
 using WHMS.Services.Contracts;
 
 namespace WHMS.Commands.Deleting
 {
     public class DeleteProductCommand : ICommand
     {
+        IWriter writer;
         IProductService productService;
         IProductWarehouseService productWarehouse;
         IWarehouseService warehouseService;
@@ -16,13 +18,15 @@ namespace WHMS.Commands.Deleting
             IProductService productService, 
             IProductWarehouseService productWarehouse, 
             IWarehouseService warehouseService,
-             ICategoryService categoryService
+             ICategoryService categoryService,
+             IWriter writer
             )
         {
             this.productService = productService;
             this.productWarehouse = productWarehouse;
             this.warehouseService = warehouseService;
             this.categoryService = categoryService;
+            this.writer = writer;
         }
 
         public string Execute(IReadOnlyList<string> parameters) //productname
@@ -31,15 +35,15 @@ namespace WHMS.Commands.Deleting
             var sb = new StringBuilder();
             sb.Append("product Name:\t");
             sb.AppendLine(product.Name);
-            //sb.Append("Category:\t");
-            //sb.AppendLine(this.categoryService.FindByName(product.Category.Id));
+            sb.Append("Category:\t");
+            sb.AppendLine(this.categoryService.FindByName(product.Category.Name).Name);
             sb.Append("Product Description:\t");
             sb.AppendLine(product.Description);
-            Console.WriteLine(sb.ToString());
-            Console.WriteLine("Do you want to delete the product? [Y/N]");
+            this.writer.WriteLine(sb.ToString());
+            this.writer.WriteLine("Do you want to delete the product? [Y/N]");
             
-            var choice = Console.ReadKey();
-            Console.WriteLine();
+            var choice = this.writer.ReadKey();
+            this.writer.WriteLine();
             while (true)
             {
                 if (choice.KeyChar == 'y')
@@ -63,7 +67,7 @@ namespace WHMS.Commands.Deleting
                     return $"Product {product.Name} was not deleted";
                 }
                 else
-                    Console.WriteLine("Enter Valid Key [Y/N]");
+                    this.writer.WriteLine("Enter Valid Key [Y/N]");
             }
 
         }
