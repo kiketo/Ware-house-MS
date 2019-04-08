@@ -82,6 +82,13 @@ namespace WHMS.Services
             }
             return product;
         }
+        public Product FindByNameInclncludingDeleted(string name)
+        {
+            var product = this.context.Products
+                .FirstOrDefault(u => u.Name == name);
+            
+            return product;
+        }
         public Product SetBuyPrice(int productId, decimal price)
         {
             var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
@@ -135,5 +142,32 @@ namespace WHMS.Services
             }
             return product;
         }
+        public Product UndeleteProduct(string name)
+        {
+            var product = FindByName(name);
+            product.IsDeleted = false;
+            product.ModifiedOn = DateTime.Now;
+
+            this.context.SaveChanges();
+            return product;
+        }
+        public Product ModifyUnit(Product product, Unit unit)
+        {
+            product.ModifiedOn = DateTime.Now;
+            product.Unit = unit;
+
+            this.context.SaveChanges();
+            return product;
+        }
+        public Product ModifyCategory(Product product, Category category)
+        {
+            product.ModifiedOn = DateTime.Now;
+            product.Category = category;
+
+            this.context.SaveChanges();
+            return product;
+        }
+
+
     }
 }

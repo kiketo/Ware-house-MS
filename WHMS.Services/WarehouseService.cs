@@ -39,14 +39,14 @@ namespace WHMS.Services
             return newWarehouse;
         }
 
-        public Warehouse ModifyWarehouseName(string name)
+        public Warehouse ModifyWarehouseName(string currentName,string newName)
         {
-            var warehousetToMod = this.context.Warehouses.FirstOrDefault(t => t.Name == name);
+            var warehousetToMod = this.context.Warehouses.FirstOrDefault(t => t.Name == currentName);
             if (warehousetToMod == null || warehousetToMod.IsDeleted)
             {
-                throw new ArgumentException($"Warehouse {name} does not exists");
+                throw new ArgumentException($"Warehouse {currentName} does not exists");
             }
-            warehousetToMod.Name = name;
+            warehousetToMod.Name = newName;
             warehousetToMod.ModifiedOn = DateTime.Now;
 
             this.context.SaveChanges();
@@ -77,6 +77,11 @@ namespace WHMS.Services
                 throw new ArgumentException($"Warehouse {name} does not exists");
             }
             return warehouse;
+        }
+        public ICollection<Warehouse> GetAllWarehouses()
+        {
+            var whs = this.context.Warehouses.ToList();
+            return whs;
         }
 
     }

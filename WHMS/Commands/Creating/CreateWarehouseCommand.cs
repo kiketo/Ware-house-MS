@@ -18,7 +18,7 @@ namespace WHMS.Commands.Creating
             this.addressService = addressService;
         }
 
-        public string Execute(IReadOnlyList<string> parameters) // TODO Add address option name/town/address
+        public string Execute(IReadOnlyList<string> parameters) 
         {
             var name = parameters[0];
             var city = this.townService.GetTown(parameters[1]);
