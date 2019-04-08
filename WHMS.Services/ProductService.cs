@@ -45,14 +45,14 @@ namespace WHMS.Services
 
             return newProduct;
         }
-        public Product ModifyProductName(string name)
+        public Product ModifyProductName(string name, string newName)
         {
             var productToMod = this.context.Products.FirstOrDefault(t => t.Name == name);
             if (productToMod == null || productToMod.IsDeleted)
             {
                 throw new ArgumentException($"Product {name} does not exists");
             }
-            productToMod.Name = name;
+            productToMod.Name = newName;
             productToMod.ModifiedOn = DateTime.Now;
 
             this.context.SaveChanges();
