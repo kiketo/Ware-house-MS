@@ -12,3 +12,17 @@ createtown;Sofia
 modifyaddress;Yambol;Grafa
 modifyaddress;Yambol;Grafa;Rakovska
 modifyaddress;Yambol;Rakovska;Sofia;Grafa
+createcategory;drehi
+createtown;sofia
+createaddress;sofia;5tata kyshta v lqwo
+createunit;gigaton
+createwarehouse;haleINC;sofia;5tata kyshta v lqwo
+createproduct;GUCCI Dress;gigaton;drehi;300;30;verry Gucci ?(^?^)?
+createpartner;talasym;sofia;5tata kyshta v lqwo;1234578901
+createorder;buy;pesho;tikso;2;fsdaf
+createorder;buy;talasym;GUCCI Dress;3;buyingggg everything 
+showproductsbycategory;drehi
+createorder;buy;talasym;GUCCI Dress;3;haleINC;buyingggg everything
+showproductsfromwarehouse;haleINC
+showordersbytype;buy;01/01/2018;01/01/2020
+showordersbypartner;talasym
