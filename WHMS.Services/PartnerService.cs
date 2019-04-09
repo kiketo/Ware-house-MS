@@ -17,41 +17,57 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Partner Add(string partnerName, Address address=null, string vat = null)
+        public Partner Add(string partnerName, Address address = null, string vat = null)
         {
-            if (this.context.Partners.FirstOrDefault(p => p.Name == partnerName)!=null)
+            Partner newPartner = this.context.Partners.FirstOrDefault(t => t.Name == partnerName);
+
+            if (newPartner != null)
             {
-                throw new ArgumentException($"Partner with name `{partnerName}` already exist!");
+                if (newPartner.IsDeleted)
+                {
+                    newPartner.Name = partnerName;
+                    newPartner.Address = address;
+                    newPartner.VAT = vat;
+                    newPartner.CreatedOn = DateTime.Now;
+                    newPartner.ModifiedOn = DateTime.Now;
+                    newPartner.PastOrders = new List<Order>();
+                    newPartner.IsDeleted = false;
+                }
+                else
+                {
+                    throw new ArgumentException($"Partner with name `{partnerName}` already exist!");
+                }
             }
-            
-
-            Partner newPartner = new Partner
+            else
             {
-                Name = partnerName,
-                Address=address,
-                VAT = vat,
-                CreatedOn = DateTime.Now,
-                ModifiedOn=DateTime.Now,
-                PastOrders = new List<Order>()
-            };
+                newPartner = new Partner
+                {
+                    Name = partnerName,
+                    Address = address,
+                    VAT = vat,
+                    CreatedOn = DateTime.Now,
+                    ModifiedOn = DateTime.Now,
+                    PastOrders = new List<Order>()
+                };
+                this.context.Partners.Add(newPartner);
+            }
 
-            this.context.Partners.Add(newPartner);
             this.context.SaveChanges();
             return newPartner;
         }
 
-        public Partner Edit(string partnerName, string newPartnerName, string newVat=null)
+        public Partner Edit(string partnerName, string newPartnerName, string newVat = null)
         {
             Partner partnerToEdit = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
 
-            if (partnerToEdit==null)
+            if (partnerToEdit == null)
             {
                 throw new ArgumentException($"Partner with name `{partnerName}` doesn't exist!");
             }
 
             partnerToEdit.Name = newPartnerName;
 
-            if (newVat!=null)
+            if (newVat != null)
             {
                 partnerToEdit.VAT = newVat;
             }
@@ -61,7 +77,7 @@ namespace WHMS.Services
             return partnerToEdit;
         }
 
-        public Partner Delete (string partnerName)
+        public Partner Delete(string partnerName)
         {
             Partner partnerToDelete = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
 
@@ -77,12 +93,12 @@ namespace WHMS.Services
             return partnerToDelete;
         }
 
-        public Partner FindByName (string partnerName)
+        public Partner FindByName(string partnerName)
         {
             var partner = this.context.Partners
-                .Include(p=>p.PastOrders)
+                .Include(p => p.PastOrders)
                 .FirstOrDefault(p => p.Name == partnerName);
-            if (partner==null || partner.IsDeleted)
+            if (partner == null || partner.IsDeleted)
             {
                 throw new ArgumentException($"Partner with name `{partnerName}` doesn't exist!");
             }
