@@ -19,20 +19,36 @@ namespace WHMS.Services
 
         public Town Add(string townToAddName)
         {
-            if (this.context.Towns.FirstOrDefault(t => t.Name == townToAddName) != null)
+            Town townToAdd = this.context.Towns.FirstOrDefault(t => t.Name == townToAddName);
+
+            if (townToAdd != null)
             {
-                throw new ArgumentException($"Town `{townToAddName}` already exist!");
+                if (townToAdd.IsDeleted)
+                {
+                    townToAdd.Addresses = new List<Address>();
+                    townToAdd.CreatedOn = DateTime.Now;
+                    townToAdd.ModifiedOn = DateTime.Now;
+                    townToAdd.IsDeleted = false;
+                    townToAdd.Name = townToAddName;
+                }
+                else
+                {
+                    throw new ArgumentException($"Town `{townToAddName}` already exist!");
+                }
+            }
+            else
+            {
+                townToAdd = new Town()
+                {
+                    Addresses = new List<Address>(),
+                    CreatedOn = DateTime.Now,
+                    ModifiedOn = DateTime.Now,
+                    IsDeleted = false,
+                    Name = townToAddName
+                };
+                this.context.Towns.Add(townToAdd);
             }
 
-            Town townToAdd = new Town()
-            {
-                Addresses = new List<Address>(),
-                CreatedOn = DateTime.Now,
-                ModifiedOn=DateTime.Now,
-                Name = townToAddName
-            };
-
-            this.context.Towns.Add(townToAdd);
             this.context.SaveChanges();
 
             return townToAdd;
@@ -65,7 +81,7 @@ namespace WHMS.Services
             {
                 throw new ArgumentException($"Town `{townToDeleteName}` doesn't exist!");
             }
-            
+
             townToDelete.ModifiedOn = DateTime.Now;
             townToDelete.IsDeleted = true;
             foreach (var address in townToDelete.Addresses)
@@ -81,14 +97,14 @@ namespace WHMS.Services
         public Town GetTown(string townToGetName)
         {
             Town townToGet = this.context.Towns
-                .Include(a=>a.Addresses)
+                .Include(a => a.Addresses)
                 .FirstOrDefault(t => t.Name == townToGetName);
 
             if (townToGet == null || townToGet.IsDeleted)
             {
                 throw new ArgumentException($"Town `{townToGetName}` doesn't exist!");
             }
-            
+
             return townToGet;
         }
     }

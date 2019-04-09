@@ -34,11 +34,15 @@ namespace WHMS.Commands.Deleting
             sb.Append("Town: ");
             sb.AppendLine(townToDelete.Name);
             sb.AppendLine(" with addresses:");
+            
             foreach (var address in townToDelete.Addresses)
             {
-                sb.AppendLine(address.Text);
+                if (!address.IsDeleted)
+                {
+                    sb.AppendLine(address.Text);
+                }
             }
-            
+
             this.writer.WriteLine(sb.ToString());
             this.writer.WriteLine("Do you want to delete the Town, together with the addresses? [Y/N]");
 
@@ -50,7 +54,10 @@ namespace WHMS.Commands.Deleting
                 {
                     foreach (var address in townToDelete.Addresses)
                     {
-                        addressSevice.Delete(townToDelete, address.Text);                        
+                        if (!address.IsDeleted)
+                        {
+                            addressSevice.Delete(townToDelete, address.Text);
+                        }
                     }
 
                     this.townService.Delete(townToDelete.Name);
