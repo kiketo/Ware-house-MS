@@ -6,6 +6,14 @@ namespace WHMSData.Context
 {
     public class WHMSContext : DbContext
     {
+        public WHMSContext() {}
+
+        public WHMSContext(DbContextOptions options)
+            :base(options)
+        {
+
+        }
+
         public DbSet<Address> Addresses { get; set; }
 
         public DbSet<Category> Categories { get; set; }

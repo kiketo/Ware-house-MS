@@ -17,23 +17,37 @@ namespace WHMS.Services
 
         public Address Add(Town town, string addressToAdd)
         {
-            
-            if (town.Addresses!=null&&town.Addresses.FirstOrDefault(a => a.Text == addressToAdd) != null)
+            Address newAddress = town.Addresses.FirstOrDefault(a => a.Text == addressToAdd);
+
+            if (newAddress != null)
             {
-                throw new ArgumentException($"Address `{addressToAdd}` in town `{town.Name}` already exist!");
+                if (newAddress.IsDeleted)
+                {
+                    newAddress.CreatedOn = DateTime.Now;
+                    newAddress.ModifiedOn = DateTime.Now;
+                    newAddress.Text = addressToAdd;
+                    newAddress.Town = town;
+                    newAddress.TownId = town.Id;
+                }
+                else
+                {
+                    throw new ArgumentException($"Address `{addressToAdd}` in town `{town.Name}` already exist!");
+                }
+            }
+            else
+            {
+                newAddress = new Address
+                {
+                    CreatedOn = DateTime.Now,
+                    ModifiedOn = DateTime.Now,
+                    Text = addressToAdd,
+                    Town = town,
+                    TownId = town.Id
+                };
+                this.context.Addresses.Add(newAddress);
             }
 
-            Address newAddress = new Address
-            {
-                CreatedOn = DateTime.Now,
-                ModifiedOn=DateTime.Now,
-                Text = addressToAdd,
-                Town = town,
-                TownId = town.Id
-            };
-
             town.Addresses.Add(newAddress);
-            this.context.Addresses.Add(newAddress);
             this.context.SaveChanges();
 
             return newAddress;

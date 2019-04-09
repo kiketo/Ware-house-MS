@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WHMSData", "WHMSData\WHMSDa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WHMS.Services", "WHMS.Services\WHMS.Services.csproj", "{21585437-1D06-48BD-BE68-D0ABD3B034B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WHMS.Tests", "WHMS.Tests\WHMS.Tests.csproj", "{35FFC9A2-5A6C-401F-9A31-54AF1E7076BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WHMS.Services.Tests", "WHMS.Tests\WHMS.Services.Tests.csproj", "{35FFC9A2-5A6C-401F-9A31-54AF1E7076BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
