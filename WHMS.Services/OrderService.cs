@@ -97,7 +97,9 @@ namespace WHMS.Services
 
         public Order GetOrderById(int orderId)
         {
-            Order orderToShow = this.context.Orders.FirstOrDefault(t => t.Id == orderId);
+            Order orderToShow = this.context.Orders
+                .Include(p=>p.Products)
+                .FirstOrDefault(t => t.Id == orderId);
             if (orderToShow == null || orderToShow.IsDeleted)
             {
                 throw new ArgumentException($"Order with ID: {orderId} doesn't exist!");
@@ -118,7 +120,7 @@ namespace WHMS.Services
 
             if (ordersToShow.Count == 0)
             {
-                throw new ArgumentException($"Order with Type: {type} doesn't exist from date {fromDate} to date {toDate}!");
+                throw new ArgumentException($"Order with Type: {type} from date {fromDate} to date {toDate} doesn't exist!");
             }
             return ordersToShow;
         }
