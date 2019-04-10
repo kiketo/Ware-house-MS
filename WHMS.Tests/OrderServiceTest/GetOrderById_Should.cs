@@ -12,13 +12,16 @@ namespace WHMS.Services.Tests.OrderServiceTest
         public void Succeed()  //int orderId
         {
             Order order = new Order { Id = 1 };
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(Succeed)))))
+
+            var dbName = ((nameof(GetOrderById_Should)) + (nameof(Succeed)));
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Orders.Add(order);
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(Succeed)))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var getOrder = sut.GetOrderById(1);
@@ -29,13 +32,16 @@ namespace WHMS.Services.Tests.OrderServiceTest
         public void ThrowException_WhenOrderDoesntExist()  //int orderId
         {
             Order order = new Order { Id = 1 };
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(ThrowException_WhenOrderDoesntExist)))))
+
+            var dbName = ((nameof(GetOrderById_Should)) + (nameof(ThrowException_WhenOrderDoesntExist)));
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Orders.Add(order);
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(ThrowException_WhenOrderDoesntExist)))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetOrderById(2));
@@ -45,14 +51,16 @@ namespace WHMS.Services.Tests.OrderServiceTest
         [TestMethod]
         public void ThrowException_WhenOrderIsDeleted()  //int orderId
         {
+            var dbName = ((nameof(GetOrderById_Should)) + (nameof(ThrowException_WhenOrderIsDeleted)));
+            var options = TestUtils.GetOptions(dbName);
             Order order = new Order { Id = 1, IsDeleted = true };
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(ThrowException_WhenOrderIsDeleted)))))
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Orders.Add(order);
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(ThrowException_WhenOrderIsDeleted)))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetOrderById(1));

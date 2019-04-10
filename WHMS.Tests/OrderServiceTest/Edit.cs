@@ -13,13 +13,15 @@ namespace WHMS.Services.Tests.OrderServiceTest
         {
             OrderType type = OrderType.Sell;
 
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Type_ShouldSucceed))))
+            var dbName = ((nameof(Edit)) + (nameof(Type_ShouldSucceed)));
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Id = 1, Type = OrderType.Buy });
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Type_ShouldSucceed))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var editType = sut.EditType(1, type);
@@ -32,13 +34,16 @@ namespace WHMS.Services.Tests.OrderServiceTest
         {
             Partner partner = new Partner { Name = "Partner1" };
             Partner newPartner = new Partner { Name = "Partner2" };
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Partner_ShouldSucceed))))
+
+            var dbName = ((nameof(Edit)) + (nameof(Partner_ShouldSucceed)));
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Id = 1, Partner = partner });
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Partner_ShouldSucceed))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var editPartner = sut.EditPartner(1, newPartner);
@@ -50,13 +55,16 @@ namespace WHMS.Services.Tests.OrderServiceTest
         public void Comment_ShouldSucceed()  //int orderId, string comment
         {
             string comment = "some comments";
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Comment_ShouldSucceed))))
+
+            var dbName = ((nameof(Edit)) + (nameof(Comment_ShouldSucceed)));
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Id = 1 });
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Comment_ShouldSucceed))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var editComment = sut.EditComment(1, comment);

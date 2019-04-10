@@ -18,13 +18,6 @@ namespace WHMS.Services.Tests.OrderServiceTest
             Partner partner = new Partner { Name = "Partner1" };
             Product product = new Product { Name = "Product1" };
 
-            //using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Succeed))))
-            //{
-            //    arrangeContext.Partners.Add(partner);
-            //    arrangeContext.Products.Add(product);
-            //    arrangeContext.SaveChanges();
-            //}
-
             //Act&Assert
             using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Add_Should) +nameof(Succeed))))
             {
@@ -34,7 +27,6 @@ namespace WHMS.Services.Tests.OrderServiceTest
                 Assert.AreEqual(type, addOrder.Type);
                 Assert.AreEqual(partner, addOrder.Partner);
                 Assert.AreEqual(product, addOrder.Products.FirstOrDefault());
-
             }
         }
     }

@@ -136,7 +136,7 @@ namespace WHMS.Services
 
             if (ordersToShow.Count == 0)
             {
-                throw new ArgumentException($"Order with Type: {partner} doesn't exist!");
+                throw new ArgumentException($"Orders of Partner: {partner} doesn't exist!");
             }
             return ordersToShow;
         }
