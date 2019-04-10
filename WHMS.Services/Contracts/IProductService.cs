@@ -13,7 +13,6 @@ namespace WHMS.Services.Contracts
         Product FindByNameInclncludingDeleted(string name);
         Product SetBuyPrice(int productId, decimal price);
         Product SetMargin(int productId, double newMargin);
-        Product SetSellPrice(int productId, decimal price);
         ICollection<Product> ProductsByCategory(Category category);
         Product GetProductById(int productId);
         Product UndeleteProduct(string name);

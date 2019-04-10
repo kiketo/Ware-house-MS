@@ -24,6 +24,14 @@ namespace WHMS.Services
             {
                 throw new ArgumentException($"Product {name} already exists");
             }
+            if (buyPrice <0)
+            {
+                throw new ArgumentException($"Price cannot be negative number");
+            }
+            if (margin<0)
+            {
+                throw new ArgumentException($"The price margin cannot be negative number");
+            }
             decimal sellPrice = buyPrice*(100+(decimal)margin)/100;
             List<Warehouse> wareHouses = this.context.Warehouses.ToList();
             var newProduct = new Product()
@@ -98,6 +106,10 @@ namespace WHMS.Services
             {
                 throw new ArgumentException($"Product does not exist!");
             }
+            if (price < 0)
+            {
+                throw new ArgumentException($"Price cannot be negative number");
+            }
             product.ModifiedOn = DateTime.Now;
             product.BuyPrice = price;
             this.context.SaveChanges();
@@ -111,27 +123,23 @@ namespace WHMS.Services
             {
                 throw new ArgumentException($"Product does not exist!");
             }
+            if (newMargin < 0)
+            {
+                throw new ArgumentException($"The price margin cannot be negative number");
+            }
             product.MarginInPercent = newMargin;
             product.ModifiedOn = DateTime.Now;
             this.context.SaveChanges();
 
             return product;
         }
-        public Product SetSellPrice(int productId, decimal price)
-        {
-            var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
-            if (product == null || product.IsDeleted)
-            {
-                throw new ArgumentException($"Product does not exist!");
-            }
-            product.BuyPrice = price;
-            product.ModifiedOn = DateTime.Now;
-            this.context.SaveChanges();
-            return product;
-        }
-
+       
         public ICollection<Product> ProductsByCategory(Category category)
         {
+            if (category == null || category.IsDeleted)
+            {
+                throw new ArgumentException("Category does not exists");
+            }
             var productsByCategory = this.context.Products.Where(p => p.Category == category).ToList();
             return productsByCategory;
         }
