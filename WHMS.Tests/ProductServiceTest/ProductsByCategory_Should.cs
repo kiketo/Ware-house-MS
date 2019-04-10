@@ -14,7 +14,10 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [TestMethod]
         public void Should_Return_Collection_Of_Products_In_Category()
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Return_Collection_Of_Products_In_Category))))
+            var dbName = nameof(Should_Return_Collection_Of_Products_In_Category);
+
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Categories.Add(new Category() { Name = "categoryName" });
                 arrangeContext.SaveChanges();
@@ -26,7 +29,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
 
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Return_Collection_Of_Products_In_Category))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var category = assertContext.Categories.First(c => c.Name == "categoryName");
@@ -50,12 +53,15 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [TestMethod]
         public void Should_Throw_Exception_If_Category_Deleted()
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Category_Deleted))))
+            var dbName = nameof(Should_Throw_Exception_If_Category_Deleted);
+
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Categories.Add(new Category() { Name = "categoryName", IsDeleted = true });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Category_Deleted))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var category = assertContext.Categories.FirstOrDefault(c => c.Name == "categoryName");

@@ -25,12 +25,15 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [TestMethod]
         public void Should_Throw_Exception_If_Product_Is_Deleted_SM()
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Product_Is_Deleted_SM))))
+            var dbName = nameof(Should_Throw_Exception_If_Product_Is_Deleted_SM);
+
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Products.Add(new Product() { IsDeleted = true });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Product_Is_Deleted_SM))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.SetBuyPrice(1, 43.432m));
@@ -45,12 +48,15 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [DataRow(-0.21)]
         public void Throw_Exception_If_Product_Margin_Is_Less_Than_Zero_SM(double number)
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Throw_Exception_If_Product_Margin_Is_Less_Than_Zero_SM))))
+            var dbName = nameof(Throw_Exception_If_Product_Margin_Is_Less_Than_Zero_SM);
+
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "Name", MarginInPercent = 0 });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Throw_Exception_If_Product_Margin_Is_Less_Than_Zero_SM))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => (sut.SetMargin(1, number)));
@@ -65,12 +71,15 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [DataRow(0.21)]
         public void Should_Set_Buy_Price_(double number)
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Set_Buy_Price_))))
+            var dbName = nameof(Should_Set_Buy_Price_);
+
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "Name", MarginInPercent = 0 });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Set_Buy_Price_))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.SetMargin(1, number);
