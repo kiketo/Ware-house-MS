@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using WHMSData.Contracts;
 
@@ -11,10 +12,13 @@ namespace WHMSData.Models
         [MaxLength(20)]
         public string Name { get; set; }
 
+        [JsonIgnore]
         public int AddressId { get; set; }
 
+        [JsonIgnore]
         public Address Address { get; set; }
 
+        [JsonIgnore]
         public ICollection<ProductWarehouse> Products { get; set; }
     }
 }

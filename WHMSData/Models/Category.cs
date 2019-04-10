@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using WHMSData.Contracts;
 
@@ -11,6 +12,7 @@ namespace WHMSData.Models
         [MaxLength(30)]
         public string Name { get; set; }
 
+        [JsonIgnore]
         public ICollection<Product> Products { get; set; }
     }
 }

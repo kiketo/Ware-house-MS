@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 using WHMSData.Contracts;
 
 namespace WHMSData.Models
@@ -10,8 +11,10 @@ namespace WHMSData.Models
         [MaxLength(50)]
         public string Text { get; set; }
 
+        [JsonIgnore]
         public int TownId { get; set; }
 
+        [JsonIgnore]
         [Required(ErrorMessage = "Address Town is required!")]
         public Town Town { get; set; }
     }
