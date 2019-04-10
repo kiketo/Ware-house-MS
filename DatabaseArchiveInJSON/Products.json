@@ -1,0 +1,24 @@
+[
+  {
+    "Name": "GUCCI Shoes",
+    "Description": "verry Gucci ?(^?^)?",
+    "BuyPrice": 13.32,
+    "MarginInPercent": 13.321,
+    "SellPrice": 9300.00,
+    "Id": 1,
+    "CreatedOn": "2019-04-07T18:43:30.225607",
+    "ModifiedOn": "2019-04-08T13:46:48.7485048",
+    "IsDeleted": false
+  },
+  {
+    "Name": "GUsasdas",
+    "Description": "verry Gu",
+    "BuyPrice": 300.00,
+    "MarginInPercent": 30.0,
+    "SellPrice": 9300.00,
+    "Id": 2,
+    "CreatedOn": "2019-04-08T12:08:35.2243445",
+    "ModifiedOn": "2019-04-08T12:12:51.5335017",
+    "IsDeleted": true
+  }
+]

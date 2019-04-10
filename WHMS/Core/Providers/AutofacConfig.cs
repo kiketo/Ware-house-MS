@@ -41,7 +41,6 @@ namespace WHMS.Core.Providers
             builder.RegisterType<Engine>().As<IEngine>().SingleInstance();
             builder.RegisterType<WHMSContext>().AsSelf().InstancePerLifetimeScope();
 
-            // builder.RegisterType<TravellerFactory>().As<ITravellerFactory>().SingleInstance();
             builder.RegisterType<InputProcessor>().As<IInputProcessor>().SingleInstance();
             builder.RegisterType<Report>().As<IReport>().SingleInstance();
 
