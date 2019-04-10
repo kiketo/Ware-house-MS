@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
-using WHMSData.Context;
-using WHMSData.Models;
 
 namespace WHMS.Commands.Creating
 {
     public class CreateProductCommand : ICommand
     {
-        IProductService productService;
-        IUnitService unitService;
-        ICategoryService categoryService;
+        private IProductService productService;
+        private IUnitService unitService;
+        private ICategoryService categoryService;
 
         public CreateProductCommand(IProductService productService, IUnitService unitService, ICategoryService categoryService)
         {
@@ -26,7 +21,7 @@ namespace WHMS.Commands.Creating
         public string Execute(IReadOnlyList<string> parameters)
         {
             var name = parameters[0];
-            
+
             var product = this.productService.FindByNameInclncludingDeleted(name);
             if (product == null)
             {
@@ -66,9 +61,8 @@ namespace WHMS.Commands.Creating
                 this.productService.SetMargin(recoveredProduct.Id, margin);
 
                 var description = parameters[5];
-                
+
             }
-            
 
             return $"Product {name} was created.";
         }

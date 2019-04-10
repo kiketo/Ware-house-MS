@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 using WHMSData.Contracts;
 using WHMSData.Utills;
 
@@ -25,5 +26,7 @@ namespace WHMSData.Models
         public string Comment { get; set; }
 
         public decimal TotalValue { get; set; }
+
+        
     }
 }
