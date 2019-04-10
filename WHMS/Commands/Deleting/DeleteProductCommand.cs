@@ -10,6 +10,7 @@ namespace WHMS.Commands.Deleting
     public class DeleteProductCommand : ICommand
     {
         IWriter writer;
+        IReader reader;
         IProductService productService;
         IProductWarehouseService productWarehouse;
         IWarehouseService warehouseService;
@@ -19,7 +20,8 @@ namespace WHMS.Commands.Deleting
             IProductWarehouseService productWarehouse, 
             IWarehouseService warehouseService,
              ICategoryService categoryService,
-             IWriter writer
+             IWriter writer,
+             IReader reader
             )
         {
             this.productService = productService;
@@ -27,6 +29,7 @@ namespace WHMS.Commands.Deleting
             this.warehouseService = warehouseService;
             this.categoryService = categoryService;
             this.writer = writer;
+            this.reader = reader;
         }
 
         public string Execute(IReadOnlyList<string> parameters) //productname
@@ -42,7 +45,7 @@ namespace WHMS.Commands.Deleting
             this.writer.WriteLine(sb.ToString());
             this.writer.WriteLine("Do you want to delete the product? [Y/N]");
             
-            var choice = this.writer.ReadKey();
+            var choice = this.reader.ReadKey();
             this.writer.WriteLine();
             while (true)
             {
@@ -67,7 +70,11 @@ namespace WHMS.Commands.Deleting
                     return $"Product {product.Name} was not deleted";
                 }
                 else
+                {
                     this.writer.WriteLine("Enter Valid Key [Y/N]");
+                    choice = this.reader.ReadKey();
+                    this.writer.WriteLine();
+                }
             }
 
         }

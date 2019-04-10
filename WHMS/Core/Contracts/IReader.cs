@@ -7,5 +7,6 @@ namespace WHMS.Core.Contracts
     public interface IReader
     {
         string ReadLine();
+        ConsoleKeyInfo ReadKey();
     }
 }

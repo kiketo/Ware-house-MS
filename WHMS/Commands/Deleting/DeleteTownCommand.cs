@@ -12,12 +12,14 @@ namespace WHMS.Commands.Deleting
     {
         private ITownService townService;
         private IWriter writer;
+        private IReader reader;
         private IAddressSevice addressSevice;
 
-        public DeleteTownCommand(ITownService townService, IWriter writer, IAddressSevice addressSevice)
+        public DeleteTownCommand(ITownService townService, IWriter writer, IReader reader, IAddressSevice addressSevice)
         {
             this.townService = townService ?? throw new ArgumentNullException(nameof(townService));
             this.writer = writer ?? throw new ArgumentNullException(nameof(writer));
+            this.reader = reader ?? throw new ArgumentNullException(nameof(reader));
             this.addressSevice = addressSevice ?? throw new ArgumentNullException(nameof(addressSevice));
         }
 
@@ -46,7 +48,7 @@ namespace WHMS.Commands.Deleting
             this.writer.WriteLine(sb.ToString());
             this.writer.WriteLine("Do you want to delete the Town, together with the addresses? [Y/N]");
 
-            var choice = this.writer.ReadKey();
+            var choice = this.reader.ReadKey();
             this.writer.WriteLine();
             while (true)
             {
@@ -69,7 +71,11 @@ namespace WHMS.Commands.Deleting
                     return $"Town {townToDelete.Name} was not deleted";
                 }
                 else
+                {
                     this.writer.WriteLine("Enter Valid Key [Y/N]");
+                    choice = this.reader.ReadKey();
+                    this.writer.WriteLine();
+                }
             }
         }
     }

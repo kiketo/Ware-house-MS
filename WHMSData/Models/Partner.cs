@@ -21,5 +21,9 @@ namespace WHMSData.Models
         [JsonIgnore]
         public ICollection<Order> PastOrders { get; set; }
 
+        public override string ToString()
+        {
+            return this.Name;
+        }
     }
 }

@@ -13,13 +13,17 @@ namespace WHMS.Commands.Deleting
         IOrderService orderService;
         IPartnerService partnerService;
         IWriter writer;
+        IReader reader;
 
-        public DeletePartnerCommand(IOrderService orderService, IPartnerService partnerService, IWriter writer)
+        public DeletePartnerCommand(IOrderService orderService, IPartnerService partnerService, IWriter writer, IReader reader)
         {
             this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
             this.partnerService = partnerService ?? throw new ArgumentNullException(nameof(partnerService));
             this.writer = writer ?? throw new ArgumentNullException(nameof(writer));
+            this.reader = reader ?? throw new ArgumentNullException(nameof(reader));
         }
+
+
 
         //deletepartner;partner
         public string Execute(IReadOnlyList<string> parameters)
@@ -43,7 +47,7 @@ namespace WHMS.Commands.Deleting
             this.writer.WriteLine(sb.ToString());
             this.writer.WriteLine("Do you want to delete? [Y/N]");
 
-            var choice = this.writer.ReadKey();
+            var choice = this.reader.ReadKey();
             this.writer.WriteLine();
             while (true)
             {
@@ -58,7 +62,11 @@ namespace WHMS.Commands.Deleting
                     return $"Partner {partnerToDelete.Name} was not deleted";
                 }
                 else
+                {
                     this.writer.WriteLine("Enter Valid Key [Y/N]");
+                    choice = this.reader.ReadKey();
+                    this.writer.WriteLine();
+                }
             }
         }
     }

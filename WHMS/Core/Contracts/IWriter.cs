@@ -8,6 +8,5 @@ namespace WHMS.Core.Contracts
     {
         void WriteLine(string text);
         void WriteLine();
-        ConsoleKeyInfo ReadKey();
     }
 }
