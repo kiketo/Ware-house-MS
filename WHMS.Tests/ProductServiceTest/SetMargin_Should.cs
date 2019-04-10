@@ -63,14 +63,14 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [DataRow(324.65464521)]
         [DataRow(3)]
         [DataRow(0.21)]
-        public void Should_Set_Buy_Price(double number)
+        public void Should_Set_Buy_Price_(double number)
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Set_Buy_Price))))
+            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Set_Buy_Price_))))
             {
                 arrangeContext.Products.Add(new Product() { Name = "Name", MarginInPercent = 0 });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Set_Buy_Price))))
+            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Set_Buy_Price_))))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.SetMargin(1, number);

@@ -136,6 +136,10 @@ namespace WHMS.Services
        
         public ICollection<Product> ProductsByCategory(Category category)
         {
+            if (category == null || category.IsDeleted)
+            {
+                throw new ArgumentException("Category does not exists");
+            }
             var productsByCategory = this.context.Products.Where(p => p.Category == category).ToList();
             return productsByCategory;
         }

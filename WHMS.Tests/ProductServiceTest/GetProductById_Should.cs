@@ -8,24 +8,23 @@ using WHMSData.Models;
 namespace WHMS.Services.Tests.ProductServiceTest
 {
     [TestClass]
-    public class FindByNameInclncludingDeleted_Should
+    public class GetProductById_Should
     {
         [TestMethod]
-        public void Should_Not_Throw_Exception_If_Null()
+        public void Should_Throw_Exception_If_Null_ByID()
         {
-
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Not_Throw_Exception_If_Null))))
+            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Null_ByID))))
             {
                 var sut = new ProductService(assertContext);
-                var product = sut.FindByNameInclncludingDeleted("productName");
-                Assert.IsNull(product);
-                
+                var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetProductById(1));
+                string expected = "Product does not exist!";
+                Assert.AreEqual(expected, ex.Message);
             }
         }
         [TestMethod]
-        public void Should_Find_Product_That_Is_Deleted()
+        public void Should_Throw_Exception_If_Product_Deleted_ByID()
         {
-            var dbName = nameof(Should_Find_Product_That_Is_Deleted);
+            var dbName = nameof(Should_Throw_Exception_If_Product_Deleted_ByID);
 
             var options = TestUtils.GetOptions(dbName);
             using (var arrangeContext = new WHMSContext(options))
@@ -36,35 +35,30 @@ namespace WHMS.Services.Tests.ProductServiceTest
             using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
-                var product = sut.FindByNameInclncludingDeleted("productName");
-                Assert.IsNotNull(product);
-                Assert.IsInstanceOfType(product, typeof(Product));
-                Assert.AreEqual("productName", product.Name);
-                Assert.IsTrue(product.IsDeleted);
+                var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetProductById(1));
+                string expected = "Product does not exist!";
+                Assert.AreEqual(expected, ex.Message);
             }
         }
         [TestMethod]
-
-        public void Should_Return_Product()
+        public void Should_Return_Product_ByID()
         {
-            var dbName = nameof(Should_Return_Product);
+            var dbName = nameof(Should_Return_Product_ByID);
 
             var options = TestUtils.GetOptions(dbName);
             using (var arrangeContext = new WHMSContext(options))
             {
-                arrangeContext.Products.Add(new Product() { Name = "productName", IsDeleted = true });
+                arrangeContext.Products.Add(new Product() { Name = "productName" });
                 arrangeContext.SaveChanges();
             }
             using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
-                var product = sut.FindByNameInclncludingDeleted("productName");
+                var product = sut.GetProductById(1);
                 Assert.IsNotNull(product);
                 Assert.IsInstanceOfType(product, typeof(Product));
                 Assert.AreEqual("productName", product.Name);
-                Assert.IsTrue(product.IsDeleted);
             }
         }
     }
-
 }

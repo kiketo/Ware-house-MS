@@ -24,12 +24,15 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [TestMethod]
         public void Should_Throw_Exception_If_Product_Is_Deleted()
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Product_Is_Deleted))))
+            var dbName = nameof(Should_Throw_Exception_If_Product_Is_Deleted);
+
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "ProductName", IsDeleted = true });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Product_Is_Deleted))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.DeleteProduct("ProductName"));
@@ -40,12 +43,15 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [TestMethod]
         public void Should_Delete_Product()
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Delete_Product))))
+            var dbName = nameof(Should_Delete_Product);
+
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "ProductName", IsDeleted = false });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Delete_Product))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.DeleteProduct("ProductName");

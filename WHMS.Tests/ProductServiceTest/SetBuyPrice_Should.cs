@@ -65,12 +65,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [DataRow("0.21")]
         public void Should_Set_Buy_Price(string number)
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Throw_Exception_If_Product_Buy_Price_Is_Less_Than_Zero_SP))))
+            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Set_Buy_Price))))
             {
                 arrangeContext.Products.Add(new Product() { Name = "Name", BuyPrice = 0 });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Throw_Exception_If_Product_Buy_Price_Is_Less_Than_Zero_SP))))
+            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Set_Buy_Price))))
             {
                 var sut = new ProductService(assertContext);
                 var product=sut.SetBuyPrice(1, decimal.Parse(number));

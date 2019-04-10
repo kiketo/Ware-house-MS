@@ -14,12 +14,15 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [TestMethod]
         public void Throw_Exception_If_Product_Exists()
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Throw_Exception_If_Product_Exists))))
+            var dbName = nameof(Throw_Exception_If_Product_Exists);
+
+            var options = TestUtils.GetOptions(dbName);
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "ProductName" });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Throw_Exception_If_Product_Exists))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => (sut.CreateProduct("ProductName", null, null, 0, 0, null)));
@@ -111,12 +114,16 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [TestMethod]
         public void Properly_Set_Existing_Category_On_Product_Creation()
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Properly_Set_Existing_Category_On_Product_Creation))))
+            var dbName = nameof(Properly_Set_Existing_Category_On_Product_Creation);
+
+            var options = TestUtils.GetOptions(dbName);
+
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Categories.Add(new Category() { Name = "CategoryName" });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Properly_Set_Existing_Category_On_Product_Creation))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var category = assertContext.Categories.Where(n => n.Name == "CategoryName").FirstOrDefault();
@@ -128,12 +135,16 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [TestMethod]
         public void Properly_Set_Existing_Unit_On_Product_Creation()
         {
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions(nameof(Properly_Set_Existing_Unit_On_Product_Creation))))
+            var dbName = nameof(Properly_Set_Existing_Category_On_Product_Creation);
+
+            var options = TestUtils.GetOptions(dbName);
+
+            using (var arrangeContext = new WHMSContext(options))
             {
                 arrangeContext.Units.Add(new Unit() { UnitName = "UnitName" });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Properly_Set_Existing_Unit_On_Product_Creation))))
+            using (var assertContext = new WHMSContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var unit = assertContext.Units.Where(n => n.UnitName == "UnitName").FirstOrDefault();
