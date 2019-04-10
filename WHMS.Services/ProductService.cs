@@ -154,7 +154,8 @@ namespace WHMS.Services
         }
         public Product UndeleteProduct(string name)
         {
-            var product = FindByName(name);
+            var product = FindByNameInclncludingDeleted(name);
+
             product.IsDeleted = false;
             product.ModifiedOn = DateTime.Now;
 
