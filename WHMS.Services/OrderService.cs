@@ -114,8 +114,8 @@ namespace WHMS.Services
                 .Where(o => o.IsDeleted == false)
                 .Where(o => o.CreatedOn >= fromDate)
                 .Where(o => o.CreatedOn <= toDate)
-                .Include(p=>p.Partner)
-                .Include(p=>p.Products)
+                .Include(p => p.Partner)
+                .Include(p => p.Products)
                 .ToList();
 
             if (ordersToShow.Count == 0)

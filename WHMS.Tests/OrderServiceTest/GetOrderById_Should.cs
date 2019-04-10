@@ -29,13 +29,13 @@ namespace WHMS.Services.Tests.OrderServiceTest
         public void ThrowException_WhenOrderDoesntExist()  //int orderId
         {
             Order order = new Order { Id = 1 };
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(Succeed)))))
+            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(ThrowException_WhenOrderDoesntExist)))))
             {
                 arrangeContext.Orders.Add(order);
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(Succeed)))))
+            using (var assertContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(ThrowException_WhenOrderDoesntExist)))))
             {
                 var sut = new OrderService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetOrderById(2));
@@ -46,13 +46,13 @@ namespace WHMS.Services.Tests.OrderServiceTest
         public void ThrowException_WhenOrderIsDeleted()  //int orderId
         {
             Order order = new Order { Id = 1, IsDeleted = true };
-            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(Succeed)))))
+            using (var arrangeContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(ThrowException_WhenOrderIsDeleted)))))
             {
                 arrangeContext.Orders.Add(order);
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(Succeed)))))
+            using (var assertContext = new WHMSContext(TestUtils.GetOptions((nameof(GetOrderById_Should)) + (nameof(ThrowException_WhenOrderIsDeleted)))))
             {
                 var sut = new OrderService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetOrderById(1));

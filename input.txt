@@ -26,3 +26,10 @@ createorder;buy;talasym;GUCCI Dress;3;haleINC;buyingggg everything
 showproductsfromwarehouse;haleINC
 showordersbytype;buy;01/01/2018;01/01/2020
 showordersbypartner;talasym
+
+
+todo:
+check create services for isDeleted
+Check which methods are in use (for testing simplicity)
+validator
+constants in a separated class

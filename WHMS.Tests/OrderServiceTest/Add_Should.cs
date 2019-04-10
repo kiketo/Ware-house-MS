@@ -26,7 +26,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
             //}
 
             //Act&Assert
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Succeed))))
+            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Add_Should) +nameof(Succeed))))
             {
                 var sut = new OrderService(assertContext);
                 var addOrder = sut.Add(type, partner, product, 5);
