@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Commands\Contracts\BaseCommand.cs" />
     <Compile Remove="Core\Contracts\ICommandParser.cs" />
     <Compile Remove="Core\Providers\CommandParser.cs" />
   </ItemGroup>

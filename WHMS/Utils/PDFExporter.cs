@@ -15,7 +15,7 @@ namespace WHMS.Utils
 
         public PDFExporter()
         {
-            this.path = @"./../../../../../PDF_Exports/";
+            this.path = @"./../../../../../PDF Exports/";
 
         }
 
@@ -108,8 +108,6 @@ namespace WHMS.Utils
                         {
                             paragraph = section.AddParagraph();
                             paragraph.Format.AddTabStop(100);
-                            //paragraph.AddFormattedText(item.Name, TextFormat.Underline);
-                            //paragraph.AddText(":");
                             paragraph.AddTab();
                             paragraph.AddFormattedText(item.Name.ToString());
                         }
