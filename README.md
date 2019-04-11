@@ -41,7 +41,7 @@ Feature name | Feature Descritption | Feature Owner |
 | ***Delete Town** command* | ** | Kiril Kuzmanov |
 |EXTRA FEATURES for regular customers:|
 | ***ExportToJson** command* | ** | Iva Zhechkova |
-| ***ImportFromJson** command* | ** | Iva Zhechkova |
+| ***ImportTownsFromJson** command* | ** | Iva Zhechkova |
 | ***PDF export on order creation** * | ** | Kiril Kuzmanov |
 
 
