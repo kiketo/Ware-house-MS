@@ -11,11 +11,11 @@ using WHMSData.Models;
 
 namespace WHMS.Commands
 {
-    public class ImportTownsFromJson : ICommand
+    public class ImportTownsFromJsonCommand : ICommand
     {
         IJSONImportService dbService;
 
-        public ImportTownsFromJson(IJSONImportService dbService)
+        public ImportTownsFromJsonCommand(IJSONImportService dbService)
         {
             this.dbService = dbService ?? throw new ArgumentNullException(nameof(dbService));
         }

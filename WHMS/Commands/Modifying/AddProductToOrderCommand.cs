@@ -5,14 +5,14 @@ using WHMS.Services.Contracts;
 
 namespace WHMS.Commands.Modifying
 {
-    public class AddProductToOrder : ICommand
+    public class AddProductToOrderCommand : ICommand
     {
         private IOrderService orderService;
         private IProductService productService;
         private IProductWarehouseService productWarehouseService;
         private IWarehouseService warehouseService;
 
-        public AddProductToOrder(
+        public AddProductToOrderCommand(
             IOrderService orderService,
             IProductService productService,
             IProductWarehouseService productWarehouseService,

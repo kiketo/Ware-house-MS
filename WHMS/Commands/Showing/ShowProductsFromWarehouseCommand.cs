@@ -6,12 +6,12 @@ using WHMS.Services.Contracts;
 
 namespace WHMS.Commands.Showing
 {
-    public class ShowProductsFromWarehouse :ICommand
+    public class ShowProductsFromWarehouseCommand :ICommand
     {
         IProductService productService;
         IWarehouseService warehouseService;
         IProductWarehouseService productWarehouseService;
-        public ShowProductsFromWarehouse(IProductService productService, IWarehouseService warehouseService, IProductWarehouseService productWarehouseService)
+        public ShowProductsFromWarehouseCommand(IProductService productService, IWarehouseService warehouseService, IProductWarehouseService productWarehouseService)
         {
             this.productService = productService;
             this.warehouseService = warehouseService;
