@@ -15,7 +15,7 @@ namespace WHMS.Utils
 
         public PDFExporter()
         {
-            this.path = @"./../../../PDF/Exports/";
+            this.path = @"./../../../../../PDF_Exports/";
 
         }
 
@@ -55,7 +55,7 @@ namespace WHMS.Utils
 
             var paragraph = section.Headers.Primary.AddParagraph();
 
-            var img = paragraph.AddImage(@"./../../../PDF/order-stamp.jpg");
+            var img = paragraph.AddImage(@"./../../../Utils/order-stamp.jpg");
             img.LockAspectRatio = true;
             img.Height = 100;
             img.RelativeVertical = RelativeVertical.Line;

@@ -23,7 +23,7 @@ namespace WHMS.Commands
         {
             
             string jsonFileName;
-            string jsonPath = "..\\..\\..\\..\\DatabaseArchiveInJSON";
+            string jsonPath = "..\\..\\..\\..\\..\\DatabaseArchiveInJSON";
             if (!Directory.Exists(jsonPath))
             {
                 try
