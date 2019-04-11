@@ -35,7 +35,7 @@ namespace WHMS.Commands.Creating
         {
             if (parameters.Count!=5&&parameters.Count!=6)
             {
-                throw new ArgumentException(@"Please provide parameters: {type};{partner};{product};{quantity};{warehouse};[comment]");
+                throw new ArgumentException(@"Please provide parameters: Type;Partner;Product;Quantity;Warehouse;[Comment]");
             }
             OrderType orderType;
             if (!Enum.TryParse(parameters[0].ToLower(), true, out orderType))

@@ -20,7 +20,7 @@ namespace WHMS.Commands.Creating
         {
             if (parameters.Count!=1)
             {
-                throw new ArgumentException(@"Please provide parameters: {unit}");
+                throw new ArgumentException(@"Please provide parameter: Unit");
             }
 
             var unit = unitService.CreateUnit(parameters[0]);

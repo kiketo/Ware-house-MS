@@ -24,7 +24,7 @@ namespace WHMS.Commands.Showing
         {
             if ( parameters.Count != 1)
             {
-                throw new ArgumentException(@"Please provide parameters: {partner}.");
+                throw new ArgumentException(@"Please provide parameter: Partner");
             }
 
             Partner partner = partnerService.FindByName(parameters[0]);

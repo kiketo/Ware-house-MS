@@ -19,7 +19,7 @@ namespace WHMS.Commands.Creating
         {
             if (parameters.Count != 1)
             {
-                throw new ArgumentException(@"Please provide parameters: {Town}");
+                throw new ArgumentException(@"Please provide parameter: Town");
             }
 
             var town = this.townService.Add(parameters[0]);

@@ -24,7 +24,7 @@ namespace WHMS.Commands.Showing
             DateTime toDate;
             if (parameters.Count != 3&& parameters.Count != 1)
             {
-                throw new ArgumentException(@"Please provide parameters:  {type};[{fromDate};{toDate}]");
+                throw new ArgumentException(@"Please provide Parameters:  Type;[fromDate;toDate]");
             }
             OrderType typeOrder = 0;
             bool tryEnum = Enum.TryParse(parameters[0], true, out typeOrder);

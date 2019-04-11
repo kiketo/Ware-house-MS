@@ -28,7 +28,7 @@ namespace WHMS.Commands.Deleting
         {
             if (parameters.Count != 1)
             {
-                throw new ArgumentException(@"Please provide valid parameter {town}.");
+                throw new ArgumentException(@"Please provide valid parameter: Town");
             }
 
             Town townToDelete = townService.GetTown(parameters[0]);

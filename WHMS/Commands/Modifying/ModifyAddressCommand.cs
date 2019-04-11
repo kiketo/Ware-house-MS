@@ -36,7 +36,7 @@ namespace WHMS.Commands.Modifying
                     $"to Address: {parameters[3]} in Town: {parameters[2]}";
             }
 
-            throw new ArgumentException(@"Please provide parameters: {Town};{oldAddress};{newAddress} or {oldTown};{oldAddress};{newTown}{newAddress}");
+            throw new ArgumentException(@"Please provide parameters: Town;oldAddress;newAddress or oldTown;oldAddress;newTown;newAddress");
         }
     }
 }

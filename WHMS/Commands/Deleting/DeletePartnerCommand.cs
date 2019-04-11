@@ -30,7 +30,7 @@ namespace WHMS.Commands.Deleting
         {
             if (parameters.Count != 1)
             {
-                throw new ArgumentException(@"Please provide valid parameter {partner name}.");
+                throw new ArgumentException(@"Please provide valid parameter: Partner");
             }
 
             Partner partnerToDelete = partnerService.FindByName(parameters[0]);

@@ -27,6 +27,10 @@ namespace WHMS.Commands.Modifying
         //orderId,product,quantity,warehouse
         public string Execute(IReadOnlyList<string> parameters)
         {
+            if (parameters.Count!=4)
+            {
+                throw new ArgumentException(@"Please provide parameters: OrderId;Product;Quantity;Warehouse");
+            }
             int orderId;
             if (!int.TryParse(parameters[0], out orderId))
             {

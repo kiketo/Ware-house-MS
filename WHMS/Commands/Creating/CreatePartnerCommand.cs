@@ -68,7 +68,7 @@ namespace WHMS.Commands.Creating
                         partner = partnerService.Add(parameters[0], address, parameters[3]);
                         return $"Partner: {partner.Name} with address: {address.Text} in town: {town.Name} and VAT: {partner.VAT} was created.";
                     default:
-                        throw new ArgumentException(@"Please provide parameter(s): {Partner Name};[{Town};{Address}];[VAT]");
+                        throw new ArgumentException(@"Please provide parameter(s): Partner;[Town;Address];[VAT]");
                 }
             }
             catch (ArgumentException ex)
