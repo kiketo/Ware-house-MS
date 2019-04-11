@@ -7,6 +7,7 @@ namespace WHMSData.Contracts
 {
     public class Model
     {
+        [JsonIgnore]
         public int Id { get; set; }
 
         public DateTime CreatedOn { get; set; }

@@ -22,5 +22,7 @@ namespace WHMS.Services
         List<Warehouse> GetWarehouses();
 
         void PushAddresses(List<Address> addresses);
+
+        void PushTowns(List<Town> towns);
     }
 }

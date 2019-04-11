@@ -7,16 +7,20 @@ using System.IO;
 using WHMSData.Context;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using WHMS.Services.Contracts;
 
 namespace WHMS.Services
 {
     public class DatabaseService : IDatabaseService
     {
         private readonly WHMSContext context;
-
-        public DatabaseService(WHMSContext context)
+        ITownService townServices;
+        IAddressSevice addressSevice;
+        public DatabaseService(WHMSContext context, ITownService townServices, IAddressSevice addressSevice)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.townServices = townServices;
+            this.addressSevice = addressSevice;
         }
 
         public List<Address> GetAddresses()
@@ -54,19 +58,66 @@ namespace WHMS.Services
 
         public void PushAddresses(List<Address> addresses)
         {
-           
-            foreach (var address in addresses)
+            context.Set<Address>().AddRange(addresses.Where(a => !context.Addresses.Any(n => n.Text == a.Text)));
+            //foreach (var address in addresses)
+            //{
+            //    this.context.Addresses.Add(new Address
+            //    {
+            //        //Id = address.Id,
+            //        CreatedOn = address.CreatedOn,
+            //        IsDeleted = address.IsDeleted,
+            //        ModifiedOn = address.ModifiedOn,
+            //        Text = address.Text,
+            //        //TownId = address.TownId
+            //    });
+            //}
+            this.context.SaveChanges();
+        }
+        public void PushTowns(List<Town> towns)
+        {
+            //context.Set<Town>().AddRange(towns.Where(a => !context.Towns.Any(n => n.Name == a.Name)));
+            //foreach (var address in addresses)
+            //{
+            //    this.context.Addresses.Add(new Address
+            //    {
+            //        //Id = address.Id,
+            //        CreatedOn = address.CreatedOn,
+            //        IsDeleted = address.IsDeleted,
+            //        ModifiedOn = address.ModifiedOn,
+            //        Text = address.Text,
+            //        //TownId = address.TownId
+            //    });
+            //}
+
+            foreach (var town in towns)
             {
-                this.context.Addresses.Add(new Address
-                {
-                    //Id = address.Id,
-                    CreatedOn = address.CreatedOn,
-                    IsDeleted = address.IsDeleted,
-                    ModifiedOn = address.ModifiedOn,
-                    Text = address.Text,
-                    //TownId = address.TownId
-                });
+                this.townServices.Add(town.Name);
             }
+
+            this.context.SaveChanges();
+        }
+        public void PushAddress(List<Address> addresses)
+        {
+            //context.Set<Town>().AddRange(towns.Where(a => !context.Towns.Any(n => n.Name == a.Name)));
+            //foreach (var address in addresses)
+            //{
+            //    this.context.Addresses.Add(new Address
+            //    {
+            //        //Id = address.Id,
+            //        CreatedOn = address.CreatedOn,
+            //        IsDeleted = address.IsDeleted,
+            //        ModifiedOn = address.ModifiedOn,
+            //        Text = address.Text,
+            //        //TownId = address.TownId
+            //    });
+            //}
+
+            foreach (var a in addresses)
+            {
+
+               // this.addressSevice.Add(a.Town, a.Text);
+            }
+
             this.context.SaveChanges();
         }
     }
