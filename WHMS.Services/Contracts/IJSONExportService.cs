@@ -3,7 +3,7 @@ using WHMSData.Models;
 
 namespace WHMS.Services
 {
-    public interface IDatabaseService
+    public interface IJSONExportService
     {
         List<Address> GetAddresses();
 
@@ -21,8 +21,6 @@ namespace WHMS.Services
 
         List<Warehouse> GetWarehouses();
 
-        void PushAddresses(List<Address> addresses);
-
-        void PushTowns(List<Town> towns);
+        List<ProductWarehouse> GetProductWarehouses();
     }
 }

@@ -1,0 +1,18 @@
+[
+  {
+    "Text": "Grafa",
+    "TownId": 1,
+    "Id": 3,
+    "CreatedOn": "2019-04-11T15:36:35.5791971",
+    "ModifiedOn": "2019-04-11T15:36:37.9985748",
+    "IsDeleted": false
+  },
+  {
+    "Text": "5tata kyshta v lqwo",
+    "TownId": 1,
+    "Id": 4,
+    "CreatedOn": "2019-04-11T15:36:38.9997849",
+    "ModifiedOn": "2019-04-11T15:36:38.9997883",
+    "IsDeleted": false
+  }
+]

@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using WHMS.Services.Contracts;
 
 namespace WHMS.Services.DatabaseServices
 {
-    public class DatabaseJSON<T>
+    public class JSONExplorer<T> : IJSONExplorer<T>
     {
         public List<T> Read(string jPath, string jName)
         {
@@ -19,3 +20,4 @@ namespace WHMS.Services.DatabaseServices
         }
     }
 }
+

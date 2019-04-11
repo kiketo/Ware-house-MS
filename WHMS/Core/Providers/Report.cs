@@ -8,7 +8,7 @@ namespace WHMS.Core.Providers
     public class Report : IReport
     {
         private StringBuilder stringBuilder;
-        private DateTime start;
+        //private DateTime start;
         public Report()
         {
             this.stringBuilder = new StringBuilder();
