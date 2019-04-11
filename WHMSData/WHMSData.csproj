@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20190406142433_OneToMany_Corection.cs" />
     <Compile Remove="Models\ProductOrderWarehouse.cs" />
     <Compile Remove="Models\Transfer.cs" />
   </ItemGroup>

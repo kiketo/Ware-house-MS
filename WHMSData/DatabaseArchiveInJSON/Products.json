@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "GUCCI Dress",
+    "Description": "verry Gucci ?(^?^)?",
+    "UnitId": 1,
+    "CategoryId": 1,
+    "BuyPrice": 300.00,
+    "MarginInPercent": 30.0,
+    "SellPrice": 390.00,
+    "Id": 1,
+    "CreatedOn": "2019-04-11T15:36:47.1237325",
+    "ModifiedOn": "2019-04-11T15:36:47.1237368",
+    "IsDeleted": false
+  }
+]
