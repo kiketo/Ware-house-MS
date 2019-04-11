@@ -22,7 +22,7 @@ namespace WHMS.Commands
         public string Execute(IReadOnlyList<string> parameters)
         {
             string jsonFileName;
-            string jsonPath = "..\\..\\..\\..\\DatabaseArchiveInJSON";
+            string jsonPath = "..\\..\\..\\..\\..\\DatabaseArchiveInJSON";
             if (!Directory.Exists(jsonPath))
             {
                 try
