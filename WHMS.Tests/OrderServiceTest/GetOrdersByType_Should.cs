@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using WHMSData.Context;
 using WHMSData.Models;
 using WHMSData.Utills;
@@ -10,13 +11,14 @@ namespace WHMS.Services.Tests.OrderServiceTest
     [TestClass]
     public class GetOrdersByType_Should
     {
+        private IFormatProvider provider;
         [TestMethod]
         public void Succeed()  //(OrderType type, DateTime fromDate, DateTime toDate)
         {
-            string outPeriod = "30/01/2000";
-            string fromDate = "01/01/2018";
-            string inPeriod = "01/02/2019";
-            string toDate = "01/03/2020";
+            DateTime outPeriod = DateTime.ParseExact("30/01/2000", "dd/mm/yyyy", CultureInfo.InvariantCulture);
+            DateTime fromDate = DateTime.ParseExact("01/01/2018", "dd/mm/yyyy", CultureInfo.InvariantCulture);
+            DateTime inPeriod = DateTime.ParseExact("01/02/2019", "dd/mm/yyyy", CultureInfo.InvariantCulture);
+            DateTime toDate = DateTime.ParseExact("01/03/2020", "dd/mm/yyyy", CultureInfo.InvariantCulture);
             Partner partner = new Partner { Name = "Partner" };
             Product product = new Product { Name = "Product" };
 
@@ -24,28 +26,28 @@ namespace WHMS.Services.Tests.OrderServiceTest
             var options = TestUtils.GetOptions(dbName);
             using (var arrangeContext = new WHMSContext(options))
             {
-                arrangeContext.Orders.Add(new Order { Id = 1, Type = OrderType.Sell, CreatedOn = DateTime.Parse(inPeriod), Partner=partner, Products=new List<Product> { product} });
-                arrangeContext.Orders.Add(new Order { Id = 2, Type = OrderType.Sell, CreatedOn = DateTime.Parse(inPeriod), Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.Orders.Add(new Order { Id = 3, Type = OrderType.Sell, CreatedOn = DateTime.Parse(outPeriod), Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.Orders.Add(new Order { Id = 4, Type = OrderType.Buy, CreatedOn = DateTime.Parse(inPeriod), Partner = partner, Products = new List<Product> { product } });
+                arrangeContext.Orders.Add(new Order { Id = 1, Type = OrderType.Sell, CreatedOn =inPeriod, Partner=partner, Products=new List<Product> { product} });
+                arrangeContext.Orders.Add(new Order { Id = 2, Type = OrderType.Sell, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product } });
+                arrangeContext.Orders.Add(new Order { Id = 3, Type = OrderType.Sell, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
+                arrangeContext.Orders.Add(new Order { Id = 4, Type = OrderType.Buy, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product } });
                 arrangeContext.SaveChanges();
             }
 
             using (var assertContext = new WHMSContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var getOrdersByType = sut.GetOrdersByType(OrderType.Sell, DateTime.Parse(fromDate), DateTime.Parse(toDate));
+                var getOrdersByType = sut.GetOrdersByType(OrderType.Sell, fromDate, toDate);
                 Assert.AreEqual(2,getOrdersByType.Count);
             }
         }
         [TestMethod]
         public void ThrowException_WhenSuchOrderDoesntExist()  //(OrderType type, DateTime fromDate, DateTime toDate)
         {
+            
             OrderType type = OrderType.Sell;
-            DateTime outPeriod = DateTime.Parse("30/01/2000");
-            DateTime fromDate = DateTime.Parse("01/01/2018");
-            //string inPeriod = "01/02/2019";
-            DateTime toDate = DateTime.Parse("01/03/2020");
+            DateTime outPeriod = DateTime.ParseExact("30/01/2000","dd/mm/yyyy", CultureInfo.InvariantCulture);
+            DateTime fromDate = DateTime.ParseExact("01/01/2018", "dd/mm/yyyy", CultureInfo.InvariantCulture);
+            DateTime toDate = DateTime.ParseExact("01/03/2020", "dd/mm/yyyy", CultureInfo.InvariantCulture);
             Partner partner = new Partner { Name = "Partner" };
             Product product = new Product { Name = "Product" };
 
@@ -71,10 +73,10 @@ namespace WHMS.Services.Tests.OrderServiceTest
         public void ThrowException_WhenOrderIsDeleted()  //int orderId
         {
             OrderType type = OrderType.Sell;
-            DateTime outPeriod = DateTime.Parse("30/01/2000");
-            DateTime fromDate = DateTime.Parse("01/01/2018");
-            DateTime inPeriod = DateTime.Parse("01/02/2019");
-            DateTime toDate = DateTime.Parse("01/03/2020");
+            DateTime outPeriod = DateTime.ParseExact("30/01/2000", "dd/mm/yyyy", CultureInfo.InvariantCulture);
+            DateTime fromDate = DateTime.ParseExact("01/01/2018", "dd/mm/yyyy", CultureInfo.InvariantCulture);
+            DateTime inPeriod = DateTime.ParseExact("01/02/2019", "dd/mm/yyyy", CultureInfo.InvariantCulture);
+            DateTime toDate = DateTime.ParseExact("01/03/2020", "dd/mm/yyyy", CultureInfo.InvariantCulture);
             Partner partner = new Partner { Name = "Partner" };
             Product product = new Product { Name = "Product" };
 

@@ -9,23 +9,29 @@ createpartner;Partner4;BG123456789
 createpartner;Partner4
 createpartner;Partner5;WrongVat1234567
 createtown;Sofia
+createaddress;Sofia;Grafa
 modifyaddress;Yambol;Grafa
 modifyaddress;Yambol;Grafa;Rakovska
 modifyaddress;Yambol;Rakovska;Sofia;Grafa
-createcategory;drehi
-createtown;sofia
-createaddress;sofia;5tata kyshta v lqwo
-createunit;gigaton
-createwarehouse;haleINC;sofia;5tata kyshta v lqwo
-createproduct;GUCCI Dress;gigaton;drehi;300;30;verry Gucci ?(^?^)?
-createpartner;talasym;sofia;5tata kyshta v lqwo;1234578901
-createorder;buy;pesho;tikso;2;fsdaf
-createorder;buy;talasym;GUCCI Dress;3;buyingggg everything 
-showproductsbycategory;drehi
-createorder;buy;talasym;GUCCI Dress;3;haleINC;buyingggg everything
-showproductsfromwarehouse;haleINC
+createcategory;Category1
+createunit;pc
+createwarehouse;Warehouse1;Sofia;Grafa
+createproduct;Product1;pc;Category1;100;10;some description
+createpartner;Partner1;sofia;Grafa;BG123456789
+createorder;buy;Partner1;Product1;1;Warehouse1;some comment
+ncreateorder;buy;Partner1;Product1;2;Warehouse1;some other comment
+y2
+showproductsbycategory;Category1
+showproductsfromwarehouse;Warehouse1
 showordersbytype;buy;01/01/2018;01/01/2020
-showordersbypartner;talasym
+showordersbypartner;Partner1
+createorder;buy;Partner1;Product1;1;Warehouse1;comment
+y3
+
+
+
+
+{System.Collections.Generic.ICollection`1[WHMSData.Models.Product]}
 
 
 todo:

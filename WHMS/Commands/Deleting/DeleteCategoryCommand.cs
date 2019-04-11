@@ -6,11 +6,11 @@ using WHMS.Services.Contracts;
 
 namespace WHMS.Commands.Deleting
 {
-    public class DeleteCategory : ICommand
+    public class DeleteCategoryCommand : ICommand
     {
         ICategoryService categoryService;
         IProductService productService;
-        public DeleteCategory(ICategoryService categoryService, IProductService productService)
+        public DeleteCategoryCommand(ICategoryService categoryService, IProductService productService)
         {
             this.categoryService = categoryService;
             this.productService = productService;
