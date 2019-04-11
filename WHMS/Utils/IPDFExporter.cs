@@ -1,7 +1,9 @@
-﻿namespace WHMS.Utils
+﻿using WHMSData.Models;
+
+namespace WHMS.Utils
 {
     public interface IPDFExporter
     {
-        void Export(object obj, string pdfName);
+        void Export(Order obj, string pdfName);
     }
 }

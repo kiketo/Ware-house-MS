@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using MigraDoc.DocumentObjectModel;
+﻿using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Shapes;
 using MigraDoc.Rendering;
 using PdfSharp.Pdf;
+using System.Collections.Generic;
+using System.IO;
+using WHMSData.Models;
 
 namespace WHMS.Utils
 {
@@ -17,12 +16,12 @@ namespace WHMS.Utils
         public PDFExporter()
         {
             this.path = @"./../../../PDF/Exports/";
-            
+
         }
 
-        public void Export(object obj, string pdfName)
+        public void Export(Order obj, string pdfName)
         {
-            this.fileName = pdfName+".pdf";
+            this.fileName = pdfName + ".pdf";
             var doc = this.CreateDocument(obj);
             this.DefineStyles(doc);
             this.AddHeader(doc);
@@ -31,7 +30,7 @@ namespace WHMS.Utils
             this.Save(pdf);
         }
 
-        private Document CreateDocument(object obj)
+        private Document CreateDocument(Order obj)
         {
             var document = new Document();
             document.Info.Title = "Warehouse Management System 2019";
@@ -67,7 +66,7 @@ namespace WHMS.Utils
             paragraph.AddText("TEAM X Software");
         }
 
-        private void FillContent(Document doc, object obj)
+        private void FillContent(Document doc, Order obj)
         {
             var section = doc.Sections[0];
 
@@ -80,36 +79,51 @@ namespace WHMS.Utils
             FillProperties(doc, obj);
         }
 
-        private void FillProperties(Document doc, object obj)
+        private void FillProperties(Document doc, Order obj)
         {
             var section = doc.Sections[0];
             Paragraph paragraph;
 
             if (obj.GetType().GetInterface(nameof(ICollection<object>)) != null)
             {
-                foreach (var item in (ICollection<object>)obj)
+                foreach (var item in (ICollection<Order>)obj)
                 {
                     this.FillProperties(doc, item);
                 }
             }
             else
             {
+                var sample = new Order();
                 foreach (var property in obj.GetType().GetProperties())
                 {
-                    //if (property is System.Collections)
-                    //{
-                    //    foreach (var product in property)
-                    //    {
 
-                    //    }
-                    //}
+                    if (property.Name == "Products")
+                    {
+                        paragraph = section.AddParagraph();
+                        paragraph.Format.AddTabStop(100);
+                        paragraph.AddFormattedText(property.Name, TextFormat.Underline);
+                        paragraph.AddText(":");
 
-                    paragraph = section.AddParagraph();
-                    paragraph.Format.AddTabStop(100);
-                    paragraph.AddFormattedText(property.Name, TextFormat.Underline);
-                    paragraph.AddText(":");
-                    paragraph.AddTab();
-                    paragraph.AddFormattedText(property.GetValue(obj).ToString());
+                        foreach (var item in obj.Products)
+                        {
+                            paragraph = section.AddParagraph();
+                            paragraph.Format.AddTabStop(100);
+                            //paragraph.AddFormattedText(item.Name, TextFormat.Underline);
+                            //paragraph.AddText(":");
+                            paragraph.AddTab();
+                            paragraph.AddFormattedText(item.Name.ToString());
+                        }
+                    }
+                    else
+                    {
+                        paragraph = section.AddParagraph();
+                        paragraph.Format.AddTabStop(100);
+                        paragraph.AddFormattedText(property.Name, TextFormat.Underline);
+                        paragraph.AddText(":");
+                        paragraph.AddTab();
+                        paragraph.AddFormattedText(property.GetValue(obj).ToString());
+                    }
+
                 }
             }
         }
