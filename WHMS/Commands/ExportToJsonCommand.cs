@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using WHMS.Commands.Contracts;
-using Newtonsoft.Json;
-using WHMS.Services;
-using WHMSData.Models;
-using WHMS.Services.DatabaseServices;
 using System.IO;
-using WHMS.Services.Contracts;
+using WHMS.Commands.Contracts;
+using WHMS.Services;
+using WHMS.Services.DatabaseServices;
+using WHMSData.Models;
 
 namespace WHMS.Commands
 {
     public class ExportToJsonCommand : ICommand
     {
-        IJSONExportService databaseService;
+        private IJSONExportService databaseService;
 
         public ExportToJsonCommand(IJSONExportService databaseService)
         {
@@ -23,7 +20,7 @@ namespace WHMS.Commands
         public string Execute(IReadOnlyList<string> parameters)
         {
             string jsonFileName;
-            string jsonPath = "..\\..\\..\\..\\WHMSData\\DatabaseArchiveInJSON";
+            string jsonPath = @"./../../../../../DatabaseArchiveInJSON/";
 
             if (!Directory.Exists(jsonPath))
             {

@@ -1,21 +1,17 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using WHMSData.Models;
-using System.IO;
-using WHMSData.Context;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using WHMS.Services.Contracts;
+using WHMSData.Context;
+using WHMSData.Models;
 
 namespace WHMS.Services
 {
     public class JSONService : IJSONExportService, IJSONImportService
     {
         private readonly WHMSContext context;
-        ITownService townServices;
-        IAddressSevice addressSevice;
+        private ITownService townServices;
+        private IAddressSevice addressSevice;
         public JSONService(WHMSContext context, ITownService townServices, IAddressSevice addressSevice)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
