@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using WHMSData.Contracts;
 
 namespace WHMSData.Models
@@ -27,11 +28,13 @@ namespace WHMSData.Models
         [JsonIgnore]
         public Category Category { get; set; }
 
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal BuyPrice { get; set; }
 
         [Required(ErrorMessage = "Product Margin is required!")]
         public double MarginInPercent { get; set; }
 
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal SellPrice { get; set; }
 
         [JsonIgnore]

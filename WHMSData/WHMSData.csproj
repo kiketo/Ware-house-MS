@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="Context\WHMSContext.cs" />
+    <Compile Remove="Migrations\20190425174119_Initial.cs" />
     <Compile Remove="Models\ProductOrderWarehouse.cs" />
     <Compile Remove="Models\Transfer.cs" />
   </ItemGroup>

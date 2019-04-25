@@ -7,7 +7,11 @@ namespace WHMSData.Context
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ApplicationDbContext()
+        {
+
+        }
+        public ApplicationDbContext(DbContextOptions options)
             : base(options)
         {
         }
@@ -39,6 +43,8 @@ namespace WHMSData.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<ProductWarehouse>()
                     .HasKey(p => new { p.ProductId, p.WarehouseId });
         }
