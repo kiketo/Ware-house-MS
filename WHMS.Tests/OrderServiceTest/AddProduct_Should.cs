@@ -18,14 +18,14 @@ namespace WHMS.Services.Tests.OrderServiceTest
             var options = TestUtils.GetOptions(dbName);
             Product product1 = new Product { Name = "Product1" };
             Product product2 = new Product { Name = "Product2" };
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 //arrangeContext.Partners.Add(partner);
                 arrangeContext.Orders.Add(new Order { Id = 1,Products=new List<Product> { product1} });
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var addProduct = sut.AddProductToOrder(1, product2,1);

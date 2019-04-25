@@ -17,12 +17,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Throw_Exception_If_Product_Exists);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "ProductName" });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => (sut.CreateProduct("ProductName", null, null, 0, 0, null)));
@@ -39,7 +39,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
         public void Throw_Exception_If_Margin_Less_Than_Zero(double margin)
         {
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Throw_Exception_If_Margin_Less_Than_Zero))))
+            using (var assertContext = new ApplicationDbContext(TestUtils.GetOptions(nameof(Throw_Exception_If_Margin_Less_Than_Zero))))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => (sut.CreateProduct("ProductName", null, null, 0, margin, null)));
@@ -55,7 +55,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
         public void Throw_Exception_If_Product_Buy_Price_Is_Less_Than_Zero(string number)
         {
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Throw_Exception_If_Product_Buy_Price_Is_Less_Than_Zero))))
+            using (var assertContext = new ApplicationDbContext(TestUtils.GetOptions(nameof(Throw_Exception_If_Product_Buy_Price_Is_Less_Than_Zero))))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => (sut.CreateProduct("ProductName", null, null,decimal.Parse(number), 0, null)));
@@ -67,7 +67,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
         public void Properly_Set_SellPrice_On_Product_Creation()
         {
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Properly_Set_SellPrice_On_Product_Creation))))
+            using (var assertContext = new ApplicationDbContext(TestUtils.GetOptions(nameof(Properly_Set_SellPrice_On_Product_Creation))))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.CreateProduct("ProductName", null, null, 5, 20, null);
@@ -79,7 +79,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
         public void Properly_Set_BuyPrice_On_Product_Creation()
         {
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Properly_Set_BuyPrice_On_Product_Creation))))
+            using (var assertContext = new ApplicationDbContext(TestUtils.GetOptions(nameof(Properly_Set_BuyPrice_On_Product_Creation))))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.CreateProduct("ProductName", null, null, 5, 0, null);
@@ -91,7 +91,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
         public void Properly_Set_Margin_On_Product_Creation()
         {
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Properly_Set_Margin_On_Product_Creation))))
+            using (var assertContext = new ApplicationDbContext(TestUtils.GetOptions(nameof(Properly_Set_Margin_On_Product_Creation))))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.CreateProduct("ProductName", null, null, 0, 30, null);
@@ -103,7 +103,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
         public void Properly_Set_Description_On_Product_Creation()
         {
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Properly_Set_Description_On_Product_Creation))))
+            using (var assertContext = new ApplicationDbContext(TestUtils.GetOptions(nameof(Properly_Set_Description_On_Product_Creation))))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.CreateProduct("ProductName", null, null, 0, 0, "Goody two shoes Description");
@@ -118,12 +118,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
 
             var options = TestUtils.GetOptions(dbName);
 
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Categories.Add(new Category() { Name = "CategoryName" });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var category = assertContext.Categories.Where(n => n.Name == "CategoryName").FirstOrDefault();
@@ -139,12 +139,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
 
             var options = TestUtils.GetOptions(dbName);
 
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Units.Add(new Unit() { UnitName = "UnitName" });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var unit = assertContext.Units.Where(n => n.UnitName == "UnitName").FirstOrDefault();
@@ -157,7 +157,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
         public void Create_Product()
         {
            
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Create_Product))))
+            using (var assertContext = new ApplicationDbContext(TestUtils.GetOptions(nameof(Create_Product))))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.CreateProduct("ProductName", null, null, 0, 0, null);

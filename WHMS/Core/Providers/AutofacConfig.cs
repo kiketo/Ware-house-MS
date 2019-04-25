@@ -39,7 +39,7 @@ namespace WHMS.Core.Providers
         private void RegisterCoreComponents(ContainerBuilder builder)
         {
             builder.RegisterType<Engine>().As<IEngine>().SingleInstance();
-            builder.RegisterType<WHMSContext>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<ApplicationDbContext>().AsSelf().InstancePerLifetimeScope();
 
             builder.RegisterType<InputProcessor>().As<IInputProcessor>().SingleInstance();
             builder.RegisterType<Report>().As<IReport>().SingleInstance();

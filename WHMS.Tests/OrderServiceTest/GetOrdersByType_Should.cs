@@ -24,7 +24,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
 
             var dbName = ((nameof(GetOrdersByType_Should)) + (nameof(Succeed)));
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Id = 1, Type = OrderType.Sell, CreatedOn =inPeriod, Partner=partner, Products=new List<Product> { product} });
                 arrangeContext.Orders.Add(new Order { Id = 2, Type = OrderType.Sell, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product } });
@@ -33,7 +33,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var getOrdersByType = sut.GetOrdersByType(OrderType.Sell, fromDate, toDate);
@@ -53,7 +53,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
 
             var dbName = ((nameof(GetOrdersByType_Should)) + (nameof(ThrowException_WhenSuchOrderDoesntExist)));
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Id = 1, Type = type, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
                 arrangeContext.Orders.Add(new Order { Id = 2, Type = type, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
@@ -62,7 +62,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var ex =Assert.ThrowsException<ArgumentException>(()=> sut.GetOrdersByType(OrderType.Sell, fromDate, toDate));
@@ -82,7 +82,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
 
             var dbName = ((nameof(GetOrdersByType_Should)) + (nameof(ThrowException_WhenOrderIsDeleted)));
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Id = 1, Type = type, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product }, IsDeleted=true });
                 arrangeContext.Orders.Add(new Order { Id = 2, Type = type, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product }, IsDeleted=true });
@@ -91,7 +91,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetOrdersByType(OrderType.Sell, fromDate, toDate));

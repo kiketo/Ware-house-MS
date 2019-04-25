@@ -13,7 +13,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [TestMethod]
         public void Should_Throw_Exception_If_Null_ByID()
         {
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Null_ByID))))
+            using (var assertContext = new ApplicationDbContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Null_ByID))))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetProductById(1));
@@ -27,12 +27,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Should_Throw_Exception_If_Product_Deleted_ByID);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "productName", IsDeleted = true });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetProductById(1));
@@ -46,12 +46,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Should_Return_Product_ByID);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "productName" });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.GetProductById(1);

@@ -10,9 +10,9 @@ namespace WHMS.Services
 {
     public class ProductWarehouseService : IProductWarehouseService
     {
-        private readonly WHMSContext context;
+        private readonly ApplicationDbContext context;
 
-        public ProductWarehouseService(WHMSContext context)
+        public ProductWarehouseService(ApplicationDbContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }

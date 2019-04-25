@@ -10,9 +10,9 @@ namespace WHMS.Services
 {
     public class PartnerService : IPartnerService
     {
-        private readonly WHMSContext context;
+        private readonly ApplicationDbContext context;
 
-        public PartnerService(WHMSContext context)
+        public PartnerService(ApplicationDbContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }

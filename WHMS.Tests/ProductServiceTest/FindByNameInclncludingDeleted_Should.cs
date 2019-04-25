@@ -14,7 +14,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
         public void Should_Not_Throw_Exception_If_Null()
         {
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Not_Throw_Exception_If_Null))))
+            using (var assertContext = new ApplicationDbContext(TestUtils.GetOptions(nameof(Should_Not_Throw_Exception_If_Null))))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.FindByNameInclncludingDeleted("productName");
@@ -28,12 +28,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Should_Find_Product_That_Is_Deleted);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "productName", IsDeleted = true });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.FindByNameInclncludingDeleted("productName");
@@ -50,12 +50,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Should_Return_Product);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "productName", IsDeleted = true });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.FindByNameInclncludingDeleted("productName");

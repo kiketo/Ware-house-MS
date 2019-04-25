@@ -10,9 +10,9 @@ namespace WHMS.Services
 {
     public class UnitService : IUnitService
     {
-        private readonly WHMSContext context;
+        private readonly ApplicationDbContext context;
 
-        public UnitService(WHMSContext context)
+        public UnitService(ApplicationDbContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }

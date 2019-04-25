@@ -17,7 +17,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Should_Return_Collection_Of_Products_In_Category);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Categories.Add(new Category() { Name = "categoryName" });
                 arrangeContext.SaveChanges();
@@ -29,7 +29,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
 
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var category = assertContext.Categories.First(c => c.Name == "categoryName");
@@ -42,7 +42,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
         [TestMethod]
         public void Should_Throw_Exception_If_Null_Category()
         {
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Null_Category))))
+            using (var assertContext = new ApplicationDbContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Null_Category))))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.ProductsByCategory(null));
@@ -56,12 +56,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Should_Throw_Exception_If_Category_Deleted);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Categories.Add(new Category() { Name = "categoryName", IsDeleted = true });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var category = assertContext.Categories.FirstOrDefault(c => c.Name == "categoryName");

@@ -8,9 +8,9 @@ namespace WHMS.Services
 {
     public class AddressSevice : IAddressSevice
     {
-        private readonly WHMSContext context;
+        private readonly ApplicationDbContext context;
 
-        public AddressSevice(WHMSContext context)
+        public AddressSevice(ApplicationDbContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }

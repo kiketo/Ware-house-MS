@@ -11,9 +11,9 @@ namespace WHMS.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly WHMSContext context;
+        private readonly ApplicationDbContext context;
 
-        public OrderService(WHMSContext context)
+        public OrderService(ApplicationDbContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }

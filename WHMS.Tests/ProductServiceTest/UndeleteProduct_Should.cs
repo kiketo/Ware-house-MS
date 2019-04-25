@@ -16,12 +16,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Should_Return_Deleted_Product);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "Name", IsDeleted = true });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var product = sut.UndeleteProduct("Name");

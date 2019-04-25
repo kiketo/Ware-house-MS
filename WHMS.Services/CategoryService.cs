@@ -9,9 +9,9 @@ namespace WHMS.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly WHMSContext context;
+        private readonly ApplicationDbContext context;
 
-        public CategoryService(WHMSContext context)
+        public CategoryService(ApplicationDbContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }

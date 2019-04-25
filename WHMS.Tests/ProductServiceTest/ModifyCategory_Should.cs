@@ -17,13 +17,13 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Should_Modify_Product_Category);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "Name", Category = new Category() { Name = "CATEGORY" } });
                 arrangeContext.Categories.Add(new Category() { Name = "newCATEGORY" });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var category = assertContext.Categories.First(u => u.Name == "newCATEGORY");

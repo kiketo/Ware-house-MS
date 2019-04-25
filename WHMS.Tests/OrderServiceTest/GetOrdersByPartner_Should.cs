@@ -19,7 +19,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
 
             var dbName = ((nameof(GetOrdersByPartner_Should)) + (nameof(Succeed)));
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
                 arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
@@ -28,7 +28,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var getOrdersByPartner = sut.GetOrdersByPartner(partner);
@@ -44,7 +44,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
 
             var dbName = ((nameof(GetOrdersByPartner_Should)) + (nameof(ThrowException_WhenSuchOrderDoesntExist)));
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
                 arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
@@ -52,7 +52,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetOrdersByPartner(partnerOther));
@@ -68,7 +68,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
 
             var dbName = ((nameof(GetOrdersByPartner_Should)) + (nameof(ThrowException_WhenOrderIsDeleted)));
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product }, IsDeleted=true });
                 arrangeContext.Orders.Add(new Order { Partner = partnerOther, Products = new List<Product> { product } });
@@ -76,7 +76,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetOrdersByPartner(partner));

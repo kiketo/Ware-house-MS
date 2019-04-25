@@ -15,13 +15,13 @@ namespace WHMS.Services.Tests.OrderServiceTest
 
             var dbName = ((nameof(Edit)) + (nameof(Type_ShouldSucceed)));
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Id = 1, Type = OrderType.Buy });
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var editType = sut.EditType(1, type);
@@ -37,13 +37,13 @@ namespace WHMS.Services.Tests.OrderServiceTest
 
             var dbName = ((nameof(Edit)) + (nameof(Partner_ShouldSucceed)));
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Id = 1, Partner = partner });
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var editPartner = sut.EditPartner(1, newPartner);
@@ -58,13 +58,13 @@ namespace WHMS.Services.Tests.OrderServiceTest
 
             var dbName = ((nameof(Edit)) + (nameof(Comment_ShouldSucceed)));
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Orders.Add(new Order { Id = 1 });
                 arrangeContext.SaveChanges();
             }
 
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
                 var editComment = sut.EditComment(1, comment);

@@ -14,7 +14,7 @@ namespace WHMS.Services.Tests.ProductServiceTest
         public void Should_Throw_Exception_If_Product_Not_Found_Null_SP()
         {
 
-            using (var assertContext = new WHMSContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Product_Not_Found_Null_SP))))
+            using (var assertContext = new ApplicationDbContext(TestUtils.GetOptions(nameof(Should_Throw_Exception_If_Product_Not_Found_Null_SP))))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.SetBuyPrice(1,(decimal)5.0000212));
@@ -28,12 +28,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Should_Throw_Exception_If_Product_Is_Deleted_SP);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Products.Add(new Product() { IsDeleted = true });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => sut.SetBuyPrice(1, 43.432m ));
@@ -51,12 +51,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Throw_Exception_If_Product_Buy_Price_Is_Less_Than_Zero_SP);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "Name", BuyPrice =0});
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var ex = Assert.ThrowsException<ArgumentException>(() => (sut.SetBuyPrice(1, decimal.Parse(number))));
@@ -74,12 +74,12 @@ namespace WHMS.Services.Tests.ProductServiceTest
             var dbName = nameof(Should_Set_Buy_Price);
 
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new WHMSContext(options))
+            using (var arrangeContext = new ApplicationDbContext(options))
             {
                 arrangeContext.Products.Add(new Product() { Name = "Name", BuyPrice = 0 });
                 arrangeContext.SaveChanges();
             }
-            using (var assertContext = new WHMSContext(options))
+            using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new ProductService(assertContext);
                 var product=sut.SetBuyPrice(1, decimal.Parse(number));

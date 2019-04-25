@@ -10,9 +10,9 @@ namespace WHMS.Services
 {
     public class TownService : ITownService
     {
-        private readonly WHMSContext context;
+        private readonly ApplicationDbContext context;
 
-        public TownService(WHMSContext context)
+        public TownService(ApplicationDbContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }

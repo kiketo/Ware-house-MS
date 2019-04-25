@@ -9,10 +9,10 @@ namespace WHMS.Services
 {
     public class JSONService : IJSONExportService, IJSONImportService
     {
-        private readonly WHMSContext context;
+        private readonly ApplicationDbContext context;
         private ITownService townServices;
         private IAddressSevice addressSevice;
-        public JSONService(WHMSContext context, ITownService townServices, IAddressSevice addressSevice)
+        public JSONService(ApplicationDbContext context, ITownService townServices, IAddressSevice addressSevice)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.townServices = townServices;
