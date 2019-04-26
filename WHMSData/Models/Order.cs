@@ -29,6 +29,8 @@ namespace WHMSData.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal TotalValue { get; set; }
 
-        
+        public string CreatorId { get; set; }
+
+        public ApplicationUser Creator { get; set; }
     }
 }

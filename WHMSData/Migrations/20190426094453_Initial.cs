@@ -138,11 +138,18 @@ namespace WHMSWebApp.Data.Migrations
                     Type = table.Column<int>(nullable: false),
                     PartnerId = table.Column<int>(nullable: false),
                     Comment = table.Column<string>(nullable: true),
-                    TotalValue = table.Column<decimal>(type: "decimal(18, 2)", nullable: false)
+                    TotalValue = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    CreatorId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Orders_Partners_PartnerId",
                         column: x => x.PartnerId,
@@ -167,6 +174,7 @@ namespace WHMSWebApp.Data.Migrations
                     BuyPrice = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
                     MarginInPercent = table.Column<double>(nullable: false),
                     SellPrice = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    CreatorId = table.Column<string>(nullable: true),
                     OrderId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -176,6 +184,12 @@ namespace WHMSWebApp.Data.Migrations
                         name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Products_AspNetUsers_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -223,6 +237,11 @@ namespace WHMSWebApp.Data.Migrations
                 column: "TownId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_CreatorId",
+                table: "Orders",
+                column: "CreatorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_PartnerId",
                 table: "Orders",
                 column: "PartnerId");
@@ -236,6 +255,11 @@ namespace WHMSWebApp.Data.Migrations
                 name: "IX_Products_CategoryId",
                 table: "Products",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_CreatorId",
+                table: "Products",
+                column: "CreatorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_OrderId",

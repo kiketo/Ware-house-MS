@@ -14,6 +14,7 @@ using WHMSData.Context;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WHMSData.Utills;
+using WHMSData.Models;
 
 namespace WHMSWebApp
 {
@@ -38,7 +39,8 @@ namespace WHMSWebApp
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer($"Server={Constants.serverName};Database=WarehouseMS;Trusted_Connection=True;"));
-            services.AddDefaultIdentity<IdentityUser>()
+
+            services.AddDefaultIdentity<ApplicationUser>()//TODO To check the role should work correctly
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 

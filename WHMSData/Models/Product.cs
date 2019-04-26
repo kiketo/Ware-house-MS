@@ -40,6 +40,10 @@ namespace WHMSData.Models
         [JsonIgnore]
         public ICollection<ProductWarehouse> Warehouses { get; set; }
 
+        public string CreatorId { get; set; }
+
+        public ApplicationUser Creator { get; set; }
+
         public override string ToString()
         {
             return this.Name;
