@@ -11,7 +11,7 @@ namespace WHMSData.Context
         {
 
         }
-        public ApplicationDbContext(DbContextOptions options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
