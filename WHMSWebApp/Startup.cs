@@ -37,13 +37,17 @@ namespace WHMSWebApp
 
             //registers all services from the service layer
             var serviceAssembly = Assembly.Load("WHMS.Services");
-            services.Scan(scan => scan.FromAssemblies(serviceAssembly).AddClasses().AsMatchingInterface().WithScopedLifetime());
+            services.Scan(scan => scan.FromAssemblies(serviceAssembly)
+                 .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Service")))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
+
 
             //registers all mappers
             services.Scan(scan => scan.FromCallingAssembly()
-            .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Mapper")))
-            .AsImplementedInterfaces()
-            .WithSingletonLifetime());
+                .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Mapper")))
+                .AsImplementedInterfaces()
+                .WithSingletonLifetime());
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer($"Server={Constants.serverName};Database=WarehouseMS;Trusted_Connection=True;"));

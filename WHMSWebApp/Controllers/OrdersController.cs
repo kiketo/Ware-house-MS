@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WHMS.Services;
+using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
 using WHMSWebApp.Mappers;
@@ -15,13 +16,11 @@ namespace WHMSWebApp.Controllers
 {
     public class OrdersController : Controller
     {
-        private readonly ApplicationDbContext context;
-        private readonly OrderService orderService;
-        private readonly OrderViewModelMapper orderMapper;
+        private readonly IOrderService orderService;
+        private readonly IViewModelMapper<Order,OrderViewModel> orderMapper;
 
-        public OrdersController(ApplicationDbContext context, OrderService orderService, OrderViewModelMapper orderMapper)
+        public OrdersController(IOrderService orderService, IViewModelMapper<Order, OrderViewModel> orderMapper)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
             this.orderMapper = orderMapper ?? throw new ArgumentNullException(nameof(orderMapper));
         }
@@ -43,148 +42,148 @@ namespace WHMSWebApp.Controllers
         }
 
 
-        // GET: Orders
-        public async Task<IActionResult> Index()
-        {
-            var applicationDbContext = context.Orders.Include(o => o.Creator).Include(o => o.Partner);
-            return View(await applicationDbContext.ToListAsync());
-        }
+        //// GET: Orders
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = context.Orders.Include(o => o.Creator).Include(o => o.Partner);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}
 
-        // GET: Orders/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Orders/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var order = await context.Orders
-                .Include(o => o.Creator)
-                .Include(o => o.Partner)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
+        //    var order = await context.Orders
+        //        .Include(o => o.Creator)
+        //        .Include(o => o.Partner)
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (order == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(order);
-        }
+        //    return View(order);
+        //}
 
-        // GET: Orders/Create
-        public IActionResult Create()
-        {
-            ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id");
-            ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name");
-            return View();
-        }
+        //// GET: Orders/Create
+        //public IActionResult Create()
+        //{
+        //    ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id");
+        //    ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name");
+        //    return View();
+        //}
 
-        // POST: Orders/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Type,PartnerId,Comment,TotalValue,CreatorId,Id,CreatedOn,ModifiedOn,IsDeleted")] Order order)
-        {
-            if (ModelState.IsValid)
-            {
-                context.Add(order);
-                await context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
-            ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
-            return View(order);
-        }
+        //// POST: Orders/Create
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Type,PartnerId,Comment,TotalValue,CreatorId,Id,CreatedOn,ModifiedOn,IsDeleted")] Order order)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        context.Add(order);
+        //        await context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
+        //    ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
+        //    return View(order);
+        //}
 
-        // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Orders/Edit/5
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var order = await context.Orders.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
-            ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
-            return View(order);
-        }
+        //    var order = await context.Orders.FindAsync(id);
+        //    if (order == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
+        //    ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
+        //    return View(order);
+        //}
 
-        // POST: Orders/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Type,PartnerId,Comment,TotalValue,CreatorId,Id,CreatedOn,ModifiedOn,IsDeleted")] Order order)
-        {
-            if (id != order.Id)
-            {
-                return NotFound();
-            }
+        //// POST: Orders/Edit/5
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("Type,PartnerId,Comment,TotalValue,CreatorId,Id,CreatedOn,ModifiedOn,IsDeleted")] Order order)
+        //{
+        //    if (id != order.Id)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    context.Update(order);
-                    await context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
-            ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
-            return View(order);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            context.Update(order);
+        //            await context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!OrderExists(order.Id))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
+        //    ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
+        //    return View(order);
+        //}
 
-        // GET: Orders/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Orders/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var order = await context.Orders
-                .Include(o => o.Creator)
-                .Include(o => o.Partner)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
+        //    var order = await context.Orders
+        //        .Include(o => o.Creator)
+        //        .Include(o => o.Partner)
+        //        .FirstOrDefaultAsync(m => m.Id == id);
+        //    if (order == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(order);
-        }
+        //    return View(order);
+        //}
 
-        // POST: Orders/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var order = await context.Orders.FindAsync(id);
-            context.Orders.Remove(order);
-            await context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //// POST: Orders/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var order = await context.Orders.FindAsync(id);
+        //    context.Orders.Remove(order);
+        //    await context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
-        private bool OrderExists(int id)
-        {
-            return context.Orders.Any(e => e.Id == id);
-        }
+        //private bool OrderExists(int id)
+        //{
+        //    return context.Orders.Any(e => e.Id == id);
+        //}
     }
 }
