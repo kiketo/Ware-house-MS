@@ -1,0 +1,39 @@
+﻿@model SearchOrderViewModel
+@{
+    ViewData["Title"] = "SearchById";
+}
+
+<h1>SearchById</h1>
+
+<div class="row mt-5">
+    <form class="col-lg-6" asp-controller="Order" asp-action="SearchById" method="get">
+        <div class="row">
+            <div class="col-sm-9">
+                <input asp-for="@Model.GetOrderById" placeholder="Search..." class="form-control" />
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-success">Search!</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row mt-5">
+    <div class="col-lg-6">
+        @if (Model != null)
+        {
+            if (Model.GetOrderById==0 && !Model.SearchResults.Any())
+            {
+                <p class="alert alert-info">There are no orders</p>
+            }
+            else
+            {
+                foreach (var order in Model.SearchResults)
+                {
+                    <partial name="_OrderPartial" model="order" />
+                }
+            }
+        }
+    </div>
+</div>
+

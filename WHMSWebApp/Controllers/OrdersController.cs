@@ -5,24 +5,48 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using WHMS.Services;
 using WHMSData.Context;
 using WHMSData.Models;
+using WHMSWebApp.Mappers;
+using WHMSWebApp.Models;
 
 namespace WHMSWebApp.Controllers
 {
     public class OrdersController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext context;
+        private readonly OrderService orderService;
+        private readonly OrderViewModelMapper orderMapper;
 
-        public OrdersController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context, OrderService orderService, OrderViewModelMapper orderMapper)
         {
-            _context = context;
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
+            this.orderMapper = orderMapper ?? throw new ArgumentNullException(nameof(orderMapper));
         }
+
+        [HttpGet]
+        public IActionResult SearchById([FromQuery]SearchOrderViewModel model)
+        {
+            if (model.GetOrderById==0)
+            {
+                return View();
+            }
+
+            model.SearchResults =new List<OrderViewModel>
+            {
+                this.orderMapper.MapFrom(this.orderService.GetOrderById(model.GetOrderById))
+            };
+
+            return View(model);
+        }
+
 
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Orders.Include(o => o.Creator).Include(o => o.Partner);
+            var applicationDbContext = context.Orders.Include(o => o.Creator).Include(o => o.Partner);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +58,7 @@ namespace WHMSWebApp.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders
+            var order = await context.Orders
                 .Include(o => o.Creator)
                 .Include(o => o.Partner)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -49,8 +73,8 @@ namespace WHMSWebApp.Controllers
         // GET: Orders/Create
         public IActionResult Create()
         {
-            ViewData["CreatorId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["PartnerId"] = new SelectList(_context.Partners, "Id", "Name");
+            ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id");
+            ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name");
             return View();
         }
 
@@ -63,12 +87,12 @@ namespace WHMSWebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(order);
-                await _context.SaveChangesAsync();
+                context.Add(order);
+                await context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatorId"] = new SelectList(_context.Users, "Id", "Id", order.CreatorId);
-            ViewData["PartnerId"] = new SelectList(_context.Partners, "Id", "Name", order.PartnerId);
+            ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
+            ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
             return View(order);
         }
 
@@ -80,13 +104,13 @@ namespace WHMSWebApp.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders.FindAsync(id);
+            var order = await context.Orders.FindAsync(id);
             if (order == null)
             {
                 return NotFound();
             }
-            ViewData["CreatorId"] = new SelectList(_context.Users, "Id", "Id", order.CreatorId);
-            ViewData["PartnerId"] = new SelectList(_context.Partners, "Id", "Name", order.PartnerId);
+            ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
+            ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
             return View(order);
         }
 
@@ -106,8 +130,8 @@ namespace WHMSWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
+                    context.Update(order);
+                    await context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -122,8 +146,8 @@ namespace WHMSWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CreatorId"] = new SelectList(_context.Users, "Id", "Id", order.CreatorId);
-            ViewData["PartnerId"] = new SelectList(_context.Partners, "Id", "Name", order.PartnerId);
+            ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
+            ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
             return View(order);
         }
 
@@ -135,7 +159,7 @@ namespace WHMSWebApp.Controllers
                 return NotFound();
             }
 
-            var order = await _context.Orders
+            var order = await context.Orders
                 .Include(o => o.Creator)
                 .Include(o => o.Partner)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -152,15 +176,15 @@ namespace WHMSWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
+            var order = await context.Orders.FindAsync(id);
+            context.Orders.Remove(order);
+            await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool OrderExists(int id)
         {
-            return _context.Orders.Any(e => e.Id == id);
+            return context.Orders.Any(e => e.Id == id);
         }
     }
 }
