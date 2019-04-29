@@ -10,7 +10,6 @@ namespace WHMSWebApp.Controllers
     {
         public IActionResult Index()
         {
-
             return View();
         }
     }

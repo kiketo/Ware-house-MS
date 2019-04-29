@@ -2,6 +2,29 @@
     ViewData["Title"] = "Search";
 }
 
+
+<partial name="_Search" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="container">
     <h2>Accordion Example</h2>
     <p><strong>Note:</strong> The <strong>data-parent</strong> attribute makes sure that all collapsible elements under the specified parent will be closed when one of the collapsible item is shown.</p>
@@ -95,22 +118,22 @@
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container">
         @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>*@
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>*@
         @*<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">*@
-            <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="SearchById">Search Order</a>
-                </li>
-                @*<li class="nav-item">
+        <ul class="navbar-nav flex-grow-1">
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="SearchById">Search Order</a>
+            </li>
+            @*<li class="nav-item">
                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="SearchById">Search Order By Id</a>
                 </li>*@
-                @*<partial name="_LoginPartial" />*@
-            </ul>
+            @*<partial name="_LoginPartial" />*@
+        </ul>
         @*</div>*@
     </div>
 </nav>
