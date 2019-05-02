@@ -26,7 +26,7 @@ namespace WHMSWebApp.Models
         public string Partner { get; set; }
 
         [Required(ErrorMessage = "Order Products is required!")]
-        public ICollection<Product> Products { get; set; }
+        public ICollection<Product> Products { get; set; } //TODO string
 
         public string Comment { get; set; }
 
@@ -35,5 +35,9 @@ namespace WHMSWebApp.Models
         public string CreatorId { get; set; }
 
         public ApplicationUser Creator { get; set; }
+
+        public int Quantity { get; set; }
+
+        public string Warehouse { get; set; }
     }
 }
