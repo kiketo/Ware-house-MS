@@ -56,9 +56,10 @@ namespace WHMSWebApp.Controllers
                 return View();
             }
         }
-        public IActionResult Details()
+        public IActionResult Details(int id)
         {
-            return View();
+            var model = this.productService.GetProductById(id);
+            return View(model);
         }
 
         public IActionResult Edit()

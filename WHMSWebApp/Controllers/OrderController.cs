@@ -17,12 +17,20 @@ namespace WHMSWebApp.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderService orderService;
+        private readonly IProductService productService;
+        private readonly IPartnerService partnerService;
         private readonly IViewModelMapper<Order,OrderViewModel> orderMapper;
 
-        public OrderController(IOrderService orderService, IViewModelMapper<Order, OrderViewModel> orderMapper)
+        public OrderController(
+            IOrderService orderService, 
+            IViewModelMapper<Order, OrderViewModel> orderMapper, 
+            IPartnerService partnerService,
+            IProductService productService)
         {
             this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
             this.orderMapper = orderMapper ?? throw new ArgumentNullException(nameof(orderMapper));
+            this.partnerService = partnerService;
+            this.productService = productService;
         }
 
         public IActionResult Search()
@@ -43,6 +51,39 @@ namespace WHMSWebApp.Controllers
                 this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(model.GetOrderById))
             };
 
+            return View(model);
+        }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Create(OrderViewModel order)
+        {
+
+            if (ModelState.IsValid)
+            {
+
+                var newOrder = this.orderService.AddAsync(
+                    order.Type,
+                    this.partnerService.FindByNameAsync(order.Partner),
+                    this.productService.FindByName(order.Products),//TODO change logic, wrong!!!
+                    order.quantity,//TODO
+                    order.Comment
+                    );
+
+                return RedirectToAction(nameof(Details), new { id = newOrder.Id });
+            }
+            else
+            {
+                return View();
+            }
+        }
+        
+        public IActionResult Details(int id)
+        {
+            var model = this.orderService.GetOrderByIdAsync(id);
             return View(model);
         }
 
