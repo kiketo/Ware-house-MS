@@ -21,6 +21,7 @@ namespace WHMSWebApp.Models
         public string City { get; set; }
 
         [StringLength(11)]
+        [MinLength(11)]
         public string VAT { get; set; }
 
        

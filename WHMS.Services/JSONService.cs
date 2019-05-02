@@ -11,8 +11,8 @@ namespace WHMS.Services
     {
         private readonly ApplicationDbContext context;
         private ITownService townServices;
-        private IAddressSevice addressSevice;
-        public JSONService(ApplicationDbContext context, ITownService townServices, IAddressSevice addressSevice)
+        private IAddressService addressSevice;
+        public JSONService(ApplicationDbContext context, ITownService townServices, IAddressService addressSevice)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
             this.townServices = townServices;

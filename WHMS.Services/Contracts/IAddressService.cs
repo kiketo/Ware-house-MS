@@ -3,7 +3,7 @@ using WHMSData.Models;
 
 namespace WHMS.Services.Contracts
 {
-    public interface IAddressSevice
+    public interface IAddressService
     {
         Task<Address> AddAsync(Town town, string addressToAdd);
 
@@ -16,3 +16,7 @@ namespace WHMS.Services.Contracts
         Address GetAddress(Town town, string addressToGet);
     }
 }
+
+
+
+

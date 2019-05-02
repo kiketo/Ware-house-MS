@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WHMS.Services
 {
-    public class AddressSevice : IAddressSevice
+    public class AddressService : IAddressService
     {
         private readonly ApplicationDbContext context;
 
-        public AddressSevice(ApplicationDbContext context)
+        public AddressService(ApplicationDbContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }

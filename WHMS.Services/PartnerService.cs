@@ -105,5 +105,17 @@ namespace WHMS.Services
 
             return partner;
         }
+        public async Task<Partner> FindByIdAsync(int id)
+        {
+            var partner = await this.context.Partners
+                .Include(p => p.PastOrders)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (partner == null || partner.IsDeleted)
+            {
+                throw new ArgumentException($"Partner doesn't exist!");
+            }
+
+            return partner;
+        }
     }
 }
