@@ -65,15 +65,16 @@ namespace WHMSWebApp.Controllers
             if (ModelState.IsValid)
             {
 
-                var newOrder = this.orderService.AddAsync(
-                    order.Type,
-                    this.partnerService.FindByNameAsync(order.Partner),
-                    this.productService.FindByName(order.Products),//TODO change logic, wrong!!!
-                    order.quantity,//TODO
-                    order.Comment
-                    );
+                //var newOrder = this.orderService.AddAsync(
+                //    order.Type,
+                //    this.partnerService.FindByNameAsync(order.Partner),
+                //    //this.productService.FindByName(order.Products),//TODO change logic, wrong!!!
+                //    //order.quantity,//TODO
+                //    order.Comment
+                //    );
 
-                return RedirectToAction(nameof(Details), new { id = newOrder.Id });
+               // return RedirectToAction(nameof(Details), new { id = newOrder.Id });
+                return View();
             }
             else
             {
