@@ -98,11 +98,11 @@ namespace WHMS.Services
 
         public async Task<Order> GetOrderByIdAsync(int orderId)
         {
-            Order orderToShow =this.context.Orders
+            Order orderToShow =await this.context.Orders
                 .Include(o => o.Products)
                 .Include(o => o.Partner)
                 .Where(o => o.Id == orderId)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
             if (orderToShow == null || orderToShow.IsDeleted)
             {
                 throw new ArgumentException($"Order with ID: {orderId} doesn't exist!");
