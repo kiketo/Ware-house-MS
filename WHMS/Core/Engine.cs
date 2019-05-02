@@ -1,4 +1,5 @@
-﻿using WHMS.Core.Contracts;
+﻿using System.Threading.Tasks;
+using WHMS.Core.Contracts;
 
 namespace WHMS.Core
 {
@@ -19,12 +20,12 @@ namespace WHMS.Core
             this.writer = writer;
         }
 
-        public void Start()
+        public async Task Start()
         {
             while (true)
             {
                 var input = this.reader.ReadLine();
-                var output = this.processor.Process(input);
+                var output = await this.processor.Process(input);
                 this.writer.WriteLine(output);
             }
         }

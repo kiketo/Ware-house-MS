@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using WHMSData.Context;
 using WHMSData.Models;
 using WHMSData.Utills;
@@ -9,11 +10,11 @@ using WHMSData.Utills;
 namespace WHMS.Services.Tests.OrderServiceTest
 {
     [TestClass]
-    public class GetOrdersByType_Should
+    public class GetOrdersByType_Should //TODO
     {
         private IFormatProvider provider;
         [TestMethod]
-        public void Succeed()  //(OrderType type, DateTime fromDate, DateTime toDate)
+        public async Task Succeed()  //(OrderType type, DateTime fromDate, DateTime toDate)
         {
             DateTime outPeriod = DateTime.ParseExact("30/01/2000", "dd/mm/yyyy", CultureInfo.InvariantCulture);
             DateTime fromDate = DateTime.ParseExact("01/01/2018", "dd/mm/yyyy", CultureInfo.InvariantCulture);
@@ -26,17 +27,17 @@ namespace WHMS.Services.Tests.OrderServiceTest
             var options = TestUtils.GetOptions(dbName);
             using (var arrangeContext = new ApplicationDbContext(options))
             {
-                arrangeContext.Orders.Add(new Order { Id = 1, Type = OrderType.Sell, CreatedOn =inPeriod, Partner=partner, Products=new List<Product> { product} });
-                arrangeContext.Orders.Add(new Order { Id = 2, Type = OrderType.Sell, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.Orders.Add(new Order { Id = 3, Type = OrderType.Sell, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.Orders.Add(new Order { Id = 4, Type = OrderType.Buy, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product } });
+                //arrangeContext.Orders.Add(new Order { Id = 1, Type = OrderType.Sell, CreatedOn =inPeriod, Partner=partner, Products=new List<Product> { product} });
+                //arrangeContext.Orders.Add(new Order { Id = 2, Type = OrderType.Sell, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product } });
+                //arrangeContext.Orders.Add(new Order { Id = 3, Type = OrderType.Sell, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
+                //arrangeContext.Orders.Add(new Order { Id = 4, Type = OrderType.Buy, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product } });
                 arrangeContext.SaveChanges();
             }
 
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var getOrdersByType = sut.GetOrdersByType(OrderType.Sell, fromDate, toDate);
+                var getOrdersByType = await sut.GetOrdersByTypeAsync(OrderType.Sell, fromDate, toDate);
                 Assert.AreEqual(2,getOrdersByType.Count);
             }
         }
@@ -53,19 +54,19 @@ namespace WHMS.Services.Tests.OrderServiceTest
 
             var dbName = ((nameof(GetOrdersByType_Should)) + (nameof(ThrowException_WhenSuchOrderDoesntExist)));
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new ApplicationDbContext(options))
-            {
-                arrangeContext.Orders.Add(new Order { Id = 1, Type = type, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.Orders.Add(new Order { Id = 2, Type = type, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.Orders.Add(new Order { Id = 3, Type = type, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.Orders.Add(new Order { Id = 4, Type = OrderType.Buy, CreatedOn =outPeriod, Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.SaveChanges();
-            }
+            //using (var arrangeContext = new ApplicationDbContext(options))
+            //{
+            //    arrangeContext.Orders.Add(new Order { Id = 1, Type = type, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
+            //    arrangeContext.Orders.Add(new Order { Id = 2, Type = type, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
+            //    arrangeContext.Orders.Add(new Order { Id = 3, Type = type, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
+            //    arrangeContext.Orders.Add(new Order { Id = 4, Type = OrderType.Buy, CreatedOn =outPeriod, Partner = partner, Products = new List<Product> { product } });
+            //    arrangeContext.SaveChanges();
+            //}
 
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var ex =Assert.ThrowsException<ArgumentException>(()=> sut.GetOrdersByType(OrderType.Sell, fromDate, toDate));
+                var ex =Assert.ThrowsException<ArgumentException>(async()=> await sut.GetOrdersByTypeAsync(OrderType.Sell, fromDate, toDate));
                 Assert.AreEqual($"Order with Type: {type} from date {fromDate} to date {toDate} doesn't exist!", ex.Message);
             }
         }
@@ -82,19 +83,19 @@ namespace WHMS.Services.Tests.OrderServiceTest
 
             var dbName = ((nameof(GetOrdersByType_Should)) + (nameof(ThrowException_WhenOrderIsDeleted)));
             var options = TestUtils.GetOptions(dbName);
-            using (var arrangeContext = new ApplicationDbContext(options))
-            {
-                arrangeContext.Orders.Add(new Order { Id = 1, Type = type, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product }, IsDeleted=true });
-                arrangeContext.Orders.Add(new Order { Id = 2, Type = type, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product }, IsDeleted=true });
-                arrangeContext.Orders.Add(new Order { Id = 3, Type = type, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.Orders.Add(new Order { Id = 4, Type = OrderType.Buy, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.SaveChanges();
-            }
+            //using (var arrangeContext = new ApplicationDbContext(options))
+            //{
+            //    arrangeContext.Orders.Add(new Order { Id = 1, Type = type, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product }, IsDeleted=true });
+            //    arrangeContext.Orders.Add(new Order { Id = 2, Type = type, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product }, IsDeleted=true });
+            //    arrangeContext.Orders.Add(new Order { Id = 3, Type = type, CreatedOn = outPeriod, Partner = partner, Products = new List<Product> { product } });
+            //    arrangeContext.Orders.Add(new Order { Id = 4, Type = OrderType.Buy, CreatedOn = inPeriod, Partner = partner, Products = new List<Product> { product } });
+            //    arrangeContext.SaveChanges();
+            //}
 
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetOrdersByType(OrderType.Sell, fromDate, toDate));
+                var ex = Assert.ThrowsException<ArgumentException>(async() => await sut.GetOrdersByTypeAsync(OrderType.Sell, fromDate, toDate));
                 Assert.AreEqual($"Order with Type: {type} from date {fromDate} to date {toDate} doesn't exist!", ex.Message);
             }
         }

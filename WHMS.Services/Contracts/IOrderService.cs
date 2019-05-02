@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WHMSData.Models;
 using WHMSData.Utills;
 
@@ -7,20 +8,20 @@ namespace WHMS.Services.Contracts
 {
     public interface IOrderService
     {
-        Order Add(OrderType type, Partner partner, Product product, int qty, string comment = null);
+        Task<Order> AddAsync(OrderType type, Partner partner, ProductWarehouse pw, int qty, string comment = null);
 
-        Order EditType(int orderId, OrderType type);
+        Task<Order> EditTypeAsync(int orderId, OrderType type);
 
-        Order EditPartner(int orderId, Partner newPartner);
+        Task<Order> EditPartnerAsync(int orderId, Partner newPartner);
 
-        Order AddProductToOrder(int orderId, Product product, int qty);
+        Task<Order> AddProductToOrderAsync(int orderId, ProductWarehouse pw);
 
-        Order EditComment(int orderId, string comment);
+        Task<Order> EditCommentAsync(int orderId, string comment);
 
-        Order GetOrderById(int orderId);
+        Task<Order> GetOrderByIdAsync(int orderId);
 
-        ICollection<Order> GetOrdersByType(OrderType type, DateTime fromDate, DateTime toDate);
+        Task<ICollection<Order>> GetOrdersByTypeAsync(OrderType type, DateTime fromDate, DateTime toDate);
 
-        ICollection<Order> GetOrdersByPartner(Partner partner);
+        Task<ICollection<Order>> GetOrdersByPartnerAsync(Partner partner);
     }
 }

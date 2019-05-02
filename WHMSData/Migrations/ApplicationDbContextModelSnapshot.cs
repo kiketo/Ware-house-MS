@@ -317,8 +317,6 @@ namespace WHMSWebApp.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<int?>("OrderId");
-
                     b.Property<decimal>("SellPrice")
                         .HasColumnType("decimal(18, 2)");
 
@@ -329,8 +327,6 @@ namespace WHMSWebApp.Data.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("CreatorId");
-
-                    b.HasIndex("OrderId");
 
                     b.HasIndex("UnitId");
 
@@ -343,9 +339,13 @@ namespace WHMSWebApp.Data.Migrations
 
                     b.Property<int>("WarehouseId");
 
+                    b.Property<int?>("OrderId");
+
                     b.Property<int>("Quantity");
 
                     b.HasKey("ProductId", "WarehouseId");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("WarehouseId");
 
@@ -501,10 +501,6 @@ namespace WHMSWebApp.Data.Migrations
                         .WithMany("Products")
                         .HasForeignKey("CreatorId");
 
-                    b.HasOne("WHMSData.Models.Order")
-                        .WithMany("Products")
-                        .HasForeignKey("OrderId");
-
                     b.HasOne("WHMSData.Models.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId")
@@ -513,6 +509,10 @@ namespace WHMSWebApp.Data.Migrations
 
             modelBuilder.Entity("WHMSData.Models.ProductWarehouse", b =>
                 {
+                    b.HasOne("WHMSData.Models.Order")
+                        .WithMany("ProductsWarehouses")
+                        .HasForeignKey("OrderId");
+
                     b.HasOne("WHMSData.Models.Product", "Product")
                         .WithMany("Warehouses")
                         .HasForeignKey("ProductId")
