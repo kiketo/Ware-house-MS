@@ -1,13 +1,14 @@
-﻿@model ProductViewModel
+﻿@*@model ProductViewModel
 @{
     ViewData["Title"] = "Create";
-}
+}*@
 
 <div class="text-center">
     <h1 class="display-4">Add New Items:</h1>
     <div>
         <a>Create New Product:</a>
-        <a asp-action="Create" asp-controller="ProductController" >Create New Product</a>
+        <a asp-controller="Product" asp-action="Create">Create New Product</a>
+        <a href="~/product/create">Link</a>
     </div>
     <div>
         <a>Create New Order:</a>

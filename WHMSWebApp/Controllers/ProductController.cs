@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WHMS.Services;
+using WHMS.Services.Contracts;
 using WHMSData.Models;
 using WHMSWebApp.Models;
 
@@ -11,14 +12,14 @@ namespace WHMSWebApp.Controllers
 {
     public class ProductController : Controller
     {
-        ProductService productService;
-        UnitService unitService;
-        CategoryService categoryService;
+        IProductService productService;
+        IUnitService unitService;
+        ICategoryService categoryService;
 
         public ProductController(
-            ProductService productService, 
-            UnitService unitService, 
-            CategoryService categoryService
+            IProductService productService,
+            IUnitService unitService,
+            ICategoryService categoryService
             )
         {
             this.productService = productService;
@@ -55,9 +56,10 @@ namespace WHMSWebApp.Controllers
                 return View();
             }
         }
-        public IActionResult Details()
+        public IActionResult Details(int id)
         {
-            return View();
+            var model = this.productService.GetProductById(id);
+            return View(model);
         }
 
         public IActionResult Edit()
