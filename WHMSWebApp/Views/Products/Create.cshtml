@@ -1,0 +1,63 @@
+﻿@model ProductViewModel
+
+
+@{
+    ViewData["Title"] = "CreateProduct";
+
+}
+
+<h2>Create Product</h2>
+
+<div asp-validation-summary="All">
+    <span>Please correct the following errors</span>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category" class="control-label"></label>
+                <input asp-for="Category" class="form-control" />
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Unit" class="control-label"></label>
+                <input asp-for="Unit" class="form-control" />
+                <span asp-validation-for="Unit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BuyPrice" class="control-label"></label>
+                <input asp-for="BuyPrice" class="form-control" />
+                <span asp-validation-for="BuyPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MarginInPercent" class="control-label"></label>
+                <input asp-for="MarginInPercent" class="form-control" />
+                <span asp-validation-for="MarginInPercent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SellPrice" class="control-label"></label>
+                <input asp-for="SellPrice" class="form-control" />
+                <span asp-validation-for="SellPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

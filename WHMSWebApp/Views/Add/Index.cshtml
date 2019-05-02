@@ -1,0 +1,20 @@
+﻿@model ProductViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Add New Items:</h1>
+    <div>
+        <a>Create New Product:</a>
+        <a asp-action="Create" asp-controller="ProductController" >Create New Product</a>
+    </div>
+    <div>
+        <a>Create New Order:</a>
+        <a asp-action="CreateOrder">Create New Order</a>
+    </div>
+    <div>
+        <a>Create New Partner:</a>
+        <a asp-action="CreatePartner">Create New Partner</a>
+    </div>
+</div>
