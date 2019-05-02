@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 
@@ -18,53 +20,54 @@ namespace WHMS.Commands.Creating
         }
         // TODO product needs: name, unit, category, buyprice, margin, Description
 
-        public string Execute(IReadOnlyList<string> parameters)
+        public Task<string> Execute(IReadOnlyList<string> parameters)
         {
-            var name = parameters[0];
+            //var name = parameters[0];
 
-            var product = this.productService.FindByNameInclncludingDeleted(name);
-            if (product == null)
-            {
-                var unit = this.unitService.GetUnit(parameters[1]);
-                if (unit == null)
-                {
-                    unit = this.unitService.CreateUnit(parameters[1]);
-                }
-                var category = this.categoryService.FindByName(parameters[2]);
-                if (category == null)
-                {
-                    category = this.categoryService.CreateCategory(parameters[2]);
-                }
-                var buyPrice = decimal.Parse(parameters[3]);
-                var margin = double.Parse(parameters[4]);
-                var description = parameters[5];
-                var newProduct = this.productService.CreateProduct(name, unit, category, buyPrice, margin, description);
-            }
-            else if (product.IsDeleted)
-            {
-                var recoveredProduct = this.productService.UndeleteProduct(product.Name);
-                var unit = this.unitService.GetUnit(parameters[1]);
-                if (unit == null)
-                {
-                    unit = this.unitService.CreateUnit(parameters[1]);
-                }
-                this.productService.ModifyUnit(recoveredProduct, unit);
-                var category = this.categoryService.FindByName(parameters[2]);
-                if (category == null)
-                {
-                    category = this.categoryService.CreateCategory(parameters[2]);
-                }
-                this.productService.ModifyCategory(recoveredProduct, category);
-                var buyPrice = decimal.Parse(parameters[3]);
-                this.productService.SetBuyPrice(recoveredProduct.Id, buyPrice);
-                var margin = double.Parse(parameters[4]);
-                this.productService.SetMargin(recoveredProduct.Id, margin);
+            //var product = this.productService.FindByNameInclncludingDeleted(name);
+            //if (product == null)
+            //{
+            //    var unit = this.unitService.GetUnit(parameters[1]);
+            //    if (unit == null)
+            //    {
+            //        unit = this.unitService.CreateUnit(parameters[1]);
+            //    }
+            //    var category = this.categoryService.FindByName(parameters[2]);
+            //    if (category == null)
+            //    {
+            //        category = this.categoryService.CreateCategory(parameters[2]);
+            //    }
+            //    var buyPrice = decimal.Parse(parameters[3]);
+            //    var margin = double.Parse(parameters[4]);
+            //    var description = parameters[5];
+            //    var newProduct = this.productService.CreateProduct(name, unit, category, buyPrice, margin, description);
+            //}
+            //else if (product.IsDeleted)
+            //{
+            //    var recoveredProduct = this.productService.UndeleteProduct(product.Name);
+            //    var unit = this.unitService.GetUnit(parameters[1]);
+            //    if (unit == null)
+            //    {
+            //        unit = this.unitService.CreateUnit(parameters[1]);
+            //    }
+            //    this.productService.ModifyUnit(recoveredProduct, unit);
+            //    var category = this.categoryService.FindByName(parameters[2]);
+            //    if (category == null)
+            //    {
+            //        category = this.categoryService.CreateCategory(parameters[2]);
+            //    }
+            //    this.productService.ModifyCategory(recoveredProduct, category);
+            //    var buyPrice = decimal.Parse(parameters[3]);
+            //    this.productService.SetBuyPrice(recoveredProduct.Id, buyPrice);
+            //    var margin = double.Parse(parameters[4]);
+            //    this.productService.SetMargin(recoveredProduct.Id, margin);
 
-                var description = parameters[5];
+            //    var description = parameters[5];
 
-            }
+            //}
 
-            return $"Product {name} was created.";
+            //return $"Product {name} was created.";
+            throw new NotImplementedException(); //TODO
         }
     }
 }

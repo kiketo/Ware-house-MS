@@ -22,7 +22,7 @@ namespace WHMSData.Models
 
         [JsonIgnore]
         [Required(ErrorMessage = "Order Products is required!")]
-        public ICollection<Product> Products { get; set; }
+        public ICollection<ProductWarehouse> ProductsWarehouses { get; set; }
 
         public string Comment { get; set; }
 
@@ -32,5 +32,6 @@ namespace WHMSData.Models
         public string CreatorId { get; set; }
 
         public ApplicationUser Creator { get; set; }
+
     }
 }

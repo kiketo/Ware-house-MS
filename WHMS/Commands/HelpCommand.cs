@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 
 namespace WHMS.Commands
@@ -17,12 +18,12 @@ namespace WHMS.Commands
             this.components = components;
         }
 
-        public string Execute(IReadOnlyList<string> args)
+        public async Task<string> Execute(IReadOnlyList<string> args)
         {
             var commandNames = this.components.ComponentRegistry.Registrations
                 .SelectMany(r => r.Services)
                 .OfType<KeyedService>()
-                .Select(ks => ks.ServiceKey);
+                .Select(ks => ks.ServiceKey).ToAsyncEnumerable();
 
             return "\r\nAvailable commands:\r\n============\r\n" + string.Join("\r\n", commandNames)+ "\r\n============\r\nPlease use ';' for separating command parameters!";
         }

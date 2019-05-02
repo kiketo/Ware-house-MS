@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WHMSData.Context;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WHMSData.Utills;
+using System.Reflection;
+using WHMS.Services;
+using WHMS.Services.Contracts;
+using WHMSData.Context;
 using WHMSData.Models;
+using WHMSData.Utills;
 
 namespace WHMSWebApp
 {
@@ -37,10 +35,24 @@ namespace WHMSWebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            //registers all services from the service layer
+            var serviceAssembly = Assembly.Load("WHMS.Services");
+            services.Scan(scan => scan.FromAssemblies(serviceAssembly)
+                 .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Service")))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime());
+
+
+            //registers all mappers
+            services.Scan(scan => scan.FromCallingAssembly()
+                .AddClasses(classes => classes.Where(type => type.Name.EndsWith("Mapper")))
+                .AsImplementedInterfaces()
+                .WithSingletonLifetime());
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer($"Server={Constants.serverName};Database=WarehouseMS;Trusted_Connection=True;"));
 
-            services.AddDefaultIdentity<ApplicationUser>()//TODO To check the role should work correctly
+            services.AddDefaultIdentity<ApplicationUser>()//TODO To check the role should work correctly!!!
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 

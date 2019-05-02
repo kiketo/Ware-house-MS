@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 using WHMSData.Models;
@@ -18,20 +19,20 @@ namespace WHMS.Commands.Modifying
             this.townService = townService ?? throw new ArgumentNullException(nameof(townService));
         }
         
-        public string Execute(IReadOnlyList<string> parameters)
+        public async Task<string> Execute(IReadOnlyList<string> parameters)
         {
             if (parameters.Count==3)//Town;oldAddress;newAddress
             {
                 Town town = townService.GetTown(parameters[0]);
-                Address Address = addressSevice.EditText(town,parameters[1],parameters[2]);
+                Address Address =await addressSevice.EditTextAsync(town,parameters[1],parameters[2]);
                 return $"Addres: {parameters[1]} in Town: {parameters[0]} was modified to Address: {parameters[2]}";
             }
             else if (parameters.Count == 4)//oldTown;oldAddress;newTown;newAddress
             {
                 Town oldTown = townService.GetTown(parameters[0]);
-                Address address = addressSevice.EditText(oldTown, parameters[1], parameters[3]);
+                Address address = await addressSevice.EditTextAsync(oldTown, parameters[1], parameters[3]);
                 Town newTown= townService.GetTown(parameters[2]);
-                Address newAddress = addressSevice.EditTown(oldTown, parameters[3], newTown);
+                Address newAddress = await addressSevice.EditTownAsync(oldTown, parameters[3], newTown);
                 return $"Addres: {parameters[1]} in Town: {parameters[0]} was modified " +
                     $"to Address: {parameters[3]} in Town: {parameters[2]}";
             }

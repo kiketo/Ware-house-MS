@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
@@ -18,10 +19,10 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Order Add(OrderType type, Partner partner, Product product, int qty, string comment = null)
+        public async Task<Order> AddAsync(OrderType type, Partner partner, Product product, int qty, string comment = null)
         {
             decimal totalValue;
-            if (type==OrderType.Buy)
+            if (type == OrderType.Buy)
             {
                 totalValue = product.BuyPrice * qty;
             }
@@ -42,35 +43,35 @@ namespace WHMS.Services
             };
 
             this.context.Orders.Add(newOrder);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return newOrder;
         }
 
-        public Order EditType(int orderId, OrderType type)
+        public async Task<Order> EditTypeAsync(int orderId, OrderType type)
         {
-            Order orderToEdit = GetOrderById(orderId);
+            Order orderToEdit = await GetOrderByIdAsync(orderId);
 
             orderToEdit.Type = type;
             orderToEdit.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return orderToEdit;
         }
 
-        public Order EditPartner(int orderId, Partner newPartner)
+        public async Task<Order> EditPartnerAsync(int orderId, Partner newPartner)
         {
-            Order orderToEdit = GetOrderById(orderId);
+            Order orderToEdit = await GetOrderByIdAsync(orderId);
 
             orderToEdit.Partner = newPartner;
             orderToEdit.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return orderToEdit;
         }
 
-        public Order AddProductToOrder(int orderId, Product product, int qty)
+        public async Task<Order> AddProductToOrderAsync(int orderId, Product product, int qty)
         {
-            Order orderToEdit = GetOrderById(orderId);
+            Order orderToEdit = await GetOrderByIdAsync(orderId);
 
             decimal totalValue = orderToEdit.TotalValue;
 
@@ -80,26 +81,28 @@ namespace WHMS.Services
             orderToEdit.TotalValue = totalValue;
             orderToEdit.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return orderToEdit;
         }
 
-        public Order EditComment(int orderId, string comment)
+        public async Task<Order> EditCommentAsync(int orderId, string comment)
         {
-            Order orderToEdit = GetOrderById(orderId);
+            Order orderToEdit = await GetOrderByIdAsync(orderId);
 
             orderToEdit.Comment = comment;
             orderToEdit.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return orderToEdit;
         }
 
-        public Order GetOrderById(int orderId)
+        public async Task<Order> GetOrderByIdAsync(int orderId)
         {
-            Order orderToShow = this.context.Orders
-                .Include(p=>p.Products)
-                .FirstOrDefault(t => t.Id == orderId);
+            Order orderToShow =await this.context.Orders
+                .Include(o => o.Products)
+                .Include(o => o.Partner)
+                .Where(o => o.Id == orderId)
+                .FirstOrDefaultAsync();
             if (orderToShow == null || orderToShow.IsDeleted)
             {
                 throw new ArgumentException($"Order with ID: {orderId} doesn't exist!");
@@ -107,16 +110,16 @@ namespace WHMS.Services
             return orderToShow;
         }
 
-        public ICollection<Order> GetOrdersByType(OrderType type, DateTime fromDate, DateTime toDate)
+        public async Task<ICollection<Order>> GetOrdersByTypeAsync(OrderType type, DateTime fromDate, DateTime toDate)
         {
-            List<Order> ordersToShow = this.context.Orders
+            List<Order> ordersToShow = await this.context.Orders
                 .Where(o => o.Type == type)
                 .Where(o => o.IsDeleted == false)
                 .Where(o => o.CreatedOn >= fromDate)
                 .Where(o => o.CreatedOn <= toDate)
                 .Include(p => p.Partner)
                 .Include(p => p.Products)
-                .ToList();
+                .ToListAsync();
 
             if (ordersToShow.Count == 0)
             {
@@ -125,14 +128,14 @@ namespace WHMS.Services
             return ordersToShow;
         }
 
-        public ICollection<Order> GetOrdersByPartner(Partner partner)
+        public async Task<ICollection<Order>> GetOrdersByPartnerAsync(Partner partner)
         {
-            List<Order> ordersToShow = this.context.Orders
+            List<Order> ordersToShow =await this.context.Orders
                 .Where(o => o.Partner == partner)
                 .Where(o => o.IsDeleted == false)
                 .Include(p => p.Partner)
                 .Include(p => p.Products)
-                .ToList();
+                .ToListAsync();
 
             if (ordersToShow.Count == 0)
             {

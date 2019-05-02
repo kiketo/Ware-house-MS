@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Core.Contracts;
 
@@ -19,7 +20,7 @@ namespace WHMS.Core.Providers
             this.scope = scope;
         }
 
-        public string Process(string input)
+        public async Task<string> Process(string input)
         {
             using (var childScope = this.scope.BeginLifetimeScope())
             {
@@ -28,7 +29,7 @@ namespace WHMS.Core.Providers
                 try
                 {
                     var command = childScope.ResolveNamed<ICommand>(name);
-                    return command.Execute(args);
+                    return await command.Execute(args);
                 }
                 catch (ComponentNotRegisteredException ex)
                 {

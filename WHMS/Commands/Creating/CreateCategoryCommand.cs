@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 
@@ -14,12 +15,13 @@ namespace WHMS.Commands.Creating
             this.categoryService = categoryService;
         }
 
-        public string Execute(IReadOnlyList<string> parameters)
+        public Task<string> Execute(IReadOnlyList<string> parameters)
         {
-            var name = parameters[0];
-            var category = this.categoryService.CreateCategory(name);
+            //var name = parameters[0];
+            //var category = await this.categoryService.CreateCategory(name);
 
-            return $"Category {category.Name} was created.";
+            //return $"Category {category.Name} was created.";
+            throw new NotImplementedException();//TODO
         }
     }
 }

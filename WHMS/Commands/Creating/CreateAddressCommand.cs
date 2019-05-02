@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 
@@ -17,7 +18,7 @@ namespace WHMS.Commands.Creating
         }
 
         //createaddress;Sofia;jk Hristo Smirnenski bl. 1
-        public string Execute(IReadOnlyList<string> parameters)
+        public async Task<string> Execute(IReadOnlyList<string> parameters)
         {
             if (parameters.Count != 2)
             {
@@ -25,7 +26,7 @@ namespace WHMS.Commands.Creating
             }
             var town = townService.GetTown(parameters[0]);
 
-            var address = this.addressSevice.Add(town, parameters[1]);
+            var address = await this.addressSevice.AddAsync(town, parameters[1]);
 
             return $"Address {address.Text} in town {town.Name} was created.";
         }

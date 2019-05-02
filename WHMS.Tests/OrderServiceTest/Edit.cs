@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading.Tasks;
 using WHMSData.Context;
 using WHMSData.Models;
 using WHMSData.Utills;
@@ -9,7 +10,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
     public class Edit
     {
         [TestMethod]
-        public void Type_ShouldSucceed()  //int orderId, OrderType type
+        public async Task Type_ShouldSucceed()  //int orderId, OrderType type
         {
             OrderType type = OrderType.Sell;
 
@@ -24,13 +25,13 @@ namespace WHMS.Services.Tests.OrderServiceTest
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var editType = sut.EditType(1, type);
+                var editType = await sut.EditTypeAsync(1, type);
                 Assert.AreEqual(type, editType.Type);
             }
         }
 
         [TestMethod]
-        public void Partner_ShouldSucceed()  //int orderId, Partner newPartner
+        public async Task Partner_ShouldSucceed()  //int orderId, Partner newPartner
         {
             Partner partner = new Partner { Name = "Partner1" };
             Partner newPartner = new Partner { Name = "Partner2" };
@@ -46,13 +47,13 @@ namespace WHMS.Services.Tests.OrderServiceTest
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var editPartner = sut.EditPartner(1, newPartner);
+                var editPartner =await sut.EditPartnerAsync(1, newPartner);
                 Assert.AreEqual(newPartner, editPartner.Partner);
             }
         }
 
         [TestMethod]
-        public void Comment_ShouldSucceed()  //int orderId, string comment
+        public async Task Comment_ShouldSucceed()  //int orderId, string comment
         {
             string comment = "some comments";
 
@@ -67,7 +68,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var editComment = sut.EditComment(1, comment);
+                var editComment = await sut.EditCommentAsync(1, comment);
                 Assert.AreEqual(comment, editComment.Comment);
             }
         }

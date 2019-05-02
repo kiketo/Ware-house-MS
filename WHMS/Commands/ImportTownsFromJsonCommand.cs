@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 using WHMSData.Models;
@@ -17,17 +18,18 @@ namespace WHMS.Commands
             this.dbService = dbService ?? throw new ArgumentNullException(nameof(dbService));
         }
 
-        public string Execute(IReadOnlyList<string> parameters)
+        public Task<string> Execute(IReadOnlyList<string> parameters)
         {
-            string jsonFileName;
-            string jsonPath = @"./../../../../../DatabaseArchiveInJSON/";
+            //string jsonFileName;
+            //string jsonPath = @"./../../../../../DatabaseArchiveInJSON/";
 
-            jsonFileName = "Towns.json";
-            var towns = File.ReadAllText($"{jsonPath}\\{jsonFileName}");
-            var townsJson = JsonConvert.DeserializeObject<Town[]>(towns);
-            dbService.ImportTowns(townsJson);
+            //jsonFileName = "Towns.json";
+            //var towns = File.ReadAllText($"{jsonPath}\\{jsonFileName}");
+            //var townsJson = JsonConvert.DeserializeObject<Town[]>(towns);
+            //dbService.ImportTowns(townsJson);
 
-            return "Successfully Imported Towns!";
+            //return "Successfully Imported Towns!";
+            throw new NotImplementedException();//TODO
         }
     }
 }

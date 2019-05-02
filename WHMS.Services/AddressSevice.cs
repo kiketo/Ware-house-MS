@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WHMS.Services
 {
@@ -15,7 +17,7 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Address Add(Town town, string addressToAdd)
+        public async Task<Address> AddAsync(Town town, string addressToAdd)
         {
             Address newAddress = town.Addresses.FirstOrDefault(a => a.Text == addressToAdd);
 
@@ -23,11 +25,9 @@ namespace WHMS.Services
             {
                 if (newAddress.IsDeleted)
                 {
+                    newAddress.IsDeleted = false;
                     newAddress.CreatedOn = DateTime.Now;
                     newAddress.ModifiedOn = DateTime.Now;
-                    newAddress.Text = addressToAdd;
-                    newAddress.Town = town;
-                    newAddress.TownId = town.Id;
                 }
                 else
                 {
@@ -48,12 +48,12 @@ namespace WHMS.Services
             }
 
             town.Addresses.Add(newAddress);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
 
             return newAddress;
         }
 
-        public Address EditText(Town town, string oldAddress, string newAddress)
+        public async Task<Address> EditTextAsync(Town town, string oldAddress, string newAddress)
         {
             Address address = town.Addresses.FirstOrDefault(a => a.Text == oldAddress);
 
@@ -65,12 +65,12 @@ namespace WHMS.Services
             address.Text = newAddress;
             address.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
 
             return address;
         }
 
-        public Address EditTown(Town oldTown, string address, Town newTown)
+        public async Task<Address> EditTownAsync(Town oldTown, string address, Town newTown)
         {
             Address addressToEdit = oldTown.Addresses.FirstOrDefault(a => a.Text == address);
 
@@ -82,12 +82,12 @@ namespace WHMS.Services
             addressToEdit.Town = newTown;
             addressToEdit.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
 
             return addressToEdit;
         }
 
-        public Address Delete(Town town, string addressToDelete)
+        public async Task<Address> DeleteAsync(Town town, string addressToDelete)
         {
             Address address = town.Addresses.FirstOrDefault(a => a.Text == addressToDelete);
 
@@ -99,7 +99,7 @@ namespace WHMS.Services
             address.IsDeleted = true;
             address.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+           await this.context.SaveChangesAsync();
 
             return address;
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 
@@ -18,14 +19,14 @@ namespace WHMS.Commands.Showing
             this.productWarehouseService = productWarehouseService;
         }
 
-        public string Execute(IReadOnlyList<string> parameters)
+        public async Task<string> Execute(IReadOnlyList<string> parameters)
         {
             var warehouse = this.warehouseService.GetByName(parameters[0]);
             if (warehouse == null)
             {
                 throw new ArgumentException($"There is no warehouse with name {parameters[0]}");
             }
-            var productList =  this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZero(warehouse.Id);
+            var productList =  await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(warehouse.Id);
 
             if (productList.Count == 0)
             {
