@@ -23,7 +23,7 @@ namespace WHMSWebApp.Models
         public int PartnerId { get; set; }
 
         [Required(ErrorMessage = "Order Partner is required!")]
-        public Partner Partner { get; set; }
+        public string Partner { get; set; }
 
         [Required(ErrorMessage = "Order Products is required!")]
         public ICollection<Product> Products { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Core.Contracts;
 using WHMS.Services.Contracts;
@@ -24,7 +25,7 @@ namespace WHMS.Commands.Deleting
         }
 
         //deletetown;Sofia
-        public string Execute(IReadOnlyList<string> parameters)
+        public async Task<string> Execute(IReadOnlyList<string> parameters)
         {
             if (parameters.Count != 1)
             {
@@ -58,7 +59,7 @@ namespace WHMS.Commands.Deleting
                     {
                         if (!address.IsDeleted)
                         {
-                            addressSevice.Delete(townToDelete, address.Text);
+                            await addressSevice.DeleteAsync(townToDelete, address.Text);
                         }
                     }
 

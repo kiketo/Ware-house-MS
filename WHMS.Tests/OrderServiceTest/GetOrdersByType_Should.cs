@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using WHMSData.Context;
 using WHMSData.Models;
 using WHMSData.Utills;
@@ -13,7 +14,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
     {
         private IFormatProvider provider;
         [TestMethod]
-        public void Succeed()  //(OrderType type, DateTime fromDate, DateTime toDate)
+        public async Task Succeed()  //(OrderType type, DateTime fromDate, DateTime toDate)
         {
             DateTime outPeriod = DateTime.ParseExact("30/01/2000", "dd/mm/yyyy", CultureInfo.InvariantCulture);
             DateTime fromDate = DateTime.ParseExact("01/01/2018", "dd/mm/yyyy", CultureInfo.InvariantCulture);
@@ -36,7 +37,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var getOrdersByType = sut.GetOrdersByType(OrderType.Sell, fromDate, toDate);
+                var getOrdersByType = await sut.GetOrdersByTypeAsync(OrderType.Sell, fromDate, toDate);
                 Assert.AreEqual(2,getOrdersByType.Count);
             }
         }
@@ -65,7 +66,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var ex =Assert.ThrowsException<ArgumentException>(()=> sut.GetOrdersByType(OrderType.Sell, fromDate, toDate));
+                var ex =Assert.ThrowsException<ArgumentException>(async()=> await sut.GetOrdersByTypeAsync(OrderType.Sell, fromDate, toDate));
                 Assert.AreEqual($"Order with Type: {type} from date {fromDate} to date {toDate} doesn't exist!", ex.Message);
             }
         }
@@ -94,7 +95,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetOrdersByType(OrderType.Sell, fromDate, toDate));
+                var ex = Assert.ThrowsException<ArgumentException>(async() => await sut.GetOrdersByTypeAsync(OrderType.Sell, fromDate, toDate));
                 Assert.AreEqual($"Order with Type: {type} from date {fromDate} to date {toDate} doesn't exist!", ex.Message);
             }
         }

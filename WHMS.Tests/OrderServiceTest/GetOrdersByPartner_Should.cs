@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WHMSData.Context;
 using WHMSData.Models;
 
@@ -11,7 +12,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
     public class GetOrdersByPartner_Should
     {
         [TestMethod]
-        public void Succeed()  
+        public async Task Succeed()  
         {
             Partner partner = new Partner { Name = "Partner" };
             Product product = new Product { Name = "Product" };
@@ -31,7 +32,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var getOrdersByPartner = sut.GetOrdersByPartner(partner);
+                var getOrdersByPartner = await sut.GetOrdersByPartnerAsync(partner);
                 Assert.AreEqual(2, getOrdersByPartner.Count);
             }
         }
@@ -55,7 +56,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetOrdersByPartner(partnerOther));
+                var ex = Assert.ThrowsException<ArgumentException>(async() => await sut.GetOrdersByPartnerAsync(partnerOther));
                 Assert.AreEqual($"Orders of Partner: {partnerOther} doesn't exist!", ex.Message);
             }
         }
@@ -79,7 +80,7 @@ namespace WHMS.Services.Tests.OrderServiceTest
             using (var assertContext = new ApplicationDbContext(options))
             {
                 var sut = new OrderService(assertContext);
-                var ex = Assert.ThrowsException<ArgumentException>(() => sut.GetOrdersByPartner(partner));
+                var ex = Assert.ThrowsException<ArgumentException>(async() => await sut.GetOrdersByPartnerAsync(partner));
                 Assert.AreEqual($"Orders of Partner: {partner} doesn't exist!", ex.Message);
             }
         }

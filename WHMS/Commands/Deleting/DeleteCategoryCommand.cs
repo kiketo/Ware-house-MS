@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 
@@ -15,16 +16,17 @@ namespace WHMS.Commands.Deleting
             this.categoryService = categoryService;
             this.productService = productService;
         }
-        public string Execute(IReadOnlyList<string> parameters)
+        public Task<string> Execute(IReadOnlyList<string> parameters)
         {
-            var categoryNameToDelete = parameters[0];
-            var category = this.categoryService.FindByName(categoryNameToDelete);
-            if (this.productService.ProductsByCategory(category).Count > 0)
-            {
-                throw new ArgumentException($"There are products in {categoryNameToDelete}\n\rCAtegory cannot be deleted");
-            }
-            this.categoryService.DeleteCategory(categoryNameToDelete);
-            return $"Category {categoryNameToDelete} was deleted";
+            //var categoryNameToDelete = parameters[0];
+            //var category = this.categoryService.FindByName(categoryNameToDelete);
+            //if (this.productService.ProductsByCategory(category).Count > 0)
+            //{
+            //    throw new ArgumentException($"There are products in {categoryNameToDelete}\n\rCAtegory cannot be deleted");
+            //}
+            //this.categoryService.DeleteCategory(categoryNameToDelete);
+            //return $"Category {categoryNameToDelete} was deleted";
+            throw new NotImplementedException();//TODO
 
         }
     }

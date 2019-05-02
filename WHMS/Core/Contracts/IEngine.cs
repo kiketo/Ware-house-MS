@@ -1,7 +1,9 @@
-﻿namespace WHMS.Core.Contracts
+﻿using System.Threading.Tasks;
+
+namespace WHMS.Core.Contracts
 {
     public interface IEngine
     {
-        void Start();
+        Task Start();
     }
 }

@@ -13,7 +13,7 @@ namespace WHMSWebApp.Mappers
         => new OrderViewModel
         {
             Id=entity.Id,
-            Partner=entity.Partner,
+            Partner=entity.Partner.Name,
             Comment=entity.Comment,
             CreatedOn=entity.CreatedOn,
             Creator=entity.Creator,
