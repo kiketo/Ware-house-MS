@@ -13,5 +13,28 @@ namespace WHMSWebApp.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(int id)
+        {
+            return View();
+        }
+     
+        public IActionResult Details()
+        {
+            return View();
+        }
+        
+        public IActionResult Edit()
+        {
+            return View();
+        }
+
     }
 }
