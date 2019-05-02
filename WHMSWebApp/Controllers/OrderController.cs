@@ -14,19 +14,19 @@ using WHMSWebApp.Models;
 
 namespace WHMSWebApp.Controllers
 {
-    public class OrdersController : Controller
+    public class OrderController : Controller
     {
         private readonly IOrderService orderService;
         private readonly IViewModelMapper<Order,OrderViewModel> orderMapper;
 
-        public OrdersController(IOrderService orderService, IViewModelMapper<Order, OrderViewModel> orderMapper)
+        public OrderController(IOrderService orderService, IViewModelMapper<Order, OrderViewModel> orderMapper)
         {
             this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
             this.orderMapper = orderMapper ?? throw new ArgumentNullException(nameof(orderMapper));
         }
 
         [HttpGet]
-        public IActionResult SearchById([FromQuery]SearchOrderViewModel model)
+        public async Task<IActionResult> SearchById([FromQuery]SearchOrderViewModel model)
         {
             if (model.GetOrderById==0)
             {
@@ -35,7 +35,7 @@ namespace WHMSWebApp.Controllers
 
             model.SearchResults =new List<OrderViewModel>
             {
-                this.orderMapper.MapFrom(this.orderService.GetOrderById(model.GetOrderById))
+                this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(model.GetOrderById))
             };
 
             return View(model);

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
@@ -17,15 +18,14 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Partner Add(string partnerName, Address address = null, string vat = null)
+        public async Task<Partner> AddAsync(string partnerName, Address address = null, string vat = null)
         {
-            Partner newPartner = this.context.Partners.FirstOrDefault(t => t.Name == partnerName);
+            Partner newPartner = await this.context.Partners.FirstOrDefaultAsync(t => t.Name == partnerName);
 
             if (newPartner != null)
             {
                 if (newPartner.IsDeleted)
                 {
-                    newPartner.Name = partnerName;
                     newPartner.Address = address;
                     newPartner.VAT = vat;
                     newPartner.CreatedOn = DateTime.Now;
@@ -52,13 +52,13 @@ namespace WHMS.Services
                 this.context.Partners.Add(newPartner);
             }
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return newPartner;
         }
 
-        public Partner Edit(string partnerName, string newPartnerName, string newVat = null)
+        public async Task<Partner> EditAsync(string partnerName, string newPartnerName, string newVat = null)
         {
-            Partner partnerToEdit = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
+            Partner partnerToEdit =await this.context.Partners.FirstOrDefaultAsync(p => p.Name == partnerName);
 
             if (partnerToEdit == null)
             {
@@ -73,13 +73,13 @@ namespace WHMS.Services
             }
             partnerToEdit.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return partnerToEdit;
         }
 
-        public Partner Delete(string partnerName)
+        public async Task<Partner> DeleteAsync(string partnerName)
         {
-            Partner partnerToDelete = this.context.Partners.FirstOrDefault(p => p.Name == partnerName);
+            Partner partnerToDelete =await this.context.Partners.FirstOrDefaultAsync(p => p.Name == partnerName);
 
             if (partnerToDelete == null || partnerToDelete.IsDeleted)
             {
@@ -89,15 +89,15 @@ namespace WHMS.Services
             partnerToDelete.IsDeleted = true;
             partnerToDelete.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return partnerToDelete;
         }
 
-        public Partner FindByName(string partnerName)
+        public async Task<Partner> FindByNameAsync(string partnerName)
         {
-            var partner = this.context.Partners
+            var partner = await this.context.Partners
                 .Include(p => p.PastOrders)
-                .FirstOrDefault(p => p.Name == partnerName);
+                .FirstOrDefaultAsync(p => p.Name == partnerName);
             if (partner == null || partner.IsDeleted)
             {
                 throw new ArgumentException($"Partner with name `{partnerName}` doesn't exist!");

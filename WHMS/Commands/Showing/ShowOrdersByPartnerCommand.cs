@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 using WHMSData.Models;
@@ -20,16 +21,16 @@ namespace WHMS.Commands.Showing
         }
 
         //ShowOrdersByPartner;Partner
-        public string Execute(IReadOnlyList<string> parameters)
+        public async Task<string> Execute(IReadOnlyList<string> parameters)
         {
             if ( parameters.Count != 1)
             {
                 throw new ArgumentException(@"Please provide parameter: Partner");
             }
 
-            Partner partner = partnerService.FindByName(parameters[0]);
+            Partner partner = await partnerService.FindByNameAsync(parameters[0]);
 
-            var orders = orderService.GetOrdersByPartner(partner);
+            var orders =await orderService.GetOrdersByPartnerAsync(partner);
 
             var result = new StringBuilder();
             result.AppendLine($"Found {orders.Count} orders");

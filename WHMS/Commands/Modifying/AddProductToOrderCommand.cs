@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 
@@ -25,7 +26,7 @@ namespace WHMS.Commands.Modifying
         }
 
         //orderId,product,quantity,warehouse
-        public string Execute(IReadOnlyList<string> parameters)
+        public async Task<string> Execute(IReadOnlyList<string> parameters)
         {
             if (parameters.Count!=4)
             {
@@ -37,7 +38,7 @@ namespace WHMS.Commands.Modifying
                 throw new ArgumentException($"{parameters[0]} is not a valid order ID.");
             }
 
-            var order = orderService.GetOrderById(orderId);
+            var order = await orderService.GetOrderByIdAsync(orderId);
             var product = this.productService.FindByName(parameters[1]);
             int quantity;
             if (!int.TryParse(parameters[2], out quantity))
@@ -46,21 +47,21 @@ namespace WHMS.Commands.Modifying
             }
 
             var warehouse = this.warehouseService.GetByName(parameters[3]);
-            var inStock = this.productWarehouseService.GetQuantity(product.Id, warehouse.Id);
+            var inStock = await this.productWarehouseService.GetQuantityAsync(product.Id, warehouse.Id);
             if (order.Type.Equals("sell"))
             {
                 if (inStock < quantity)
                 {
                     throw new ArgumentException($"The wanted quantity of {product.Name} is not available in {warehouse.Name}");
                 }
-                this.productWarehouseService.SubstractQuantity(product.Id, warehouse.Id, quantity);
+                await this.productWarehouseService.SubstractQuantityAsync(product.Id, warehouse.Id, quantity);
             }
             else
             {
-                this.productWarehouseService.AddQuantity(product.Id, warehouse.Id, quantity);
+                await this.productWarehouseService.AddQuantityAsync(product.Id, warehouse.Id, quantity);
             }
 
-            orderService.AddProductToOrder(orderId, product, quantity);
+            await orderService.AddProductToOrderAsync(orderId, product, quantity);
 
 
             return $"Product: {product.Name} was added to Order with ID: {order.Id}.";

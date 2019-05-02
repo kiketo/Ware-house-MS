@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 using WHMSData.Utills;
@@ -18,7 +19,7 @@ namespace WHMS.Commands.Showing
         }
 
         //ShowOrdersByType;buy;01/01/2018;01/01/2018;
-        public string Execute(IReadOnlyList<string> parameters)
+        public async Task<string> Execute(IReadOnlyList<string> parameters)
         {
             DateTime fromDate;
             DateTime toDate;
@@ -54,7 +55,7 @@ namespace WHMS.Commands.Showing
                 }
             }
 
-            var orders = orderService.GetOrdersByType(typeOrder, fromDate, toDate);
+            var orders = await orderService.GetOrdersByTypeAsync(typeOrder, fromDate, toDate);
 
             var result = new StringBuilder();
             result.AppendLine($"Found {orders.Count} orders");

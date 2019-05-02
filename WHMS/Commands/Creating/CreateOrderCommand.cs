@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Core.Contracts;
 using WHMS.Services.Contracts;
@@ -31,7 +32,7 @@ namespace WHMS.Commands.Creating
             this.warehouseService = warehouseService ?? throw new ArgumentNullException(nameof(warehouseService));
         }
 
-        public string Execute(IReadOnlyList<string> parameters) //type,partner,product,quantity,warehouse, comment
+        public async Task<string> Execute(IReadOnlyList<string> parameters) //type,partner,product,quantity,warehouse, comment
         {
             if (parameters.Count!=5&&parameters.Count!=6)
             {
@@ -42,7 +43,7 @@ namespace WHMS.Commands.Creating
             {
                 throw new ArgumentException($"Order type '{parameters[0]}' is not valid. Should be 'buy' or 'sell'.");
             }
-            var partner = this.partnerService.FindByName(parameters[1]);
+            var partner = await this.partnerService.FindByNameAsync(parameters[1]);
 
             var product = this.productService.FindByName(parameters[2]);
             int quantity;
@@ -52,26 +53,26 @@ namespace WHMS.Commands.Creating
             }
 
             var warehouse = this.warehouseService.GetByName(parameters[4]);
-            var inStock = this.productWarehouseService.GetQuantity(product.Id, warehouse.Id);
+            var inStock = await this.productWarehouseService.GetQuantityAsync(product.Id, warehouse.Id);
             if (orderType.Equals("sell"))
             {
                 if (inStock < quantity)
                 {
                     throw new ArgumentException($"The wanted quantity of {product.Name} is not available in {warehouse.Name}.");
                 }
-                this.productWarehouseService.SubstractQuantity(product.Id, warehouse.Id, quantity);
+                await this.productWarehouseService.SubstractQuantityAsync(product.Id, warehouse.Id, quantity);
             }
             else
             {
-                this.productWarehouseService.AddQuantity(product.Id, warehouse.Id, quantity);
+                await this.productWarehouseService.AddQuantityAsync(product.Id, warehouse.Id, quantity);
             }
             string comment=null;
             if (parameters.Count == 6)
             {
                 comment = parameters[5];
             }
-            var order = this.orderService.Add(orderType, partner, product, quantity, comment);
-            partner.PastOrders.Add(order);
+            var order = await this.orderService.AddAsync(orderType, partner, product, quantity, comment);
+            partner.PastOrders.Add(order);//TODO move this in PartnerService
 
             this.writer.WriteLine("Do you want to print the order to pdf? [Y/N]");
 

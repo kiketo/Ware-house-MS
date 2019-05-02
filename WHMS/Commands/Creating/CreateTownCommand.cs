@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Services.Contracts;
 
@@ -15,15 +16,16 @@ namespace WHMS.Commands.Creating
         }
 
         //createtown;Sofia
-        public string Execute(IReadOnlyList<string> parameters)
+        public Task<string> Execute(IReadOnlyList<string> parameters)
         {
-            if (parameters.Count != 1)
-            {
-                throw new ArgumentException(@"Please provide parameter: Town");
-            }
+            //if (parameters.Count != 1)
+            //{
+            //    throw new ArgumentException(@"Please provide parameter: Town");
+            //}
 
-            var town = this.townService.Add(parameters[0]);
-            return $"Town {town.Name} was created.";
+            //var town = this.townService.Add(parameters[0]);
+            //return $"Town {town.Name} was created.";
+            throw new NotImplementedException();//TODO
         }
     }
 }

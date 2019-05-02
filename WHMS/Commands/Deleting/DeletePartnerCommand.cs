@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Commands.Contracts;
 using WHMS.Core.Contracts;
 using WHMS.Services.Contracts;
@@ -26,14 +27,14 @@ namespace WHMS.Commands.Deleting
 
 
         //deletepartner;partner
-        public string Execute(IReadOnlyList<string> parameters)
+        public async Task<string> Execute(IReadOnlyList<string> parameters)
         {
             if (parameters.Count != 1)
             {
                 throw new ArgumentException(@"Please provide valid parameter: Partner");
             }
 
-            Partner partnerToDelete = partnerService.FindByName(parameters[0]);
+            Partner partnerToDelete = await partnerService.FindByNameAsync(parameters[0]);
 
             if (partnerToDelete.PastOrders.Count!=0)
             {
@@ -53,7 +54,7 @@ namespace WHMS.Commands.Deleting
             {
                 if (choice.KeyChar == 'y')
                 {
-                    this.partnerService.Delete(partnerToDelete.Name);
+                    await this.partnerService.DeleteAsync(partnerToDelete.Name);
 
                     return $"Partner {parameters[0]} was deleted";
                 }
