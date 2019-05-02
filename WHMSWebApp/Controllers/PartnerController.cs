@@ -8,5 +8,10 @@ namespace WHMSWebApp.Controllers
 {
     public class PartnerController : Controller
     {
+
+        public IActionResult Search()
+        {
+            return View();
+        }
     }
 }

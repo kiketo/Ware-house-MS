@@ -21,11 +21,7 @@ namespace WHMSWebApp.Controllers
             this.orderMapper = orderMapper ?? throw new ArgumentNullException(nameof(orderMapper));
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+        
         public IActionResult Order()
         {
             return View();
@@ -42,7 +38,7 @@ namespace WHMSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> OrderById([FromQuery]SearchOrderViewModel model)
+        public async Task<IActionResult> OrderById([FromQuery]SearchOrderByIdViewModel model)
         {
             if (model.GetOrderById == 0)
             {

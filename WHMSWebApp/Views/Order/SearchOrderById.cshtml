@@ -1,4 +1,4 @@
-﻿@model SearchOrderViewModel
+﻿@model SearchOrderByIdViewModel
 @{
     ViewData["Title"] = "SearchById";
 }
@@ -9,7 +9,7 @@
 <h3>Search for Order by ID</h3>
 
 <div class="row mt-5">
-    <form class="col-lg-6" asp-controller="Search" asp-action="OrderById" method="get">
+    <form class="col-lg-6" asp-controller="Order" asp-action="SearchOrderById" method="get">
         <div class="row">
             <div class="col-sm-9">
                 <input asp-for="@Model.GetOrderById" placeholder="Search..." class="form-control" />

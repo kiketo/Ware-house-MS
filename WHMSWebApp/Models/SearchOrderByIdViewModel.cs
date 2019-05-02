@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WHMSWebApp.Models
 {
-    public class SearchOrderViewModel
+    public class SearchOrderByIdViewModel
     {
         [Required]
         [Range(1,int.MaxValue,ErrorMessage ="ID should be non negative number")]
