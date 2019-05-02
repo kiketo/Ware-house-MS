@@ -9,7 +9,7 @@ using WHMSData.Models;
 namespace WHMS.Services.Tests.OrderServiceTest
 {
     [TestClass]
-    public class GetOrdersByPartner_Should
+    public class GetOrdersByPartner_Should//TODO
     {
         [TestMethod]
         public async Task Succeed()  
@@ -22,9 +22,9 @@ namespace WHMS.Services.Tests.OrderServiceTest
             var options = TestUtils.GetOptions(dbName);
             using (var arrangeContext = new ApplicationDbContext(options))
             {
-                arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.Orders.Add(new Order { Partner = partnerOther, Products = new List<Product> { product } });
+                //arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
+                //arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
+                //arrangeContext.Orders.Add(new Order { Partner = partnerOther, Products = new List<Product> { product } });
 
                 arrangeContext.SaveChanges();
             }
@@ -47,8 +47,8 @@ namespace WHMS.Services.Tests.OrderServiceTest
             var options = TestUtils.GetOptions(dbName);
             using (var arrangeContext = new ApplicationDbContext(options))
             {
-                arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
-                arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
+                //arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
+                //arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product } });
 
                 arrangeContext.SaveChanges();
             }
@@ -71,8 +71,8 @@ namespace WHMS.Services.Tests.OrderServiceTest
             var options = TestUtils.GetOptions(dbName);
             using (var arrangeContext = new ApplicationDbContext(options))
             {
-                arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product }, IsDeleted=true });
-                arrangeContext.Orders.Add(new Order { Partner = partnerOther, Products = new List<Product> { product } });
+                //arrangeContext.Orders.Add(new Order { Partner = partner, Products = new List<Product> { product }, IsDeleted=true });
+                //arrangeContext.Orders.Add(new Order { Partner = partnerOther, Products = new List<Product> { product } });
 
                 arrangeContext.SaveChanges();
             }

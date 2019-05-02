@@ -11,6 +11,7 @@ using WHMSData.Context;
 using WHMSData.Models;
 using WHMSWebApp.Mappers;
 using WHMSWebApp.Models;
+using WHMSWebApp.Models.OrderViewModels;
 
 namespace WHMSWebApp.Controllers
 {
@@ -53,33 +54,53 @@ namespace WHMSWebApp.Controllers
 
             return View(model);
         }
+        //TODO
+        //[HttpGet]
+        //public async Task<IActionResult> SearchOrderByPartner([FromQuery]SearchOrderByPartnerViewModel model)
+        //{
+        //    if (model.GetOrderById == 0)
+        //    {
+        //        return View();
+        //    }
+
+        //    model.SearchResults = new List<OrderViewModel>
+        //    {
+        //        this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(model.GetOrderById))
+        //    };
+
+        //    return View(model);
+        //}
+
+
+
+
         [HttpGet]
         public IActionResult Create()
         {
             return View();
-        }
-        [HttpPost]
-        public IActionResult Create(OrderViewModel order)
-        {
+        }//TODO
+        //[HttpPost]
+        //public IActionResult Create(OrderViewModel order)
+        //{
 
-            if (ModelState.IsValid)
-            {
+        //    if (ModelState.IsValid)
+        //    {
 
-                var newOrder = this.orderService.AddAsync(
-                    order.Type,
-                    this.partnerService.FindByNameAsync(order.Partner),
-                    this.productService.FindByName(order.Products),//TODO change logic, wrong!!!
-                    order.quantity,//TODO
-                    order.Comment
-                    );
+        //        var newOrder = this.orderService.AddAsync(
+        //            order.Type,
+        //            this.partnerService.FindByNameAsync(order.Partner),
+        //            this.productService.FindByName(order.Products),//TODO change logic, wrong!!!
+        //            order.quantity,//TODO
+        //            order.Comment
+        //            );
 
-                return RedirectToAction(nameof(Details), new { id = newOrder.Id });
-            }
-            else
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction(nameof(Details), new { id = newOrder.Id });
+        //    }
+        //    else
+        //    {
+        //        return View();
+        //    }
+        //}
         
         public IActionResult Details(int id)
         {

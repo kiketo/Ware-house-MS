@@ -61,7 +61,7 @@ namespace WHMS.Commands.Modifying
                 await this.productWarehouseService.AddQuantityAsync(product.Id, warehouse.Id, quantity);
             }
 
-            await orderService.AddProductToOrderAsync(orderId, product, quantity);
+           // await orderService.AddProductToOrderAsync(orderId, product, quantity);
 
 
             return $"Product: {product.Name} was added to Order with ID: {order.Id}.";

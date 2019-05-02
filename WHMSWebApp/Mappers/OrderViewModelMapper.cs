@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WHMSData.Models;
 using WHMSWebApp.Models;
+using WHMSWebApp.Models.OrderViewModels;
 
 namespace WHMSWebApp.Mappers
 {
@@ -20,8 +21,8 @@ namespace WHMSWebApp.Mappers
             CreatorId=entity.CreatorId,
             IsDeleted=entity.IsDeleted,
             ModifiedOn=entity.ModifiedOn,
-            PartnerId=entity.PartnerId,
-            Products=entity.Products,
+            PartnerId=entity.PartnerId,//TODO
+            //Products=entity.Products,
             TotalValue=entity.TotalValue,
             Type=entity.Type
         };

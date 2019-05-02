@@ -58,10 +58,12 @@ namespace WHMS.Commands.Showing
             var orders = await orderService.GetOrdersByTypeAsync(typeOrder, fromDate, toDate);
 
             var result = new StringBuilder();
-            result.AppendLine($"Found {orders.Count} orders");
-            result.Append(string.Join(Environment.NewLine, orders
-                .Select(o => $"Id: {o.Id} \r\n Created on: {o.CreatedOn} \r\n Partner: {o.Partner.Name} \r\n" +
-                $"  Products: {string.Join(Environment.NewLine, o.Products.Select(p => $"{p.Name}"))}")));
+            //result.AppendLine($"Found {orders.Count} orders");
+            //result.Append(string.Join(Environment.NewLine, orders
+            //    .Select(o => $"Id: {o.Id} \r\n Created on: {o.CreatedOn} \r\n Partner: {o.Partner.Name} \r\n" +
+            //    $"  Products: {string.Join(Environment.NewLine, o.ProductsWarehouses.Products.Select(p => $"{p.Name}"))}"))); 
+
+            //TODO
 
             return result.ToString();
         }

@@ -19,16 +19,16 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Order> AddAsync(OrderType type, Partner partner, Product product, int qty, string comment = null)
+        public async Task<Order> AddAsync(OrderType type, Partner partner, ProductWarehouse pw, int qty, string comment = null)
         {
             decimal totalValue;
             if (type == OrderType.Buy)
             {
-                totalValue = product.BuyPrice * qty;
+                totalValue = pw.Product.BuyPrice * qty;
             }
             else
             {
-                totalValue = product.SellPrice * qty;
+                totalValue = pw.Product.SellPrice * qty;
             }
 
             Order newOrder = new Order
@@ -38,7 +38,7 @@ namespace WHMS.Services
                 Partner = partner,
                 Comment = comment,
                 ModifiedOn = DateTime.Now,
-                Products = new List<Product> { product },
+                ProductsWarehouses = new List<ProductWarehouse> { pw },
                 TotalValue = totalValue
             };
 
@@ -69,15 +69,15 @@ namespace WHMS.Services
             return orderToEdit;
         }
 
-        public async Task<Order> AddProductToOrderAsync(int orderId, Product product, int qty)
+        public async Task<Order> AddProductToOrderAsync(int orderId, ProductWarehouse pw)
         {
             Order orderToEdit = await GetOrderByIdAsync(orderId);
 
             decimal totalValue = orderToEdit.TotalValue;
 
-            totalValue += product.SellPrice * qty;
+            totalValue +=pw.Product.SellPrice * pw.Quantity;
 
-            orderToEdit.Products.Add(product);
+            orderToEdit.ProductsWarehouses.Add(pw);
             orderToEdit.TotalValue = totalValue;
             orderToEdit.ModifiedOn = DateTime.Now;
 
@@ -99,7 +99,7 @@ namespace WHMS.Services
         public async Task<Order> GetOrderByIdAsync(int orderId)
         {
             Order orderToShow =await this.context.Orders
-                .Include(o => o.Products)
+                .Include(o => o.ProductsWarehouses)
                 .Include(o => o.Partner)
                 .Where(o => o.Id == orderId)
                 .FirstOrDefaultAsync();
@@ -118,7 +118,7 @@ namespace WHMS.Services
                 .Where(o => o.CreatedOn >= fromDate)
                 .Where(o => o.CreatedOn <= toDate)
                 .Include(p => p.Partner)
-                .Include(p => p.Products)
+                .Include(p => p.ProductsWarehouses)
                 .ToListAsync();
 
             if (ordersToShow.Count == 0)
@@ -134,7 +134,7 @@ namespace WHMS.Services
                 .Where(o => o.Partner == partner)
                 .Where(o => o.IsDeleted == false)
                 .Include(p => p.Partner)
-                .Include(p => p.Products)
+                .Include(p => p.ProductsWarehouses)
                 .ToListAsync();
 
             if (ordersToShow.Count == 0)

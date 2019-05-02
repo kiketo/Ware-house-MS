@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using WHMSData.Models;
 using WHMSData.Utills;
 
-namespace WHMSWebApp.Models
+namespace WHMSWebApp.Models.OrderViewModels
 {
     public class OrderViewModel
     {

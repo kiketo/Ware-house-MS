@@ -104,12 +104,13 @@ namespace WHMS.Utils
                         paragraph.AddFormattedText(property.Name, TextFormat.Underline);
                         paragraph.AddText(":");
 
-                        foreach (var item in obj.Products)
+                        foreach (var item in obj.ProductsWarehouses)
                         {
+                            
                             paragraph = section.AddParagraph();
                             paragraph.Format.AddTabStop(100);
                             paragraph.AddTab();
-                            paragraph.AddFormattedText(item.Name.ToString());
+                            paragraph.AddFormattedText(item.Product.Name.ToString());
                         }
                     }
                     else

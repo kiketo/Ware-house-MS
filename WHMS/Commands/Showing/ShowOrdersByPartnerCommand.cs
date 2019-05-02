@@ -36,7 +36,7 @@ namespace WHMS.Commands.Showing
             result.AppendLine($"Found {orders.Count} orders");
             result.Append(string.Join(Environment.NewLine, orders
                 .Select(o => $"Id: {o.Id} \r\n Created on: {o.CreatedOn} \r\n Partner: {o.Partner.Name} \r\n" +
-                $"  Products: {string.Join(Environment.NewLine, o.Products.Select(p => $"{p.Name}"))}")));
+                $"  Products: {string.Join(Environment.NewLine, o.ProductsWarehouses.Select(p => $"{p.Product.Name}"))}")));
 
             return result.ToString();
         }
