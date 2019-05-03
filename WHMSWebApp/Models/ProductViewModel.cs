@@ -30,5 +30,7 @@ namespace WHMSWebApp.Models
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal SellPrice { get; set; }
+
+        public IReadOnlyCollection<ProductViewModel> SearchResults { get; set; } = new List<ProductViewModel>();
     }
 }

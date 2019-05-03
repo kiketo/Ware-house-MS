@@ -1,16 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using WHMS.Services;
 using WHMS.Services.Contracts;
-using WHMSData.Context;
 using WHMSData.Models;
+using WHMSData.Utills;
 using WHMSWebApp.Mappers;
-using WHMSWebApp.Models;
 using WHMSWebApp.Models.OrderViewModels;
 
 namespace WHMSWebApp.Controllers
@@ -20,18 +16,16 @@ namespace WHMSWebApp.Controllers
         private readonly IOrderService orderService;
         private readonly IProductService productService;
         private readonly IPartnerService partnerService;
-        private readonly IViewModelMapper<Order,OrderViewModel> orderMapper;
+        private readonly IViewModelMapper<Order, OrderViewModel> orderMapper;
+        private readonly IUnitService unitService;
 
-        public OrderController(
-            IOrderService orderService, 
-            IViewModelMapper<Order, OrderViewModel> orderMapper, 
-            IPartnerService partnerService,
-            IProductService productService)
+        public OrderController(IOrderService orderService, IProductService productService, IPartnerService partnerService, IViewModelMapper<Order, OrderViewModel> orderMapper, IUnitService unitService)
         {
             this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
+            this.productService = productService ?? throw new ArgumentNullException(nameof(productService));
+            this.partnerService = partnerService ?? throw new ArgumentNullException(nameof(partnerService));
             this.orderMapper = orderMapper ?? throw new ArgumentNullException(nameof(orderMapper));
-            this.partnerService = partnerService;
-            this.productService = productService;
+            this.unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
         }
 
         public IActionResult Search()
@@ -40,36 +34,74 @@ namespace WHMSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SearchOrderById([FromQuery]SearchOrderByIdViewModel model)
+        public async Task<IActionResult> SearchOrderById([FromQuery]OrderViewModel model)
         {
-            if (model.GetOrderById==0)
+            if (model.Id == 0)
+            {
+                return View();
+            }
+            try
+            {
+                model.SearchResults = new List<OrderViewModel>
+            {
+                this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(model.Id))
+            };
+            }
+            catch (ArgumentException)
+            {
+                return View("NoOrdersFound");
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchOrderByPartner([FromQuery]OrderViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Partner))
             {
                 return View();
             }
 
-            model.SearchResults =new List<OrderViewModel>
+            try
             {
-                this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(model.GetOrderById))
-            };
+                var partner = await this.partnerService.FindByNameAsync(model.Partner);
+                model.SearchResults = (await this.orderService.GetOrdersByPartnerAsync(partner))
+                    .Select(this.orderMapper.MapFrom)
+                    .ToList();
+            }
+            catch (ArgumentException)
+            {
+                return View("NoOrdersFound");
+            }
 
             return View(model);
         }
-        //TODO
-        //[HttpGet]
-        //public async Task<IActionResult> SearchOrderByPartner([FromQuery]SearchOrderByPartnerViewModel model)
-        //{
-        //    if (model.GetOrderById == 0)
-        //    {
-        //        return View();
-        //    }
 
-        //    model.SearchResults = new List<OrderViewModel>
-        //    {
-        //        this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(model.GetOrderById))
-        //    };
+        [HttpGet]
+        public async Task<IActionResult> SearchOrderByType([FromQuery]OrderViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Type))
+            {
+                return View();
+            }
+            OrderType orderType;
+            var type = Enum.TryParse(model.Type, true, out orderType);
 
-        //    return View(model);
-        //}
+            try
+            {
+                model.SearchResults = (await this.orderService.GetOrdersByTypeAsync(orderType, DateTime.MinValue, DateTime.MaxValue))
+                    .Select(this.orderMapper.MapFrom)
+                    .ToList();
+            }
+            catch (ArgumentException)
+            {
+
+                return View("NoOrdersFound");
+            }
+
+            return View(model);
+        }
 
 
 
@@ -79,9 +111,9 @@ namespace WHMSWebApp.Controllers
         {
             return View();
         }//TODO
-        //[HttpPost]
-        //public IActionResult Create(OrderViewModel order)
-        //{
+         //[HttpPost]
+         //public IActionResult Create(OrderViewModel order)
+         //{
 
         //    if (ModelState.IsValid)
         //    {
@@ -101,14 +133,14 @@ namespace WHMSWebApp.Controllers
         //        return View();
         //    }
         //}
-        
+
         public IActionResult Details(int id)
         {
             var model = this.orderService.GetOrderByIdAsync(id);
             return View(model);
         }
 
-        
+
 
 
         //// GET: Orders

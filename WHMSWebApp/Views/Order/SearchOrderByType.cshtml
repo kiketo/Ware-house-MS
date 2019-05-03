@@ -1,19 +1,20 @@
 ﻿@model OrderViewModel
 @{
-    ViewData["Title"] = "SearchById";
+    ViewData["Title"] = "SearchOrderByType";
 }
 <partial name="_Search" />
 
 <partial name="_SearchOrder" />
 
-<h3>Search for Order by ID</h3>
+<h3>Search for Orders by Type</h3>
 
 <div class="row mt-5">
-    <form class="col-lg-6" asp-controller="Order" asp-action="SearchOrderById" method="get">
+    <form class="col-lg-6" asp-controller="Order" asp-action="SearchOrderByType" method="get">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row">
             <div class="col-sm-9">
-                <input asp-for="@Model.Id" placeholder="Search..." class="form-control" />
-                <span asp-validation-for="@Model.Id" class="text-danger"></span>
+                <select class="form-control" id="sel1" name="sellist1" asp-for="@Model.Type" asp-items="@Html.GetEnumSelectList<OrderType>()"></select>
+                <span asp-validation-for="@Model.Type" class="text-danger"></span>
             </div>
             <div class="col-sm-3">
                 <button type="submit" class="btn btn-success">Search!</button>
@@ -28,7 +29,7 @@
         {
 
             @*<a href="~/Views/Orders/Index.cshtml"> ~/Views/Orders/Index.cshtml </a>*@
-            if (Model.Id == 0 && !Model.SearchResults.Any())
+            if (!string.IsNullOrWhiteSpace(Model.Type) && !Model.SearchResults.Any())
             {
                 <p class="alert alert-info">There are no orders</p>
             }
