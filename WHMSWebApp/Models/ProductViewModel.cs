@@ -11,6 +11,9 @@ namespace WHMSWebApp.Models
 {
     public class ProductViewModel
     {
+        [Range(1, int.MaxValue, ErrorMessage = "ID should be a positive number")]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Product Name is required!")]
         [MaxLength(30)]
         [MinLength(4)]
