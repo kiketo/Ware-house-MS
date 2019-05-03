@@ -18,6 +18,14 @@ namespace WHMSWebApp.Controllers
         private readonly ITownService townService;
         private readonly IViewModelMapper<Partner, PartnerViewModel> partnerMapper;
 
+        public PartnerController(IPartnerService partnerService, IAddressService addressService, ITownService townService, IViewModelMapper<Partner, PartnerViewModel> partnerMapper)
+        {
+            this.partnerService = partnerService ?? throw new ArgumentNullException(nameof(partnerService));
+            this.addressService = addressService ?? throw new ArgumentNullException(nameof(addressService));
+            this.townService = townService ?? throw new ArgumentNullException(nameof(townService));
+            this.partnerMapper = partnerMapper ?? throw new ArgumentNullException(nameof(partnerMapper));
+        }
+
         public IActionResult Search()
         {
             return View();
@@ -82,7 +90,7 @@ namespace WHMSWebApp.Controllers
             return View(model);
         }
 
-        }
+        
 
         [HttpGet]
         public IActionResult Create()
