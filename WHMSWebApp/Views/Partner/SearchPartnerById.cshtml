@@ -1,15 +1,15 @@
-﻿@model OrderViewModel
+﻿@model PartnerViewModel
 @{
-    ViewData["Title"] = "SearchById";
+    ViewData["Title"] = "SearchPartnerById";
 }
 <partial name="_Search" />
 
-<partial name="_SearchOrder" />
+<partial name="_SearchPartner" />
 
-<h3>Search for Order by ID</h3>
+<h3>Search for Partner by ID</h3>
 
 <div class="row mt-5">
-    <form class="col-lg-6" asp-controller="Order" asp-action="SearchOrderById" method="get">
+    <form class="col-lg-6" asp-controller="Partner" asp-action="SearchPartnerById" method="get">
         <div class="row">
             <div class="col-sm-9">
                 <input asp-for="@Model.Id" placeholder="Search..." class="form-control" />
@@ -27,16 +27,13 @@
         @if (Model != null)
         {
 
-            if (Model.Id == 0 && !Model.SearchResults.Any())
+            if (Model.Id == 0 && Model.SearchResult == null)
             {
-                <p class="alert alert-info">There are no orders</p>
+                <p class="alert alert-info">There are no partners</p>
             }
             else
             {
-                foreach (var order in Model.SearchResults)
-                {
-                    <partial name="_OrderPartial" model="order" />
-                }
+                <partial name="_PartnerPartial" model="Model.SearchResult" />
             }
         }
     </div>

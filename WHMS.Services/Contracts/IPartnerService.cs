@@ -12,5 +12,9 @@ namespace WHMS.Services.Contracts
         Task<Partner> DeleteAsync(string partnerName);
 
         Task<Partner> FindByNameAsync(string partnerName);
+
+        Task<Partner> FindByIdAsync(int Id);
+
+        Task<Partner> FindByVATAsync(string VAT);
     }
 }

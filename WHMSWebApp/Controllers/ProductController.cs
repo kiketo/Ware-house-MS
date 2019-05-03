@@ -72,6 +72,50 @@ namespace WHMSWebApp.Controllers
             return View();
         }
 
+        //public async Task<IActionResult> SearchPartnerById([FromQuery]PartnerViewModel model)
+        //{
+        //    if (model.Id == 0)
+        //    {
+        //        return View();
+        //    }
+        //    try
+        //    {
+        //        model.SearchResults = new List<OrderViewModel>
+        //    {
+        //        this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(model.Id))
+        //    };
+        //    }
+        //    catch (ArgumentException)
+        //    {
+        //        return View("NoOrdersFound");
+        //    }
+
+        //    return View(model);
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> SearchOrderByPartner([FromQuery]OrderViewModel model)
+        //{
+        //    if (string.IsNullOrWhiteSpace(model.Partner))
+        //    {
+        //        return View();
+        //    }
+
+        //    try
+        //    {
+        //        var partner = await this.partnerService.FindByNameAsync(model.Partner);
+        //        model.SearchResults = (await this.orderService.GetOrdersByPartnerAsync(partner))
+        //            .Select(this.orderMapper.MapFrom)
+        //            .ToList();
+        //    }
+        //    catch (ArgumentException)
+        //    {
+        //        return View("NoOrdersFound");
+        //    }
+
+        //    return View(model);
+        //}
+
 
     }
 }
