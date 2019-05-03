@@ -104,7 +104,7 @@ namespace WHMSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SearchProductByName([FromQuery]ProductViewModel model)
+        public async Task<IActionResult> SearchProductsByName([FromQuery]ProductViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Name))
             {
@@ -125,6 +125,26 @@ namespace WHMSWebApp.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SearchProductsByCategory([FromQuery]ProductViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Name))
+            {
+                return View();
+            }
 
+            try
+            {
+                model.SearchResults = (await this.productService.FindByNameAsync(model.Name))
+                    .Select(this.productMapper.MapFrom)
+                    .ToList();
+            }
+            catch (ArgumentException)
+            {
+                return View("NoOrdersFound");
+            }
+
+            return View(model);
+        }
     }
 }
