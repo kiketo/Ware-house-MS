@@ -105,14 +105,28 @@ namespace WHMS.Services
 
             return partner;
         }
-        public async Task<Partner> FindByIdAsync(int id)
+
+        public async Task<Partner> FindByIdAsync(int Id)
         {
             var partner = await this.context.Partners
                 .Include(p => p.PastOrders)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == Id);
             if (partner == null || partner.IsDeleted)
             {
-                throw new ArgumentException($"Partner doesn't exist!");
+                throw new ArgumentException($"Partner with ID `{Id}` doesn't exist!");
+            }
+
+            return partner;
+        }
+
+        public async Task<Partner> FindByVATAsync(string VAT)
+        {
+            var partner = await this.context.Partners
+                .Include(p => p.PastOrders)
+                .FirstOrDefaultAsync(p => p.VAT == VAT);
+            if (partner == null || partner.IsDeleted)
+            {
+                throw new ArgumentException($"Partner with VAT `{VAT}` doesn't exist!");
             }
 
             return partner;
