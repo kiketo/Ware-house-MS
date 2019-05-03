@@ -90,8 +90,6 @@ namespace WHMSWebApp.Controllers
             return View(model);
         }
 
-        
-
         [HttpGet]
         public IActionResult Create()
         {

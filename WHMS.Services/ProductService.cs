@@ -6,6 +6,7 @@ using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace WHMS.Services
 {
@@ -81,12 +82,14 @@ namespace WHMS.Services
             return productToDelete;
         }
 
-        public Product FindByName(string name)
+        public async Task<ICollection<Product>> FindByNameAsync(string name)
         {
-            Product product = this.context.Products
-                .Include(p=>p.Category)
-                .FirstOrDefault(u => u.Name == name);
-            if (product == null || product.IsDeleted)
+            var product = await this.context.Products
+                .Include(p => p.Category)                
+                .Where(p => p.Name.Contains(name))
+                .Where(p=>p.IsDeleted==false)
+                .ToListAsync();
+            if (product.Count==0)
             {
                 throw new ArgumentException($"Product `{name}` doesn't exist!");
             }
@@ -143,9 +146,9 @@ namespace WHMS.Services
             var productsByCategory = this.context.Products.Where(p => p.Category == category).ToList();
             return productsByCategory;
         }
-        public Product GetProductById(int productId)
+        public async Task<Product> GetProductByIdAsync(int productId)
         {
-            var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
+            var product = await this.context.Products.Where(i => i.Id == productId).FirstOrDefaultAsync();
             if (product == null || product.IsDeleted)
             {
                 throw new ArgumentException($"Product does not exist!");

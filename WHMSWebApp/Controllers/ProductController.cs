@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WHMS.Services;
 using WHMS.Services.Contracts;
 using WHMSData.Models;
+using WHMSWebApp.Mappers;
 using WHMSWebApp.Models;
 
 namespace WHMSWebApp.Controllers
@@ -15,16 +16,14 @@ namespace WHMSWebApp.Controllers
         IProductService productService;
         IUnitService unitService;
         ICategoryService categoryService;
+        IViewModelMapper<Product,ProductViewModel> productMapper;
 
-        public ProductController(
-            IProductService productService, 
-            IUnitService unitService, 
-            ICategoryService categoryService
-            )
+        public ProductController(IProductService productService, IUnitService unitService, ICategoryService categoryService, IViewModelMapper<Product, ProductViewModel> productMapper)
         {
-            this.productService = productService;
-            this.unitService = unitService;
-            this.categoryService = categoryService;
+            this.productService = productService ?? throw new ArgumentNullException(nameof(productService));
+            this.unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
+            this.categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
+            this.productMapper = productMapper ?? throw new ArgumentNullException(nameof(productMapper));
         }
 
         [HttpGet]
@@ -56,9 +55,9 @@ namespace WHMSWebApp.Controllers
                 return View();
             }
         }
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var model = this.productService.GetProductById(id);
+            var model = await this.productService.GetProductByIdAsync(id);
             return View(model);
         }
 
@@ -72,49 +71,48 @@ namespace WHMSWebApp.Controllers
             return View();
         }
 
-        //public async Task<IActionResult> SearchPartnerById([FromQuery]PartnerViewModel model)
-        //{
-        //    if (model.Id == 0)
-        //    {
-        //        return View();
-        //    }
-        //    try
-        //    {
-        //        model.SearchResults = new List<OrderViewModel>
-        //    {
-        //        this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(model.Id))
-        //    };
-        //    }
-        //    catch (ArgumentException)
-        //    {
-        //        return View("NoOrdersFound");
-        //    }
+        public async Task<IActionResult> SearchProductById([FromQuery]ProductViewModel model)
+        {
+            if (model.Id == 0)
+            {
+                return View();
+            }
+            try
+            {
+                model.SearchResults = new List<ProductViewModel>
+            {
+                this.productMapper.MapFrom(await this.productService.GetProductByIdAsync(model.Id))
+            };
+            }
+            catch (ArgumentException)
+            {
+                return View("NoProductFound");
+            }
 
-        //    return View(model);
-        //}
+            return View(model);
+        }
 
-        //[HttpGet]
-        //public async Task<IActionResult> SearchOrderByPartner([FromQuery]OrderViewModel model)
-        //{
-        //    if (string.IsNullOrWhiteSpace(model.Partner))
-        //    {
-        //        return View();
-        //    }
+        [HttpGet]
+        public async Task<IActionResult> SearchProductByName([FromQuery]ProductViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Name))
+            {
+                return View();
+            }
 
-        //    try
-        //    {
-        //        var partner = await this.partnerService.FindByNameAsync(model.Partner);
-        //        model.SearchResults = (await this.orderService.GetOrdersByPartnerAsync(partner))
-        //            .Select(this.orderMapper.MapFrom)
-        //            .ToList();
-        //    }
-        //    catch (ArgumentException)
-        //    {
-        //        return View("NoOrdersFound");
-        //    }
+            try
+            {
+                model.SearchResults = (await this.productService.FindByNameAsync(model.Name))
+                    .Select(this.productMapper.MapFrom)
+                    .ToList();
+            }
+            catch (ArgumentException)
+            {
+                return View("NoOrdersFound");
+            }
 
-        //    return View(model);
-        //}
+            return View(model);
+        }
 
 
     }

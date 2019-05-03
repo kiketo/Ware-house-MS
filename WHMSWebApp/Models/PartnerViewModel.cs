@@ -24,7 +24,7 @@ namespace WHMSWebApp.Models
         public string City { get; set; }
 
         [StringLength(11)]
-        [MinLength(11)]
+        [MinLength(11,ErrorMessage="Please enter a valid VAT number (ex: BG123456789)")]
         public string VAT { get; set; }
 
         public PartnerViewModel SearchResult { get; set; }
