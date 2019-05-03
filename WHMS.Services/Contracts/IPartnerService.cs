@@ -13,6 +13,8 @@ namespace WHMS.Services.Contracts
 
         Task<Partner> FindByNameAsync(string partnerName);
 
-        Task<Partner> FindByIdAsync(int id);
+        Task<Partner> FindByIdAsync(int Id);
+
+        Task<Partner> FindByVATAsync(string VAT);
     }
 }
