@@ -78,6 +78,15 @@ namespace WHMS.Services
             }
             return unit;
         }
+        public Unit GetUnitByID(int id)
+        {
+            var unit = this.context.Units.Where(u => u.Id == id).FirstOrDefault();
+            if (unit == null || unit.IsDeleted)
+            {
+                throw new ArgumentException($"Unit does not exist");
+            }
+            return unit;
+        }
 
     }
 }

@@ -75,6 +75,20 @@ namespace WHMS.Services
             }
             return category;
         }
+        public Category FindByID(int id)
+        {
+            var category = this.context.Categories
+                .FirstOrDefault(u => u.Id == id);
+            if (category == null || category.IsDeleted)
+            {
+                throw new ArgumentException($"Category does not exist!");
+            }
+            return category;
+        }
 
+        public IEnumerable<Category> GetAllCategories()
+        {
+            return this.context.Categories.ToList();
+        }
     }
 }

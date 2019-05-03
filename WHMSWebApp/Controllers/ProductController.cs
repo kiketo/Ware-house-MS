@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,10 @@ namespace WHMSWebApp.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            ViewData["Unit"] = new SelectList( unitService.GetAllUnits(), "Id", "UnitName").OrderBy(x => x.Text);
+            ViewData["Category"] = new SelectList(categoryService.GetAllCategories(), "Id", "Name").OrderBy(x => x.Text);
             return View();
+           
         }
 
         [HttpPost]
@@ -42,8 +46,8 @@ namespace WHMSWebApp.Controllers
                 
                 var newProduct = this.productService.CreateProduct(
                     product.Name,
-                    unitService.GetUnit(product.Unit),
-                    categoryService.FindByName(product.Category),
+                    unitService.GetUnitByID(int.Parse(product.Unit)),
+                    categoryService.FindByID(int.Parse(product.Category)),
                     product.BuyPrice,
                     product.MarginInPercent,
                     product.Description

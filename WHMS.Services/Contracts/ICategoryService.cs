@@ -1,4 +1,5 @@
-﻿using WHMSData.Models;
+﻿using System.Collections.Generic;
+using WHMSData.Models;
 
 namespace WHMS.Services.Contracts
 {
@@ -12,5 +13,8 @@ namespace WHMS.Services.Contracts
 
         Category FindByName(string name);
 
+        Category FindByID(int id);
+
+        IEnumerable<Category> GetAllCategories();
     }
 }

@@ -10,5 +10,6 @@ namespace WHMS.Services.Contracts
         List<Unit> GetAllUnits();
         Unit ModifyUnitName(string name);
         Unit GetUnit(string name);
+        Unit GetUnitByID(int id);
     }
 }
