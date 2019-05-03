@@ -41,6 +41,13 @@ namespace WHMSWebApp.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(ProductViewModel product)
         {
+            if (this.productService.GetProducts().Any(p=>p.Name == product.Name))
+            {
+                ModelState.AddModelError("Name", "The name must be unique.");
+            }
+            ViewData["Unit"] = new SelectList(unitService.GetAllUnits(), "Id", "UnitName").OrderBy(x => x.Text);
+            ViewData["Category"] = new SelectList(categoryService.GetAllCategories(), "Id", "Name").OrderBy(x => x.Text);
+
             if (ModelState.IsValid)
             {
                 
@@ -57,7 +64,7 @@ namespace WHMSWebApp.Controllers
             }
             else
             {
-                return View();
+                return View(product);
             }
         }
         public IActionResult Details(int id)

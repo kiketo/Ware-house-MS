@@ -18,6 +18,7 @@ namespace WHMS.Services.Contracts
         Product UndeleteProduct(string name);
         Product ModifyUnit(Product product, Unit unit);
         Product ModifyCategory(Product product, Category category);
+        IEnumerable<Product> GetProducts();
 
     }
 }

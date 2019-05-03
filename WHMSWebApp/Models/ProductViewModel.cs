@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,6 +14,7 @@ namespace WHMSWebApp.Models
         [Required(ErrorMessage = "Product Name is required!")]
         [MaxLength(30)]
         [MinLength(4)]
+        
         public string Name { get; set; }
 
         public string Description { get; set; }

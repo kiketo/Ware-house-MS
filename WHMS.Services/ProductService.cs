@@ -179,6 +179,9 @@ namespace WHMS.Services
             return product;
         }
 
-
+        public IEnumerable<Product> GetProducts()
+        {
+           return this.context.Products.ToList();
+        }
     }
 }
