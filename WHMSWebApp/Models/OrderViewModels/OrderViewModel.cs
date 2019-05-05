@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using WHMSData.Models;
 using WHMSData.Utills;
 
@@ -27,7 +29,7 @@ namespace WHMSWebApp.Models.OrderViewModels
         public string Partner { get; set; }
 
         [Required(ErrorMessage = "Product is required!")]
-        public ICollection<Product> Products { get; set; } //TODO string
+        public IEnumerable<Product> Products { get; set; } //TODO string
 
         public string Comment { get; set; }
 
@@ -42,5 +44,10 @@ namespace WHMSWebApp.Models.OrderViewModels
         public string Warehouse { get; set; }
 
         public IReadOnlyCollection<OrderViewModel> SearchResults { get; set; } = new List<OrderViewModel>();
+
+        [Required(ErrorMessage = "Product is required!")]
+        public IOrderedEnumerable<SelectListItem> ProductsInWarehouse { get; set; }
+
+        public IOrderedEnumerable<SelectListItem> Warehouses { get; set; }
     }
 }

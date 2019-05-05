@@ -1,4 +1,4 @@
-﻿@model WHMSData.Models.Order
+﻿@model OrderViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -18,8 +18,10 @@
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PartnerId" class="control-label"></label>
-                <select asp-for="PartnerId" class ="form-control" asp-items="ViewBag.PartnerId"></select>
+                <label asp-for="Products" class="control-label"></label>
+
+                <select asp-for="Products" asp-items="Model.ProductsInWarehouse"></select>
+
             </div>
             <div class="form-group">
                 <label asp-for="Comment" class="control-label"></label>
@@ -31,9 +33,9 @@
                 <input asp-for="TotalValue" class="form-control" />
                 <span asp-validation-for="TotalValue" class="text-danger"></span>
             </div>*@
-            <div class="form-group">
-                <label asp-for="CreatorId" class="control-label"></label>
-                <select asp-for="CreatorId" class ="form-control" asp-items="ViewBag.CreatorId"></select>
+            <div class=" form-group">
+                    <label asp-for="CreatorId" class="control-label"></label>
+                    <select asp-for="CreatorId" class="form-control" asp-items="ViewBag.CreatorId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="CreatedOn" class="control-label"></label>
@@ -64,3 +66,35 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+
+        public int Id { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+
+        public DateTime ModifiedOn { get; set; }
+
+        public bool IsDeleted { get; set; }
+
+        [Required(ErrorMessage = "Type is required!")]
+        public string Type { get; set; }
+
+        public int PartnerId { get; set; }
+
+        [Required(ErrorMessage = "Partner is required!")]
+        public string Partner { get; set; }
+
+        [Required(ErrorMessage = "Product is required!")]
+        public ICollection<Product> Products { get; set; } //TODO string
+
+        public string Comment { get; set; }
+
+        public decimal TotalValue { get; set; }
+
+        public string CreatorId { get; set; }
+
+        public ApplicationUser Creator { get; set; }
+
+        public int Quantity { get; set; }
+
+        public string Warehouse { get; set; }

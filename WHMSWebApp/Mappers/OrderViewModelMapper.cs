@@ -25,6 +25,7 @@ namespace WHMSWebApp.Mappers
             //Products=entity.Products,
             TotalValue=entity.TotalValue,
             Type=entity.Type.ToString()
+            
         };
     }
 }
