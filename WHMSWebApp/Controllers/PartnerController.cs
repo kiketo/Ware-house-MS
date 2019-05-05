@@ -8,6 +8,7 @@ using WHMSData.Models;
 using WHMSWebApp.Mappers;
 using WHMSWebApp.Models;
 using WHMS.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WHMSWebApp.Controllers
 {
@@ -91,33 +92,47 @@ namespace WHMSWebApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            PartnerViewModel model = new PartnerViewModel()
+            {
+                Cities = new SelectList(await this.townService.GetAllTowns(), "Id", "Name")
+                .OrderBy(x => x.Text)
+            };
+           
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PartnerViewModel partner)
         {
+            partner.Cities = new SelectList(await this.townService.GetAllTowns(), "Id", "Name").OrderBy(x => x.Text);
+
             if (ModelState.IsValid)
             {
-                Town town = this.townService.GetTown(partner.City);
+                Town town = await this.townService.GetTownById(int.Parse( partner.City));
 
                 if (town == null || town.IsDeleted)
                 {
-                    town = this.townService.Add(partner.City);
+                    town = await this.townService.Add(partner.City);
 
                 }
-                Address address = this.addressService.GetAddress(town, partner.Address);
-
-                if (address == null || address.IsDeleted)
+                Address address = new Address()
                 {
-                    address = await this.addressService.AddAsync(town, partner.Address);
+                    Town = town,
+                    Text = partner.Address
+                };
+                //TODO async  method GetAddress
+                //await this.addressService.GetAddress(town, partner.Address);
 
-                }
+                //if (address == null || address.IsDeleted)
+                //{
+                //    address = await this.addressService.AddAsync(town, partner.Address);
 
-                var newPartner = this.partnerService.AddAsync(
+                //}
+
+                var newPartner = await this.partnerService.AddAsync(
                     partner.Name,
                     address,
                     partner.VAT

@@ -29,24 +29,32 @@ namespace WHMSWebApp.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewData["Unit"] = new SelectList(unitService.GetAllUnits(), "Id", "UnitName").OrderBy(x => x.Text);
-            ViewData["Category"] = new SelectList(categoryService.GetAllCategories(), "Id", "Name").OrderBy(x => x.Text);
-            return View();
+            
+            ProductViewModel product = new ProductViewModel()
+            {
+                Categories = new SelectList(this.categoryService.GetAllCategories(), "Id", "Name")
+                .OrderBy(x => x.Text),
+                Units = new SelectList(this.unitService.GetAllUnits(), "Id", "UnitName")
+                .OrderBy(x => x.Text)
+            };
+            return View(product);
+
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel product)
         {
+            if (this.productService.GetProducts().Any(p => p.Name == product.Name))
             var allProducts = await this.productService.GetAllProductsAsync();
 
             if (allProducts.Any(p => p.Name == product.Name))
             {
                 ModelState.AddModelError("Name", "The name must be unique.");
             }
-            ViewData["Unit"] = new SelectList(unitService.GetAllUnits(), "Id", "UnitName").OrderBy(x => x.Text);
-            ViewData["Category"] = new SelectList(categoryService.GetAllCategories(), "Id", "Name").OrderBy(x => x.Text);
-            ModelState.Remove("Id");
+            product.Units = new SelectList(this.unitService.GetAllUnits(), "Id", "Name").OrderBy(x => x.Text);
+            product.Categories = new SelectList(this.categoryService.GetAllCategories(), "Id", "Name").OrderBy(x => x.Text);
+
             if (ModelState.IsValid)
             {
 
@@ -70,7 +78,8 @@ namespace WHMSWebApp.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var model = await this.productService.GetProductByIdAsync(id);
-            return View(model);
+            var viewModel = productMapper.MapFrom(model);
+            return View(viewModel);
         }
 
         public IActionResult Edit()

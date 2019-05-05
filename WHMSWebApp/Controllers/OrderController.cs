@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,21 @@ namespace WHMSWebApp.Controllers
         private readonly IPartnerService partnerService;
         private readonly IViewModelMapper<Order, OrderViewModel> orderMapper;
         private readonly IUnitService unitService;
+        private readonly IProductWarehouseService productWarehouseService;
 
-        public OrderController(IOrderService orderService, IProductService productService, IPartnerService partnerService, IViewModelMapper<Order, OrderViewModel> orderMapper, IUnitService unitService)
+        public OrderController(
+            IOrderService orderService,
+            IProductService productService,
+            IPartnerService partnerService,
+            IViewModelMapper<Order, OrderViewModel> orderMapper, IUnitService unitService,
+            IProductWarehouseService productWarehouseService)
         {
             this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
             this.productService = productService ?? throw new ArgumentNullException(nameof(productService));
             this.partnerService = partnerService ?? throw new ArgumentNullException(nameof(partnerService));
             this.orderMapper = orderMapper ?? throw new ArgumentNullException(nameof(orderMapper));
             this.unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
+            this.productWarehouseService = productWarehouseService ?? throw new ArgumentNullException(nameof(productWarehouseService));
         }
 
         [HttpGet]
@@ -102,13 +110,29 @@ namespace WHMSWebApp.Controllers
 
 
         [HttpGet]
-        public IActionResult Create()
+        [Route("[controller]/[action]/id")]
+        public async Task<IActionResult> Create(int warehouseId)
         {
-            return View();
+            var productsOverZero = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(warehouseId);
+            var productsList = new List<Product>();
+            foreach (var pw in productsOverZero)
+            {
+                productsList.Add(pw.Product);
+            }
+
+            OrderViewModel model = new OrderViewModel()
+            {
+                ProductsInWarehouse = new SelectList(productsList, "Id","Name").OrderBy(x => x.Text)
+                
+            };
+            return View(model);
         }//TODO
-         //[HttpPost]
-         //public IActionResult Create(OrderViewModel order)
-         //{
+
+
+
+        //[HttpPost]
+        //public IActionResult Create(OrderViewModel order)
+        //{
 
         //    if (ModelState.IsValid)
         //    {

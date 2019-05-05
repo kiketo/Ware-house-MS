@@ -17,9 +17,9 @@ namespace WHMSWebApp.Mappers
             BuyPrice = entity.BuyPrice,
             SellPrice = entity.SellPrice,
             MarginInPercent = entity.MarginInPercent,
-            Category = entity.Category.Name,
+            Category = entity.Category?.Name,
             Description = entity.Description,
-            Unit = entity.Unit.UnitName
+            Unit = entity.Unit?.UnitName
         };
     }
 }

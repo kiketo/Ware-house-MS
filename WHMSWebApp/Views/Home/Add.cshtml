@@ -1,6 +1,24 @@
-﻿@{
+﻿@model OrderViewModel
+
+@{
     ViewData["Title"] = "Create";
 }
+
+
+
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Warehouses" class="control-label"></label>
+        <select asp-for="Warehouses" class="form-control" asp-items="Model.Warehouses.ToList()"></select>
+        <span asp-validation-for="Warehouses" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-default" />
+    </div>
+</form>
+
+
 
 <div class="text-center">
     <h1 class="display-4">Add New Items:</h1>
@@ -10,10 +28,78 @@
     </div>
     <div>
         <a>Create New Order:</a>
-        <a asp-controller="Order" asp-action="Create">Create New Order</a>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+            <div class="form-group">
+                <label asp-for="Warehouses" class="control-label"></label>
+
+                <select asp-for="Warehouses" class="form-control" asp-items="Model.Warehouses.ToList()"></select>
+                <span asp-validation-for="Warehouses" class="text-danger"></span>
+                <a asp-controller="Add" asp-action="AddOrder">
+                    <input type="submit" value="New Order" class="btn btn-primary" />
+                </a>
+            </div>
+        </form>
+
+
+
+
+
     </div>
     <div>
         <a>Create New Partner:</a>
         <a asp-controller="Partner" asp-action="Create">Create New Partner</a>
+    </div>
+</div>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div>
+                <a>Create New Product:</a>
+                <a asp-controller="Product" asp-action="Create">Create New Product</a>
+                <a asp-controller="Product" asp-action="Create">
+                    <input type="submit" value="New Product" class="btn btn-primary" />
+
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div>
+                <a>Create New Partner:</a>
+                <a asp-controller="Partner" asp-action="Create">
+                    <input type="submit" value="New Partner" class="btn btn-primary" />
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div>
+                <a>Create New Order:</a>
+                <div class="form-group">
+                    <select asp-for="Warehouses" asp-items="Model.Warehouses.ToList()"></select>
+                    <span asp-validation-for="Warehouses" class="text-danger"></span>
+                    <a asp-controller="Order" asp-action="Create">
+                        <input type="submit" value="New Order" class="btn btn-primary" />
+                    </a>
+                </div>
+            </div>
+
+        </form>
     </div>
 </div>

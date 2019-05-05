@@ -28,8 +28,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="City" class="control-label"></label>
-                <input asp-for="City" class="form-control" />
+                <select asp-for="City" class="form-control" asp-items="Model.Cities"></select>
                 <span asp-validation-for="City" class="text-danger"></span>
+
+
             </div>
             <div class="form-group">
                 <label asp-for="VAT" class="control-label"></label>
