@@ -9,7 +9,7 @@ namespace WHMSWebApp.Models.OrderViewModels
 {
     public class OrderViewModel
     {
-        [Range(1, int.MaxValue, ErrorMessage = "ID should be a positive number")]
+        [Range(0, int.MaxValue, ErrorMessage = "ID should be a positive number")]
         public int Id { get; set; }
 
         public DateTime CreatedOn { get; set; }
@@ -18,12 +18,11 @@ namespace WHMSWebApp.Models.OrderViewModels
 
         public bool IsDeleted { get; set; }
 
-        [Required(ErrorMessage = "Type is required!")]
         public string Type { get; set; }
 
         public int PartnerId { get; set; }
 
-        [Required(ErrorMessage = "Partner is required!")]
+        [MinLength(0,ErrorMessage = "Partner is required!")]
         public string Partner { get; set; }
 
         [Required(ErrorMessage = "Product is required!")]

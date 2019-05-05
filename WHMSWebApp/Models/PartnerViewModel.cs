@@ -9,11 +9,10 @@ namespace WHMSWebApp.Models
 {
     public class PartnerViewModel
     {
-        [Range(1, int.MaxValue, ErrorMessage = "ID should be a positive number")]
+        [Range(0, int.MaxValue, ErrorMessage = "ID should be a positive number")]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Partner Name is required!")]
-        [MinLength(4)]
+        [MinLength(4, ErrorMessage = "Partner Name is required!")]
         [MaxLength(30)]
         public string Name { get; set; }
 

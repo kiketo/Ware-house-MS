@@ -28,11 +28,6 @@ namespace WHMSWebApp.Controllers
             this.unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
         }
 
-        public IActionResult Search()
-        {
-            return View();
-        }
-
         [HttpGet]
         public async Task<IActionResult> SearchOrderById([FromQuery]OrderViewModel model)
         {
@@ -56,7 +51,7 @@ namespace WHMSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SearchOrderByPartner([FromQuery]OrderViewModel model)
+        public async Task<IActionResult> SearchOrdersByPartner([FromQuery]OrderViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Partner))
             {
@@ -79,7 +74,7 @@ namespace WHMSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SearchOrderByType([FromQuery]OrderViewModel model)
+        public async Task<IActionResult> SearchOrdersByType([FromQuery]OrderViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Type))
             {
