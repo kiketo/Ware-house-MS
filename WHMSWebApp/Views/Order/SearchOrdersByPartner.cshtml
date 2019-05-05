@@ -1,15 +1,11 @@
 ﻿@model OrderViewModel
-@{
-    ViewData["Title"] = "SearchOrderByPartner";
-}
-<partial name="_Search" />
 
 <partial name="_SearchOrder" />
 
-<h3>Search for Order by Partner</h3>
+<h3>Search for Orders by Partner</h3>
 
 <div class="row mt-5">
-    <form class="col-lg-6" asp-controller="Order" asp-action="SearchOrderByPartner" method="get">
+    <form class="col-lg-6" asp-controller="Order" asp-action="SearchOrdersByPartner" method="get">
         <div class="row">
             <div class="col-sm-9">
                 <input asp-for="@Model.Partner" placeholder="Search..." class="form-control" />

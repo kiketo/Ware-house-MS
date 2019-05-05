@@ -1,15 +1,13 @@
-﻿@model PartnerViewModel
-@{
-    ViewData["Title"] = "SearchPartnerById";
-}
+﻿@model ProductViewModel
+
 @*<partial name="_Search" />*@
 
-<partial name="_SearchPartner" />
+<partial name="_SearchProduct" />
 
-<h3>Search for Partner by ID</h3>
+<h3>Search for Product by ID</h3>
 
 <div class="row mt-5">
-    <form class="col-lg-6" asp-controller="Partner" asp-action="SearchPartnerById" method="get">
+    <form class="col-lg-6" asp-controller="Product" asp-action="SearchProductById" method="get">
         <div class="row">
             <div class="col-sm-9">
                 <input asp-for="@Model.Id" placeholder="Search..." class="form-control" />
@@ -27,18 +25,24 @@
         @if (Model != null)
         {
 
-            if (Model.Id == 0 && Model.SearchResult == null)
+            if (Model.Id == 0 && Model.SearchResults.Count == 0)
             {
-                <p class="alert alert-info">There are no partners</p>
+                <p class="alert alert-info">There are no products</p>
             }
             else
             {
-                <partial name="_PartnerPartial" model="Model.SearchResult" />
+                foreach (var product in Model.SearchResults)
+                {
+                    <partial name="_ProductPartial" model="product" />
+
+                }
+
             }
         }
     </div>
 </div>
 
-@section Scripts {
+@section Scripts 
+{
     <partial name="_ValidationScriptsPartial" />
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WHMSData.Models;
 
 namespace WHMS.Services.Contracts
@@ -10,6 +11,8 @@ namespace WHMS.Services.Contracts
         Category ModifyCategoryName(string name);
 
         Category DeleteCategory(string name);
+
+        Task<Category> GetCategoryByNameAsync(string name);
 
         Category FindByName(string name);
 
