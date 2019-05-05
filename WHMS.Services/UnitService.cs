@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
@@ -17,9 +19,9 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Unit CreateUnit(string name)
+        public async Task<Unit> CreateUnitAsync(string name)
         {
-            if (this.context.Units.Any(t => t.UnitName == name))
+            if (await this.context.Units.AnyAsync(t => t.UnitName == name))
             {
                 throw new ArgumentException($"Unit {name} already exists");
             }
@@ -31,15 +33,15 @@ namespace WHMS.Services
                 ModifiedOn = DateTime.Now
                 
             };
-            this.context.Units.Add(newUnit);
-            this.context.SaveChanges();
+            await this.context.Units.AddAsync(newUnit);
+            await this.context.SaveChangesAsync();
 
             return newUnit;
         }
 
-        public Unit ModifyUnitName(string name)
+        public async Task<Unit> ModifyUnitNameAsync(string name)
         {
-            var unitToMod = this.context.Units.FirstOrDefault(t => t.UnitName == name);
+            var unitToMod = await this.context.Units.Where(t => t.UnitName == name).FirstOrDefaultAsync();
             if (unitToMod == null || unitToMod.IsDeleted)
             {
                 throw new ArgumentException($"Unit {name} does not exists");
@@ -51,14 +53,14 @@ namespace WHMS.Services
             return unitToMod;
         }
 
-        public List<Unit> GetAllUnits()
+        public async Task<List<Unit>> GetAllUnitsAsync()
         {
-            return this.context.Units.Where(u => u.IsDeleted != true).ToList();
+            return await this.context.Units.Where(u => u.IsDeleted != true).ToListAsync();
         }
 
-        public Unit DeleteUnitName(int unitId)
+        public async Task<Unit> DeleteUnitNameAsync(int unitId)
         {
-            var unitToDel = this.context.Units.FirstOrDefault(t => t.Id == unitId);
+            var unitToDel = await this.context.Units.FirstOrDefaultAsync(t => t.Id == unitId);
             if (unitToDel == null || unitToDel.IsDeleted)
             {
                 throw new ArgumentException($"Such unit does not exists");
@@ -66,21 +68,21 @@ namespace WHMS.Services
             unitToDel.IsDeleted = true;
             unitToDel.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return unitToDel;
         }
-        public Unit GetUnit(string name)
+        public async Task<Unit> GetUnitAsync(string name)
         {
-            var unit = this.context.Units.Where(u => u.UnitName == name).FirstOrDefault();
+            var unit = await this.context.Units.Where(u => u.UnitName == name).FirstOrDefaultAsync();
             if (unit == null || unit.IsDeleted)
             {
                 throw new ArgumentException($"Unit with name {name} does not exist");
             }
             return unit;
         }
-        public Unit GetUnitByID(int id)
+        public async Task<Unit> GetUnitByIDAsync(int id)
         {
-            var unit = this.context.Units.Where(u => u.Id == id).FirstOrDefault();
+            var unit = await this.context.Units.Where(u => u.Id == id).FirstOrDefaultAsync();
             if (unit == null || unit.IsDeleted)
             {
                 throw new ArgumentException($"Unit does not exist");

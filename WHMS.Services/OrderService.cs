@@ -42,7 +42,7 @@ namespace WHMS.Services
                 TotalValue = totalValue
             };
 
-            this.context.Orders.Add(newOrder);
+            await this.context.Orders.AddAsync(newOrder);
             await this.context.SaveChangesAsync();
             return newOrder;
         }

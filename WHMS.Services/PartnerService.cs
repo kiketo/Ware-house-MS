@@ -110,6 +110,8 @@ namespace WHMS.Services
         {
             var partner = await this.context.Partners
                 .Include(p => p.PastOrders)
+                .Include(a=>a.Address)
+                .ThenInclude(t=>t.Town)
                 .FirstOrDefaultAsync(p => p.Id == Id);
             if (partner == null || partner.IsDeleted)
             {

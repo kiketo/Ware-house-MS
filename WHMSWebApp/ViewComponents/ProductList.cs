@@ -17,9 +17,9 @@ namespace WHMSWebApp.ViewComponents
         {
             this.productService = productService;
         }
-        public IViewComponentResult Invoke()
+        public async Task<IViewComponentResult> Invoke()
         {
-            var modelProducts = new SelectList (productService.GetProducts(), "Id", "Name").OrderBy(x => x.Text).ToList();
+            var modelProducts = new SelectList (await productService.GetAllProductsAsync(), "Id", "Name").OrderBy(x => x.Text).ToList();
            
             return View("Default", modelProducts);
 

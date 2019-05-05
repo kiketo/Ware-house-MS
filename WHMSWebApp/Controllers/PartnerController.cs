@@ -96,7 +96,7 @@ namespace WHMSWebApp.Controllers
         {
             PartnerViewModel model = new PartnerViewModel()
             {
-                Cities = new SelectList(await this.townService.GetAllTowns(), "Id", "Name")
+                Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name")
                 .OrderBy(x => x.Text)
             };
            
@@ -107,15 +107,15 @@ namespace WHMSWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PartnerViewModel partner)
         {
-            partner.Cities = new SelectList(await this.townService.GetAllTowns(), "Id", "Name").OrderBy(x => x.Text);
+            partner.Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name").OrderBy(x => x.Text);
 
             if (ModelState.IsValid)
             {
-                Town town = await this.townService.GetTownById(int.Parse( partner.City));
+                Town town = await this.townService.GetTownByIdAsync(int.Parse( partner.City));
 
                 if (town == null || town.IsDeleted)
                 {
-                    town = await this.townService.Add(partner.City);
+                    town = await this.townService.AddAsync(partner.City);
 
                 }
                 Address address = new Address()
@@ -137,7 +137,7 @@ namespace WHMSWebApp.Controllers
                     address,
                     partner.VAT
                     );
-
+                
                 return RedirectToAction(nameof(Details), new { id = newPartner.Id });
             }
             else
@@ -147,10 +147,10 @@ namespace WHMSWebApp.Controllers
 
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var model = this.partnerService.FindByIdAsync(id);
-            return View(model);
+            PartnerViewModel viewModel = partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(id));
+            return View(viewModel);
         }
 
         public IActionResult Edit()

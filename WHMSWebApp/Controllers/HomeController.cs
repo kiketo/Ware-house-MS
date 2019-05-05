@@ -34,33 +34,27 @@ namespace WHMSWebApp.Controllers
         {
             return View();
         }
-        [HttpGet]
-        public IActionResult Add()
+        
+        public async Task<IActionResult> Add()
         {
             OrderViewModel model = new OrderViewModel()
             {
-                Warehouses = new SelectList(this.warehouseService.GetAllWarehouses(), "Id", "Name").OrderBy(x => x.Text)
+                Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text)
         };
 
             return View(model);
         }
         [HttpPost]
-        public IActionResult Add(OrderViewModel model)
+        public async Task<IActionResult> Add(OrderViewModel model)
         {
-            model.Warehouses = new SelectList(this.warehouseService.GetAllWarehouses(), "Id", "Name").OrderBy(x => x.Text);
-            var warehouse = this.warehouseService.GetByName(model.Warehouse);
+            model.Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text);
+            var warehouse = await this.warehouseService.GetByNameAsync(model.Warehouse);
                     
 
 
             return RedirectToAction("Create", "Order", new { id = model.Id });
 
-      
-
-
-
-
-
-            return RedirectToAction("Create", "Order");
+    
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

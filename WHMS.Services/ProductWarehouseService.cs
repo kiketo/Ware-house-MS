@@ -44,7 +44,7 @@ namespace WHMS.Services
                 .Where(p => p.ProductId == productId)
                 .Where(w => w.WarehouseId == warehouseId)
                 .ToAsyncEnumerable()
-                .FirstOrDefault();
+                .FirstOrDefault(); //TODO Check if .FirstOrDefaultAsync is enough
 
             if (pairPW == null)
             {
@@ -69,7 +69,7 @@ namespace WHMS.Services
                 .Where(p => p.ProductId == productId)
                 .Where(w => w.WarehouseId == warehouseId)
                 .ToAsyncEnumerable()
-                .FirstOrDefault();
+                .FirstOrDefault(); //TODO Check if .FirstOrDefaultAsync is enough
 
             if (pairPW == null)
             {

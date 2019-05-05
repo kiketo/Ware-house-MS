@@ -8,16 +8,16 @@ namespace WHMS.Services.Contracts
 {
     public interface ITownService
     {
-        Task<Town> Add(string townToAddName);
+        Task<Town> AddAsync(string townToAddName);
 
-        Task<Town> Edit(string oldTownName, string newTownName);
+        Task<Town> EditAsync(string oldTownName, string newTownName);
 
-        Task<Town> Delete(string townToDeleteName);
+        Task<Town> DeleteAsync(string townToDeleteName);
 
-        Task<Town> GetTown(string townToGetName);
+        Task<Town> GetTownAsync(string townToGetName);
 
-        Task<IEnumerable<Town>> GetAllTowns();
+        Task<IEnumerable<Town>> GetAllTownsAsync();
 
-        Task<Town> GetTownById(int id);
+        Task<Town> GetTownByIdAsync(int id);
     }
 }

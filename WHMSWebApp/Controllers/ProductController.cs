@@ -27,14 +27,14 @@ namespace WHMSWebApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task< IActionResult> Create()
         {
             
             ProductViewModel product = new ProductViewModel()
             {
-                Categories = new SelectList(this.categoryService.GetAllCategories(), "Id", "Name")
+                Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
                 .OrderBy(x => x.Text),
-                Units = new SelectList(this.unitService.GetAllUnits(), "Id", "UnitName")
+                Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "UnitName")
                 .OrderBy(x => x.Text)
             };
             return View(product);
@@ -45,29 +45,30 @@ namespace WHMSWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel product)
         {
-            if (this.productService.GetProducts().Any(p => p.Name == product.Name))
+            
             var allProducts = await this.productService.GetAllProductsAsync();
 
             if (allProducts.Any(p => p.Name == product.Name))
             {
                 ModelState.AddModelError("Name", "The name must be unique.");
             }
-            product.Units = new SelectList(this.unitService.GetAllUnits(), "Id", "Name").OrderBy(x => x.Text);
-            product.Categories = new SelectList(this.categoryService.GetAllCategories(), "Id", "Name").OrderBy(x => x.Text);
+            product.Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "Name").OrderBy(x => x.Text);
+            product.Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name").OrderBy(x => x.Text);
 
             if (ModelState.IsValid)
             {
 
-                var newProduct = this.productService.CreateProduct(
+                var newProduct =await this.productService.CreateProductAsync(
                     product.Name,
-                    unitService.GetUnitByID(int.Parse(product.Unit)),
-                    categoryService.FindByID(int.Parse(product.Category)),
+                    await unitService.GetUnitByIDAsync(int.Parse(product.Unit)),
+                    await categoryService.FindByIDAsync(int.Parse(product.Category)),
                     product.BuyPrice,
                     product.MarginInPercent,
                     product.Description
                     );
+                var viewModel = productMapper.MapFrom(newProduct);
 
-                return RedirectToAction(nameof(Details), new { id = newProduct.Id });
+                return RedirectToAction(nameof(Details), new { id = viewModel.Id });
             }
             else
             {
@@ -139,7 +140,7 @@ namespace WHMSWebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchProductsByCategory([FromQuery]ProductViewModel model)
         {
-            ViewData["Category"] = new SelectList(categoryService.GetAllCategories(), "Id", "Name").OrderBy(x => x.Text);
+            ViewData["Category"] = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name").OrderBy(x => x.Text);
             if (string.IsNullOrWhiteSpace(model.Category))
             {
                 return View();

@@ -19,7 +19,7 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Town> Add(string townToAddName)
+        public async Task<Town> AddAsync(string townToAddName)
         {
             Town townToAdd = await this.context.Towns.FirstOrDefaultAsync(t => t.Name == townToAddName);
 
@@ -56,7 +56,7 @@ namespace WHMS.Services
             return townToAdd;
         }
 
-        public async Task<Town> Edit(string oldTownName, string newTownName)
+        public async Task<Town> EditAsync(string oldTownName, string newTownName)
         {
             Town townToEdit = await this.context.Towns
                 .FirstOrDefaultAsync(t => t.Name == oldTownName);
@@ -74,7 +74,7 @@ namespace WHMS.Services
             return townToEdit;
         }
 
-        public async Task<Town> Delete(string townToDeleteName)
+        public async Task<Town> DeleteAsync(string townToDeleteName)
         {
             Town townToDelete = await this.context.Towns
                 .FirstOrDefaultAsync(t => t.Name == townToDeleteName);
@@ -96,7 +96,7 @@ namespace WHMS.Services
             return townToDelete;
         }
 
-        public async Task<Town> GetTown(string townToGetName)
+        public async Task<Town> GetTownAsync(string townToGetName)
         {
             Town townToGet = await this.context.Towns
                 .Include(a => a.Addresses)
@@ -109,7 +109,7 @@ namespace WHMS.Services
 
             return townToGet;
         }
-        public async Task<IEnumerable<Town>> GetAllTowns()
+        public async Task<IEnumerable<Town>> GetAllTownsAsync()
         {
             var allTowns = await this.context.Towns
                 .Include(a => a.Addresses)
@@ -118,7 +118,7 @@ namespace WHMS.Services
             
             return allTowns;
         }
-        public async Task<Town> GetTownById(int id)
+        public async Task<Town> GetTownByIdAsync(int id)
         {
             Town townToGet = await this.context.Towns
                 .Include(a => a.Addresses)

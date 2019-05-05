@@ -19,7 +19,7 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Product CreateProduct(string name, Unit unit, Category category, decimal buyPrice, double margin, string description)
+        public async Task<Product> CreateProductAsync(string name, Unit unit, Category category, decimal buyPrice, double margin, string description)
         {
             if (this.context.Products.Any(t => t.Name == name))
             {
@@ -34,7 +34,7 @@ namespace WHMS.Services
                 throw new ArgumentException($"The price margin cannot be negative number");
             }
             decimal sellPrice = buyPrice*(100+(decimal)margin)/100;
-            List<Warehouse> wareHouses = this.context.Warehouses.ToList();
+            List<Warehouse> wareHouses = await this.context.Warehouses.ToListAsync();
             var newProduct = new Product()
             {
                 Name = name,
@@ -49,15 +49,15 @@ namespace WHMS.Services
                 Description = description
             };
 
-            this.context.Products.Add(newProduct);
-            this.context.SaveChanges();
+            await this.context.Products.AddAsync(newProduct);
+            await this.context.SaveChangesAsync();
 
             return newProduct;
         }
 
-        public Product SetMargin(int productId, double newMargin)
+        public async Task<Product> SetMarginAsync(int productId, double newMargin)
         {
-            var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
+            var product = await this.context.Products.FirstOrDefaultAsync(i => i.Id == productId);
             if (product == null || product.IsDeleted)
             {
                 throw new ArgumentException($"Product does not exist!");
@@ -68,14 +68,14 @@ namespace WHMS.Services
             }
             product.MarginInPercent = newMargin;
             product.ModifiedOn = DateTime.Now;
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
 
             return product;
         }
 
-        public Product SetBuyPrice(int productId, decimal price)
+        public async Task<Product> SetBuyPriceAsync(int productId, decimal price)
         {
-            var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
+            var product = await this.context.Products.FirstOrDefaultAsync(i => i.Id == productId);
             if (product == null || product.IsDeleted)
             {
                 throw new ArgumentException($"Product does not exist!");
@@ -86,14 +86,14 @@ namespace WHMS.Services
             }
             product.ModifiedOn = DateTime.Now;
             product.BuyPrice = price;
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
 
             return product;
         }
 
-        public Product ModifyProductName(string name, string newName)
+        public async Task<Product> ModifyProductNameAsync(string name, string newName)
         {
-            var productToMod = this.context.Products.FirstOrDefault(t => t.Name == name);
+            var productToMod = await this.context.Products.FirstOrDefaultAsync(t => t.Name == name);
             if (productToMod == null || productToMod.IsDeleted)
             {
                 throw new ArgumentException($"Product {name} does not exists");
@@ -101,25 +101,25 @@ namespace WHMS.Services
             productToMod.Name = newName;
             productToMod.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return productToMod;
         }
 
-        public Product ModifyUnit(Product product, Unit unit)
+        public async Task<Product> ModifyUnitAsync(Product product, Unit unit)
         {
             product.ModifiedOn = DateTime.Now;
             product.Unit = unit;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return product;
         }
 
-        public Product ModifyCategory(Product product, Category category)
+        public async Task<Product> ModifyCategoryAsync(Product product, Category category)
         {
             product.ModifiedOn = DateTime.Now;
             product.Category = category;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return product;
         }
 
@@ -163,36 +163,36 @@ namespace WHMS.Services
             return productsByCategory;
         }
 
-        public Product GetProductByNameInclDeleted(string name)
+        public async Task<Product> GetProductByNameInclDeletedAsync(string name)
         {
-            var product = this.context.Products
-                .FirstOrDefault(u => u.Name == name);
+            var product = await this.context.Products
+                .FirstOrDefaultAsync(u => u.Name == name);
 
             return product;
         }
 
-        public Task<List<Product>> GetAllProductsAsync()
+        public async Task<List<Product>> GetAllProductsAsync()
         {
-            var task= this.context.Products.ToListAsync();
+            var task= await this.context.Products.ToListAsync();
 
             return task;
         }
 
-        public Product UndeleteProduct(string name)
+        public async Task<Product> UndeleteProductAsync(string name)
         {
-            var product = GetProductByNameInclDeleted(name);
+            var product = await GetProductByNameInclDeletedAsync(name);
 
             product.IsDeleted = false;
             product.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return product;
         }
 
-        public Product DeleteProduct(string name)
+        public async Task<Product> DeleteProductAsync(string name)
         {
-            var productToDelete = this.context.Products
-                .FirstOrDefault(u => u.Name == name);
+            var productToDelete = await this.context.Products
+                .FirstOrDefaultAsync(u => u.Name == name);
 
             if (productToDelete == null || productToDelete.IsDeleted)
             {
@@ -200,7 +200,7 @@ namespace WHMS.Services
             }
             productToDelete.ModifiedOn = DateTime.Now;
             productToDelete.IsDeleted = true;
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return productToDelete;
         }
 
