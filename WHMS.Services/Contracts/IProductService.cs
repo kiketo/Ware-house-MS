@@ -8,18 +8,18 @@ namespace WHMS.Services.Contracts
     public interface IProductService
     {
         Product CreateProduct(string name, Unit unit, Category category, decimal buyPrice, double margin, string description);
-        Product ModifyProductName(string name, string newName);
-        Product DeleteProduct(string name);
-        Task<ICollection<Product>> FindByNameAsync(string name);
-        Product FindByNameInclncludingDeleted(string name);
-        Product SetBuyPrice(int productId, decimal price);
         Product SetMargin(int productId, double newMargin);
-        ICollection<Product> ProductsByCategory(Category category);
-        Task<Product> GetProductByIdAsync(int productId);
-        Product UndeleteProduct(string name);
+        Product SetBuyPrice(int productId, decimal price);
+        Product ModifyProductName(string name, string newName);
         Product ModifyUnit(Product product, Unit unit);
         Product ModifyCategory(Product product, Category category);
-        IEnumerable<Product> GetProducts();
+        Task<Product> GetProductByIdAsync(int productId);
+        Task<ICollection<Product>> GetProductsByNameAsync(string name);
+        Task<ICollection<Product>> GetProductsByCategoryAsync(Category category);
+        Product GetProductByNameInclDeleted(string name);
+        Task<List<Product>> GetAllProductsAsync();
+        Product UndeleteProduct(string name);
+        Product DeleteProduct(string name);
 
     }
 }

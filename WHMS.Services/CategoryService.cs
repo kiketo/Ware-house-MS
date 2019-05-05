@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
@@ -65,6 +67,14 @@ namespace WHMS.Services
             return categoryToDelete;
         }
 
+        public Task<Category> GetCategoryByNameAsync(string name)
+        {
+            var category = this.context.Categories
+                        .Where(c => c.Name == name)
+                        .FirstOrDefaultAsync();
+            return category;
+        }
+
         public Category FindByName(string name)
         {
             var category = this.context.Categories
@@ -75,6 +85,7 @@ namespace WHMS.Services
             }
             return category;
         }
+
         public Category FindByID(int id)
         {
             var category = this.context.Categories

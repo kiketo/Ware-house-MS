@@ -19,7 +19,7 @@ namespace WHMSWebApp.Mappers
             MarginInPercent = entity.MarginInPercent,
             Category = entity.Category.Name,
             Description = entity.Description,
-            Unit = entity.Unit.ToString()
+            Unit = entity.Unit.UnitName
         };
     }
 }

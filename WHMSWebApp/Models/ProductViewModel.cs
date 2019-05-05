@@ -14,10 +14,7 @@ namespace WHMSWebApp.Models
         [Range(1, int.MaxValue, ErrorMessage = "ID should be a positive number")]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Product Name is required!")]
-        [MaxLength(30)]
-        [MinLength(4)]
-        
+        [StringLength(30,ErrorMessage = "Product Name must be between 4 and 30 letters!", MinimumLength =4)]
         public string Name { get; set; }
 
         public string Description { get; set; }

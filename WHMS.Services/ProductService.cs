@@ -54,71 +54,7 @@ namespace WHMS.Services
 
             return newProduct;
         }
-        public Product ModifyProductName(string name, string newName)
-        {
-            var productToMod = this.context.Products.FirstOrDefault(t => t.Name == name);
-            if (productToMod == null || productToMod.IsDeleted)
-            {
-                throw new ArgumentException($"Product {name} does not exists");
-            }
-            productToMod.Name = newName;
-            productToMod.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
-            return productToMod;
-        }
-        public Product DeleteProduct(string name)
-        {
-            var productToDelete = this.context.Products
-                .FirstOrDefault(u => u.Name == name);
-
-            if (productToDelete == null || productToDelete.IsDeleted)
-            {
-                throw new ArgumentException($"Product `{name}` doesn't exist!");
-            }
-            productToDelete.ModifiedOn = DateTime.Now;
-            productToDelete.IsDeleted = true;
-            this.context.SaveChanges();
-            return productToDelete;
-        }
-
-        public async Task<ICollection<Product>> FindByNameAsync(string name)
-        {
-            var product = await this.context.Products
-                .Include(p => p.Category)                
-                .Where(p => p.Name.Contains(name))
-                .Where(p=>p.IsDeleted==false)
-                .ToListAsync();
-            if (product.Count==0)
-            {
-                throw new ArgumentException($"Product `{name}` doesn't exist!");
-            }
-            return product;
-        }
-        public Product FindByNameInclncludingDeleted(string name)
-        {
-            var product = this.context.Products
-                .FirstOrDefault(u => u.Name == name);
-            
-            return product;
-        }
-        public Product SetBuyPrice(int productId, decimal price)
-        {
-            var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
-            if (product == null || product.IsDeleted)
-            {
-                throw new ArgumentException($"Product does not exist!");
-            }
-            if (price < 0)
-            {
-                throw new ArgumentException($"Price cannot be negative number");
-            }
-            product.ModifiedOn = DateTime.Now;
-            product.BuyPrice = price;
-            this.context.SaveChanges();
-
-            return product;
-        }
         public Product SetMargin(int productId, double newMargin)
         {
             var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
@@ -136,35 +72,39 @@ namespace WHMS.Services
 
             return product;
         }
-       
-        public ICollection<Product> ProductsByCategory(Category category)
+
+        public Product SetBuyPrice(int productId, decimal price)
         {
-            if (category == null || category.IsDeleted)
-            {
-                throw new ArgumentException("Category does not exists");
-            }
-            var productsByCategory = this.context.Products.Where(p => p.Category == category).ToList();
-            return productsByCategory;
-        }
-        public async Task<Product> GetProductByIdAsync(int productId)
-        {
-            var product = await this.context.Products.Where(i => i.Id == productId).FirstOrDefaultAsync();
+            var product = this.context.Products.Where(i => i.Id == productId).FirstOrDefault();
             if (product == null || product.IsDeleted)
             {
                 throw new ArgumentException($"Product does not exist!");
             }
+            if (price < 0)
+            {
+                throw new ArgumentException($"Price cannot be negative number");
+            }
+            product.ModifiedOn = DateTime.Now;
+            product.BuyPrice = price;
+            this.context.SaveChanges();
+
             return product;
         }
-        public Product UndeleteProduct(string name)
-        {
-            var product = FindByNameInclncludingDeleted(name);
 
-            product.IsDeleted = false;
-            product.ModifiedOn = DateTime.Now;
+        public Product ModifyProductName(string name, string newName)
+        {
+            var productToMod = this.context.Products.FirstOrDefault(t => t.Name == name);
+            if (productToMod == null || productToMod.IsDeleted)
+            {
+                throw new ArgumentException($"Product {name} does not exists");
+            }
+            productToMod.Name = newName;
+            productToMod.ModifiedOn = DateTime.Now;
 
             this.context.SaveChanges();
-            return product;
+            return productToMod;
         }
+
         public Product ModifyUnit(Product product, Unit unit)
         {
             product.ModifiedOn = DateTime.Now;
@@ -173,6 +113,7 @@ namespace WHMS.Services
             this.context.SaveChanges();
             return product;
         }
+
         public Product ModifyCategory(Product product, Category category)
         {
             product.ModifiedOn = DateTime.Now;
@@ -182,9 +123,86 @@ namespace WHMS.Services
             return product;
         }
 
-        public IEnumerable<Product> GetProducts()
+        public async Task<Product> GetProductByIdAsync(int productId)
         {
-           return this.context.Products.ToList();
+            var product = await this.context.Products
+                .Where(i => i.Id == productId && !i.IsDeleted)
+                .Include(p=>p.Category)
+                .Include(p=>p.Unit)
+                .FirstOrDefaultAsync();
+            if (product == null || product.IsDeleted)
+            {
+                throw new ArgumentException($"Product does not exist!");
+            }
+            return product;
         }
+
+        public async Task<ICollection<Product>> GetProductsByNameAsync(string name)
+        {
+            var product = await this.context.Products
+                .Include(p => p.Category)
+                .Where(p => p.Name.Contains(name))
+                .Where(p => p.IsDeleted == false)
+                .ToListAsync();
+            if (product.Count == 0)
+            {
+                throw new ArgumentException($"Product `{name}` doesn't exist!");
+            }
+            return product;
+        }
+
+        public async Task<ICollection<Product>> GetProductsByCategoryAsync(Category category)
+        {
+            if (category == null || category.IsDeleted)
+            {
+                throw new ArgumentException("Category does not exists");
+            }
+            var productsByCategory = await this.context.Products
+                .Where(p => p.Category == category && !p.IsDeleted)
+                .ToListAsync();
+            return productsByCategory;
+        }
+
+        public Product GetProductByNameInclDeleted(string name)
+        {
+            var product = this.context.Products
+                .FirstOrDefault(u => u.Name == name);
+
+            return product;
+        }
+
+        public Task<List<Product>> GetAllProductsAsync()
+        {
+            var task= this.context.Products.ToListAsync();
+
+            return task;
+        }
+
+        public Product UndeleteProduct(string name)
+        {
+            var product = GetProductByNameInclDeleted(name);
+
+            product.IsDeleted = false;
+            product.ModifiedOn = DateTime.Now;
+
+            this.context.SaveChanges();
+            return product;
+        }
+
+        public Product DeleteProduct(string name)
+        {
+            var productToDelete = this.context.Products
+                .FirstOrDefault(u => u.Name == name);
+
+            if (productToDelete == null || productToDelete.IsDeleted)
+            {
+                throw new ArgumentException($"Product `{name}` doesn't exist!");
+            }
+            productToDelete.ModifiedOn = DateTime.Now;
+            productToDelete.IsDeleted = true;
+            this.context.SaveChanges();
+            return productToDelete;
+        }
+
     }
 }
