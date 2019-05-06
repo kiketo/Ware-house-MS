@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WHMS.Services.Contracts;
 using WHMSData.Models;
-using WHMSWebApp.Models;
-using WHMSWebApp.Models.OrderViewModels;
+using WHMSWebApp2.Models;
+using WHMSWebApp2.Models.OrderViewModels;
 
-namespace WHMSWebApp.Controllers
+namespace WHMSWebApp2.Controllers
 {
     public class HomeController : Controller
     {

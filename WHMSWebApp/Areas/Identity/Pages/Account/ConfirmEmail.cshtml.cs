@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WHMSData.Models;
 
-namespace WHMSWebApp.Areas.Identity.Pages.Account
+namespace WHMSWebApp2.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ConfirmEmailModel : PageModel

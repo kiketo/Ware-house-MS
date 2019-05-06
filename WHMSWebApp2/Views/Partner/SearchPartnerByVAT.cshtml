@@ -1,0 +1,46 @@
+﻿@model PartnerViewModel
+@{
+    ViewData["Title"] = "SearchPartnerByVAT";
+}
+
+@*<partial name="_Search" />*@
+
+@*<partial name="_SearchPartner" />*@
+
+<h3>Search for Partner by VAT</h3>
+
+<div class="row mt-5">
+    <form class="col-lg-6" asp-controller="Partner" asp-action="SearchPartnerByVAT" method="get">
+        <div class="row">
+            <div class="col-sm-9">
+                <input asp-for="@Model.VAT" placeholder="Search..." class="form-control" />
+                <span asp-validation-for="@Model.VAT" class="text-danger"></span>
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-success">Search!</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row mt-5">
+    <div class="col-lg-6">
+        @if (Model != null)
+        {
+
+            if (!string.IsNullOrWhiteSpace(Model.VAT) && Model.VAT == null)
+            {
+                <p class="alert alert-info">There are no partners</p>
+            }
+            else
+            {
+                <partial name="_PartnerPartial" model="Model.SearchResult" />
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

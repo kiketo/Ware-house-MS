@@ -1,0 +1,7 @@
+﻿@model OrderViewModel
+
+<div class="font-weight-bold">
+    <a asp-controller="Order" asp-action="Details" asp-route-id="@Model.Id">Details</a>
+</div>
+<div>Order Id: @Model.Id | Type: @Model.Type | Partner: @Model.Partner | Total value: @Model.TotalValue EUR</div>
+<hr />

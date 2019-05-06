@@ -19,5 +19,9 @@
     <ProjectReference Include="..\WHMSData\WHMSData.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+  </ItemGroup>
+
 </Project>
 

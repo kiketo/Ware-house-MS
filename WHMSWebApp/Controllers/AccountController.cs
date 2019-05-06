@@ -10,10 +10,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WHMSData.Models;
-using WHMSWebApp.Extensions;
-using WHMSWebApp.Models.AccountViewModels;
+using WHMSWebApp2.Extensions;
+using WHMSWebApp2.Models.AccountViewModels;
 
-namespace WHMSWebApp.Controllers
+namespace WHMSWebApp2.Controllers
 {
     [Authorize]
     [Route("[controller]/[action]")]

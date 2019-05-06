@@ -1,0 +1,48 @@
+﻿@model ProductViewModel
+
+@*<partial name="_Search" />*@
+
+@*<partial name="_SearchProduct" />*@
+
+<h3>Search for Product by ID</h3>
+
+<div class="row mt-5">
+    <form class="col-lg-6" asp-controller="Product" asp-action="SearchProductById" method="get">
+        <div class="row">
+            <div class="col-sm-9">
+                <input asp-for="@Model.Id" placeholder="Search..." class="form-control" />
+                <span asp-validation-for="@Model.Id" class="text-danger"></span>
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-success">Search!</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row mt-5">
+    <div class="col-lg-6">
+        @if (Model != null)
+        {
+
+            if (Model.Id == 0 && Model.SearchResults.Count == 0)
+            {
+                <p class="alert alert-info">There are no products</p>
+            }
+            else
+            {
+                foreach (var product in Model.SearchResults)
+                {
+                    <partial name="_ProductPartial" model="product" />
+
+                }
+
+            }
+        }
+    </div>
+</div>
+
+@section Scripts 
+{
+    <partial name="_ValidationScriptsPartial" />
+}
