@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -27,5 +28,7 @@ namespace WHMSWebApp.Models
         public string VAT { get; set; }
 
         public PartnerViewModel SearchResult { get; set; }
+
+        public IOrderedEnumerable<SelectListItem> Cities { get; set; }
     }
 }

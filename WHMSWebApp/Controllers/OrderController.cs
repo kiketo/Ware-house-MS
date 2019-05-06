@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,21 @@ namespace WHMSWebApp.Controllers
         private readonly IPartnerService partnerService;
         private readonly IViewModelMapper<Order, OrderViewModel> orderMapper;
         private readonly IUnitService unitService;
+        private readonly IProductWarehouseService productWarehouseService;
 
-        public OrderController(IOrderService orderService, IProductService productService, IPartnerService partnerService, IViewModelMapper<Order, OrderViewModel> orderMapper, IUnitService unitService)
+        public OrderController(
+            IOrderService orderService,
+            IProductService productService,
+            IPartnerService partnerService,
+            IViewModelMapper<Order, OrderViewModel> orderMapper, IUnitService unitService,
+            IProductWarehouseService productWarehouseService)
         {
             this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
             this.productService = productService ?? throw new ArgumentNullException(nameof(productService));
             this.partnerService = partnerService ?? throw new ArgumentNullException(nameof(partnerService));
             this.orderMapper = orderMapper ?? throw new ArgumentNullException(nameof(orderMapper));
             this.unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
+            this.productWarehouseService = productWarehouseService ?? throw new ArgumentNullException(nameof(productWarehouseService));
         }
 
         [HttpGet]
@@ -102,32 +110,54 @@ namespace WHMSWebApp.Controllers
 
 
         [HttpGet]
-        public IActionResult Create()
+        //[Route("[controller]/[action]/id")]
+        public async Task<IActionResult> Create(int warehouseId)
         {
-            return View();
-        }//TODO
-         //[HttpPost]
-         //public IActionResult Create(OrderViewModel order)
-         //{
+            var productNQuantity = new Dictionary<ProductWarehouse, int>();
+            var pw = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(4);//TODO change warehouse id after setting set up window
+            foreach (var item in pw)
+            {
+                productNQuantity.Add(item, 0);
+            }
+            
+            var order = new OrderViewModel()
+            {
+                ProductsInWarehouse = new MultiSelectList(productNQuantity.Keys.Select(p => p.Product), "Id", "Name").OrderBy(x => x.Text),
+                Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text),
+                
+            };
 
-        //    if (ModelState.IsValid)
-        //    {
+            return View(order);
+        }
 
-        //        var newOrder = this.orderService.AddAsync(
-        //            order.Type,
-        //            this.partnerService.FindByNameAsync(order.Partner),
-        //            this.productService.FindByName(order.Products),//TODO change logic, wrong!!!
-        //            order.quantity,//TODO
-        //            order.Comment
-        //            );
 
-        //        return RedirectToAction(nameof(Details), new { id = newOrder.Id });
-        //    }
-        //    else
-        //    {
-        //        return View();
-        //    }
-        //}
+
+        [HttpPost]
+        public async Task<IActionResult> Create(OrderViewModel order)
+        {
+            var pw = (await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(4));//TODO change warehouse id after setting set up window
+
+            order.ProductsInWarehouse = new MultiSelectList(pw.Select(p=>p.Product), "Id", "Name").OrderBy(x => x.Text);
+            order.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
+            var productNQuantity = new Dictionary<ProductWarehouse, int>();
+            if (ModelState.IsValid)
+            {
+                var temp = new Dictionary<ProductWarehouse, int>();
+
+                var newOrder = this.orderService.AddAsync(
+                    order.TypeOrder,
+                    await this.partnerService.FindByNameAsync(order.Partner), new Dictionary<ProductWarehouse, int>()
+                    //productNQuantity.Keys =
+                   // order.Comment
+                    );
+
+                return RedirectToAction(nameof(Details), new { id = newOrder.Id });
+            }
+            else
+            {
+                return View();
+            }
+        }
 
         public IActionResult Details(int id)
         {

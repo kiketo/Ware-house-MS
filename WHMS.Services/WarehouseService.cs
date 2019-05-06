@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
@@ -17,13 +19,13 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Warehouse CreateWarehouse(string name, Address address)
+        public async Task<Warehouse> CreateWarehouseAsync(string name, Address address)
         {
-            if (this.context.Warehouses.Any(t => t.Name == name))
+            if (await this.context.Warehouses.AnyAsync(t => t.Name == name))
             {
                 throw new ArgumentException($"Warehouse {name} already exists");
             }
-            List<Product> products = this.context.Products.ToList();
+            List<Product> products = await this.context.Products.ToListAsync();
             var newWarehouse = new Warehouse()
             {
                 Name = name,
@@ -33,15 +35,15 @@ namespace WHMS.Services
                 Address = address
 
             };
-            this.context.Warehouses.Add(newWarehouse);
-            this.context.SaveChanges();
+            await this.context.Warehouses.AddAsync(newWarehouse);
+            await this.context.SaveChangesAsync();
 
             return newWarehouse;
         }
 
-        public Warehouse ModifyWarehouseName(string currentName,string newName)
+        public async Task<Warehouse> ModifyWarehouseNameAsync(string currentName,string newName)
         {
-            var warehousetToMod = this.context.Warehouses.FirstOrDefault(t => t.Name == currentName);
+            var warehousetToMod = await this.context.Warehouses.FirstOrDefaultAsync(t => t.Name == currentName);
             if (warehousetToMod == null || warehousetToMod.IsDeleted)
             {
                 throw new ArgumentException($"Warehouse {currentName} does not exists");
@@ -49,14 +51,14 @@ namespace WHMS.Services
             warehousetToMod.Name = newName;
             warehousetToMod.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return warehousetToMod;
         }
 
-        public Warehouse DeleteWarehouse(string name)
+        public async Task<Warehouse> DeleteWarehouseAsync(string name)
         {
-            var warehouseToDelete = this.context.Warehouses
-                .FirstOrDefault(u => u.Name == name);
+            var warehouseToDelete = await this.context.Warehouses
+                .FirstOrDefaultAsync(u => u.Name == name);
 
             if (warehouseToDelete == null || warehouseToDelete.IsDeleted)
             {
@@ -64,23 +66,23 @@ namespace WHMS.Services
             }
             warehouseToDelete.ModifiedOn = DateTime.Now;
             warehouseToDelete.IsDeleted = true;
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return warehouseToDelete;
         }
 
-        public Warehouse GetByName(string name)
+        public async Task<Warehouse> GetByNameAsync(string name)
         {
-            var warehouse = this.context.Warehouses
-                .FirstOrDefault(u => u.Name == name);
+            var warehouse = await this.context.Warehouses
+                .FirstOrDefaultAsync(u => u.Name == name);
             if (warehouse == null || warehouse.IsDeleted)
             {
                 throw new ArgumentException($"Warehouse {name} does not exists");
             }
             return warehouse;
         }
-        public ICollection<Warehouse> GetAllWarehouses()
+        public async Task<ICollection<Warehouse>> GetAllWarehousesAsync()
         {
-            var whs = this.context.Warehouses.ToList();
+            var whs = await this.context.Warehouses.ToListAsync();
             return whs;
         }
 

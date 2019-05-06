@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,6 +111,8 @@ namespace WHMS.Services
         {
             var partner = await this.context.Partners
                 .Include(p => p.PastOrders)
+                .Include(a=>a.Address)
+                .ThenInclude(t=>t.Town)
                 .FirstOrDefaultAsync(p => p.Id == Id);
             if (partner == null || partner.IsDeleted)
             {
@@ -130,6 +133,15 @@ namespace WHMS.Services
             }
 
             return partner;
+        }
+        public async Task<IEnumerable<Partner>> GetAllPartners()
+        {
+            var partners = await this.context.Partners.Where(p=>p.IsDeleted != true).ToListAsync();
+               
+                
+            
+
+            return partners;
         }
     }
 }

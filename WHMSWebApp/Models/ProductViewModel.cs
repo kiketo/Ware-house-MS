@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +12,7 @@ namespace WHMSWebApp.Models
 {
     public class ProductViewModel
     {
-        [Range(1, int.MaxValue, ErrorMessage = "ID should be a positive number")]
+       // [Range(1, int.MaxValue, ErrorMessage = "ID should be a positive number")]
         public int Id { get; set; }
 
         [StringLength(30,ErrorMessage = "Product Name must be between 4 and 30 letters!", MinimumLength =4)]
@@ -34,5 +35,10 @@ namespace WHMSWebApp.Models
         public decimal SellPrice { get; set; }
 
         public IReadOnlyCollection<ProductViewModel> SearchResults { get; set; } = new List<ProductViewModel>();
+
+        public IOrderedEnumerable<SelectListItem> Categories { get; set; }
+
+        public IOrderedEnumerable<SelectListItem> Units { get; set; }
+        
     }
 }

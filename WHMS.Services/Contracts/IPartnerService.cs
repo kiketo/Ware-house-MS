@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WHMSData.Models;
 
 namespace WHMS.Services.Contracts
@@ -16,5 +17,7 @@ namespace WHMS.Services.Contracts
         Task<Partner> FindByIdAsync(int Id);
 
         Task<Partner> FindByVATAsync(string VAT);
+
+        Task<IEnumerable<Partner>> GetAllPartners();
     }
 }

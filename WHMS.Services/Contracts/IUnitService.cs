@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WHMSData.Models;
 
 namespace WHMS.Services.Contracts
 {
     public interface IUnitService
     {
-        Unit CreateUnit(string name);
-        Unit DeleteUnitName(int unitId);
-        List<Unit> GetAllUnits();
-        Unit ModifyUnitName(string name);
-        Unit GetUnit(string name);
-        Unit GetUnitByID(int id);
+        Task<Unit> CreateUnitAsync(string name);
+        Task<Unit> DeleteUnitNameAsync(int unitId);
+        Task<List<Unit>> GetAllUnitsAsync();
+        Task<Unit> ModifyUnitNameAsync(string name);
+        Task<Unit> GetUnitAsync(string name);
+        Task<Unit> GetUnitByIDAsync(int id);
     }
 }

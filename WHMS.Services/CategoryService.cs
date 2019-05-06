@@ -18,9 +18,9 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Category CreateCategory(string name)
+        public async Task<Category> CreateCategoryAsync(string name)
         {
-            if (this.context.Categories.Any(t => t.Name == name))
+            if (await this.context.Categories.AnyAsync(t => t.Name == name))
             {
                 throw new ArgumentException($"Category {name} already exists");
             }
@@ -32,15 +32,15 @@ namespace WHMS.Services
                 ModifiedOn = DateTime.Now,
                 Products = new List<Product>()
             };
-            this.context.Categories.Add(newCategory);
-            this.context.SaveChanges();
+            await this.context.Categories.AddAsync(newCategory);
+            await this.context.SaveChangesAsync();
 
             return newCategory;
         }
 
-        public Category ModifyCategoryName(string name)
+        public async Task<Category> ModifyCategoryNameAsync(string name)
         {
-            var categoryToMod = this.context.Categories.FirstOrDefault(t => t.Name == name);
+            var categoryToMod = await this.context.Categories.FirstOrDefaultAsync(t => t.Name == name);
             if (categoryToMod == null || categoryToMod.IsDeleted)
             {
                 throw new ArgumentException($"Category {name} does not exists");
@@ -48,14 +48,14 @@ namespace WHMS.Services
             categoryToMod.Name = name;
             categoryToMod.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return categoryToMod;
         }
 
-        public Category DeleteCategory(string name)
+        public async Task<Category> DeleteCategoryAsync(string name)
         {
-            var categoryToDelete = this.context.Categories
-                .FirstOrDefault(u => u.Name == name);
+            var categoryToDelete = await this.context.Categories
+                .FirstOrDefaultAsync(u => u.Name == name);
 
             if (categoryToDelete == null || categoryToDelete.IsDeleted)
             {
@@ -63,22 +63,22 @@ namespace WHMS.Services
             }
             categoryToDelete.ModifiedOn = DateTime.Now;
             categoryToDelete.IsDeleted = true;
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return categoryToDelete;
         }
 
-        public Task<Category> GetCategoryByNameAsync(string name)
+        public async Task<Category> GetCategoryByNameAsync(string name)
         {
-            var category = this.context.Categories
+            var category = await this.context.Categories
                         .Where(c => c.Name == name)
                         .FirstOrDefaultAsync();
             return category;
         }
 
-        public Category FindByName(string name)
+        public async Task<Category> FindByNameAsync(string name)
         {
-            var category = this.context.Categories
-                .FirstOrDefault(u => u.Name == name);
+            var category = await this.context.Categories
+                .FirstOrDefaultAsync(u => u.Name == name);
             if (category == null || category.IsDeleted)
             {
                 throw new ArgumentException($"Category {name} does not exist!");
@@ -86,10 +86,10 @@ namespace WHMS.Services
             return category;
         }
 
-        public Category FindByID(int id)
+        public async Task<Category> FindByIDAsync(int id)
         {
-            var category = this.context.Categories
-                .FirstOrDefault(u => u.Id == id);
+            var category = await this.context.Categories
+                .FirstOrDefaultAsync(u => u.Id == id);
             if (category == null || category.IsDeleted)
             {
                 throw new ArgumentException($"Category does not exist!");
@@ -97,9 +97,9 @@ namespace WHMS.Services
             return category;
         }
 
-        public IEnumerable<Category> GetAllCategories()
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return this.context.Categories.ToList();
+            return await this.context.Categories.ToListAsync();
         }
     }
 }

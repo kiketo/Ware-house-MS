@@ -8,6 +8,7 @@ using WHMSData.Models;
 using WHMSWebApp.Mappers;
 using WHMSWebApp.Models;
 using WHMS.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WHMSWebApp.Controllers
 {
@@ -91,38 +92,52 @@ namespace WHMSWebApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            PartnerViewModel model = new PartnerViewModel()
+            {
+                Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name")
+                .OrderBy(x => x.Text)
+            };
+           
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PartnerViewModel partner)
         {
+            partner.Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name").OrderBy(x => x.Text);
+
             if (ModelState.IsValid)
             {
-                Town town = this.townService.GetTown(partner.City);
+                Town town = await this.townService.GetTownByIdAsync(int.Parse( partner.City));
 
                 if (town == null || town.IsDeleted)
                 {
-                    town = this.townService.Add(partner.City);
+                    town = await this.townService.AddAsync(partner.City);
 
                 }
-                Address address = this.addressService.GetAddress(town, partner.Address);
-
-                if (address == null || address.IsDeleted)
+                Address address = new Address()
                 {
-                    address = await this.addressService.AddAsync(town, partner.Address);
+                    Town = town,
+                    Text = partner.Address
+                };
+                //TODO async  method GetAddress
+                //await this.addressService.GetAddress(town, partner.Address);
 
-                }
+                //if (address == null || address.IsDeleted)
+                //{
+                //    address = await this.addressService.AddAsync(town, partner.Address);
 
-                var newPartner = this.partnerService.AddAsync(
+                //}
+
+                var newPartner = await this.partnerService.AddAsync(
                     partner.Name,
                     address,
                     partner.VAT
                     );
-
+                
                 return RedirectToAction(nameof(Details), new { id = newPartner.Id });
             }
             else
@@ -132,10 +147,10 @@ namespace WHMSWebApp.Controllers
 
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var model = this.partnerService.FindByIdAsync(id);
-            return View(model);
+            PartnerViewModel viewModel = partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(id));
+            return View(viewModel);
         }
 
         public IActionResult Edit()

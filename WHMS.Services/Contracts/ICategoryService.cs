@@ -6,18 +6,18 @@ namespace WHMS.Services.Contracts
 {
     public interface ICategoryService
     {
-        Category CreateCategory(string name);
+        Task<Category> CreateCategoryAsync(string name);
 
-        Category ModifyCategoryName(string name);
+        Task<Category> ModifyCategoryNameAsync(string name);
 
-        Category DeleteCategory(string name);
+        Task<Category> DeleteCategoryAsync(string name);
 
         Task<Category> GetCategoryByNameAsync(string name);
 
-        Category FindByName(string name);
+        Task<Category> FindByNameAsync(string name);
 
-        Category FindByID(int id);
+        Task<Category> FindByIDAsync(int id);
 
-        IEnumerable<Category> GetAllCategories();
+        Task<IEnumerable<Category>> GetAllCategoriesAsync();
     }
 }

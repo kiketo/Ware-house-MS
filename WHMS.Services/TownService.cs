@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
@@ -17,9 +19,9 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public Town Add(string townToAddName)
+        public async Task<Town> AddAsync(string townToAddName)
         {
-            Town townToAdd = this.context.Towns.FirstOrDefault(t => t.Name == townToAddName);
+            Town townToAdd = await this.context.Towns.FirstOrDefaultAsync(t => t.Name == townToAddName);
 
             if (townToAdd != null)
             {
@@ -46,18 +48,18 @@ namespace WHMS.Services
                     IsDeleted = false,
                     Name = townToAddName
                 };
-                this.context.Towns.Add(townToAdd);
+               await this.context.Towns.AddAsync(townToAdd);
             }
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
 
             return townToAdd;
         }
 
-        public Town Edit(string oldTownName, string newTownName)
+        public async Task<Town> EditAsync(string oldTownName, string newTownName)
         {
-            Town townToEdit = this.context.Towns
-                .FirstOrDefault(t => t.Name == oldTownName);
+            Town townToEdit = await this.context.Towns
+                .FirstOrDefaultAsync(t => t.Name == oldTownName);
 
             if (townToEdit == null || townToEdit.IsDeleted)
             {
@@ -67,15 +69,15 @@ namespace WHMS.Services
             townToEdit.Name = newTownName;
             townToEdit.ModifiedOn = DateTime.Now;
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
 
             return townToEdit;
         }
 
-        public Town Delete(string townToDeleteName)
+        public async Task<Town> DeleteAsync(string townToDeleteName)
         {
-            Town townToDelete = this.context.Towns
-                .FirstOrDefault(t => t.Name == townToDeleteName);
+            Town townToDelete = await this.context.Towns
+                .FirstOrDefaultAsync(t => t.Name == townToDeleteName);
 
             if (townToDelete == null || townToDelete.IsDeleted)
             {
@@ -90,15 +92,15 @@ namespace WHMS.Services
                 address.ModifiedOn = DateTime.Now;
             }
 
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return townToDelete;
         }
 
-        public Town GetTown(string townToGetName)
+        public async Task<Town> GetTownAsync(string townToGetName)
         {
-            Town townToGet = this.context.Towns
+            Town townToGet = await this.context.Towns
                 .Include(a => a.Addresses)
-                .FirstOrDefault(t => t.Name == townToGetName);
+                .FirstOrDefaultAsync(t => t.Name == townToGetName);
 
             if (townToGet == null || townToGet.IsDeleted)
             {
@@ -107,6 +109,27 @@ namespace WHMS.Services
 
             return townToGet;
         }
+        public async Task<IEnumerable<Town>> GetAllTownsAsync()
+        {
+            var allTowns = await this.context.Towns
+                .Include(a => a.Addresses)
+                .ToListAsync();
 
+            
+            return allTowns;
+        }
+        public async Task<Town> GetTownByIdAsync(int id)
+        {
+            Town townToGet = await this.context.Towns
+                .Include(a => a.Addresses)
+                .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (townToGet == null || townToGet.IsDeleted)
+            {
+                throw new ArgumentException($"Town  doesn't exist!");
+            }
+
+            return townToGet;
+        }
     }
 }

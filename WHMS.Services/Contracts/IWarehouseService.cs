@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WHMSData.Models;
 
 namespace WHMS.Services.Contracts
 {
     public interface IWarehouseService
     {
-        Warehouse CreateWarehouse(string name, Address address);
+        Task<Warehouse> CreateWarehouseAsync(string name, Address address);
 
-        Warehouse ModifyWarehouseName(string currentName, string newName);
+        Task<Warehouse> ModifyWarehouseNameAsync(string currentName, string newName);
 
-        Warehouse DeleteWarehouse(string name);
+        Task<Warehouse> DeleteWarehouseAsync(string name);
 
-        Warehouse GetByName(string name);
+        Task<Warehouse> GetByNameAsync(string name);
 
-        ICollection<Warehouse> GetAllWarehouses();
+        Task<ICollection<Warehouse>> GetAllWarehousesAsync();
     }
 }

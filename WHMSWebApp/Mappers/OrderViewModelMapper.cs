@@ -24,7 +24,9 @@ namespace WHMSWebApp.Mappers
             PartnerId=entity.PartnerId,//TODO
             //Products=entity.Products,
             TotalValue=entity.TotalValue,
-            Type=entity.Type.ToString()
+            Type=entity.Type.ToString(),
+            TypeOrder= entity.Type
+            
         };
     }
 }

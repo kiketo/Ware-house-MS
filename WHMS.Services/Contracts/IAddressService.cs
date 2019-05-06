@@ -13,7 +13,7 @@ namespace WHMS.Services.Contracts
 
         Task<Address> DeleteAsync(Town town, string addressToDelete);
 
-        Address GetAddress(Town town, string addressToGet);
+        Task<Address> GetAddressAsync(Town town, string addressToGet);
     }
 }
 

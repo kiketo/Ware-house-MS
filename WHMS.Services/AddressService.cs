@@ -104,9 +104,9 @@ namespace WHMS.Services
             return address;
         }
 
-        public Address GetAddress(Town town, string addressToGet)
+        public async Task<Address> GetAddressAsync(Town town, string addressToGet)
         {
-            Address address = town.Addresses.FirstOrDefault(a => a.Text == addressToGet);
+            Address address = await this.context.Addresses.FirstOrDefaultAsync(a => a.Text == addressToGet && a.Town == town);
 
             if (address == null || address.IsDeleted)
             {

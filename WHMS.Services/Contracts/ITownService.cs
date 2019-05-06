@@ -1,15 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using WHMSData.Models;
 
 namespace WHMS.Services.Contracts
 {
     public interface ITownService
     {
-        Town Add(string townToAddName);
-        Town Edit(string oldTownName, string newTownName);
-        Town Delete(string townToDeleteName);
-        Town GetTown(string townToGetName);
+        Task<Town> AddAsync(string townToAddName);
+
+        Task<Town> EditAsync(string oldTownName, string newTownName);
+
+        Task<Town> DeleteAsync(string townToDeleteName);
+
+        Task<Town> GetTownAsync(string townToGetName);
+
+        Task<IEnumerable<Town>> GetAllTownsAsync();
+
+        Task<Town> GetTownByIdAsync(int id);
     }
 }
