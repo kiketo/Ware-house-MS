@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WHMSData.Models;
-using WHMSWebApp2.Models;
+using WHMSWebApp.Models;
 
-namespace WHMSWebApp2.Mappers
+namespace WHMSWebApp.Mappers
 {
     public class WarehouseViewModelMapper : IViewModelMapper<Warehouse, WarehouseViewModel>
     {

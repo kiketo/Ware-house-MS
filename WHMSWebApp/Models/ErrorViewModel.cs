@@ -1,6 +1,6 @@
 using System;
 
-namespace WHMSWebApp2.Models
+namespace WHMSWebApp.Models
 {
     public class ErrorViewModel
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WHMSWebApp2.Models.ManageViewModels
+namespace WHMSWebApp.Models.ManageViewModels
 {
     public class RemoveLoginViewModel
     {

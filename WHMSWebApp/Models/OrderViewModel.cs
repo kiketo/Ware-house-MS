@@ -7,7 +7,7 @@ using System.Linq;
 using WHMSData.Models;
 using WHMSData.Utills;
 
-namespace WHMSWebApp2.Models.OrderViewModels
+namespace WHMSWebApp.Models.OrderViewModels
 {
     public class OrderViewModel
     {

@@ -10,10 +10,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WHMSData.Models;
-using WHMSWebApp2.Extensions;
-using WHMSWebApp2.Models.ManageViewModels;
+using WHMSWebApp.Extensions;
+using WHMSWebApp.Models.ManageViewModels;
 
-namespace WHMSWebApp2.Controllers
+namespace WHMSWebApp.Controllers
 {
     public class ManageController : Controller
     {

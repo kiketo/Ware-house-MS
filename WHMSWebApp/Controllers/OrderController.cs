@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Models;
 using WHMSData.Utills;
-using WHMSWebApp2.Mappers;
-using WHMSWebApp2.Models.OrderViewModels;
+using WHMSWebApp.Mappers;
+using WHMSWebApp.Models.OrderViewModels;
 
-namespace WHMSWebApp2.Controllers
+namespace WHMSWebApp.Controllers
 {
     public class OrderController : Controller
     {

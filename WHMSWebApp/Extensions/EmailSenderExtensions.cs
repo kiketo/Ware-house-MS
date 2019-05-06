@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
-namespace WHMSWebApp2.Extensions
+namespace WHMSWebApp.Extensions
 {
     public static class EmailSenderExtensions
     {

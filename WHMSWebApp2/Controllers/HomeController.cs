@@ -4,42 +4,34 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using WHMS.Services.Contracts;
-using WHMSData.Models;
 using WHMSWebApp2.Models;
-using WHMSWebApp2.Models.OrderViewModels;
 
 namespace WHMSWebApp2.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IWarehouseService warehouseService;
-
-        public HomeController(IWarehouseService warehouseService)
-        {
-            this.warehouseService = warehouseService ?? throw new ArgumentNullException(nameof(warehouseService));
-        }
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult About()
         {
+            ViewData["Message"] = "Your application description page.";
+
             return View();
         }
 
-        public IActionResult Search()
+        public IActionResult Contact()
         {
+            ViewData["Message"] = "Your contact page.";
+
             return View();
         }
 
-        public IActionResult Add()
+        public IActionResult Error()
         {
-            return View();
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-
     }
 }

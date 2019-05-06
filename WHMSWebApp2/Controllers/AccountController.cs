@@ -7,7 +7,6 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WHMSData.Models;
-using WHMSWebApp2.Controllers;
 using WHMSWebApp2.Models.AccountViewModels;
 using WHMSWebApp2.Services;
 

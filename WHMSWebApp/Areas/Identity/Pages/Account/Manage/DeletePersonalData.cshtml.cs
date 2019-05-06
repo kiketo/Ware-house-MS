@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using WHMSData.Models;
 
-namespace WHMSWebApp2.Areas.Identity.Pages.Account.Manage
+namespace WHMSWebApp.Areas.Identity.Pages.Account.Manage
 {
     public class DeletePersonalDataModel : PageModel
     {

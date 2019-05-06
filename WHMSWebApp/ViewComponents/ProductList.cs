@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Models;
 
-namespace WHMSWebApp2.ViewComponents
+namespace WHMSWebApp.ViewComponents
 {
     public class ProductList :ViewComponent
     {

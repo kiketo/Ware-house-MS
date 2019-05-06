@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WHMSData.Models;
 
-namespace WHMSWebApp2.Models
+namespace WHMSWebApp.Models
 {
     public class ProductViewModel
     {

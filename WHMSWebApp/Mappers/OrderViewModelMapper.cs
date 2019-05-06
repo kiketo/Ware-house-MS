@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WHMSData.Models;
-using WHMSWebApp2.Models;
-using WHMSWebApp2.Models.OrderViewModels;
+using WHMSWebApp.Models;
+using WHMSWebApp.Models.OrderViewModels;
 
-namespace WHMSWebApp2.Mappers
+namespace WHMSWebApp.Mappers
 {
     public class OrderViewModelMapper : IViewModelMapper<Order, OrderViewModel>
     {

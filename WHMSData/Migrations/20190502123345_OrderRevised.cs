@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace WHMSWebApp2.Data.Migrations
+namespace WHMSWebApp.Data.Migrations
 {
     public partial class OrderRevised : Migration
     {

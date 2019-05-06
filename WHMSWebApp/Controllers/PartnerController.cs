@@ -5,12 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Models;
-using WHMSWebApp2.Mappers;
-using WHMSWebApp2.Models;
+using WHMSWebApp.Mappers;
+using WHMSWebApp.Models;
 using WHMS.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace WHMSWebApp2.Controllers
+namespace WHMSWebApp.Controllers
 {
     public class PartnerController : Controller
     {
