@@ -1,20 +1,21 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
-using WHMS.Services;
-using WHMS.Services.Contracts;
-using WHMSData.Context;
 using WHMSData.Models;
+using WHMSWebApp2.Services;
+using WHMSData.Context;
+using Microsoft.AspNetCore.Http;
+using System.Reflection;
 using WHMSData.Utills;
 
-namespace WHMSWebApp
+namespace WHMSWebApp2
 {
     public class Startup
     {
@@ -52,12 +53,15 @@ namespace WHMSWebApp
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer($"Server={Constants.serverName};Database=WarehouseMS;Trusted_Connection=True;"));
 
-            services.AddIdentity<ApplicationUser,IdentityRole>()//TODO To check the role should work correctly!!!
-                //.AddDefaultUI(UIFramework.Bootstrap4)
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            // Add application services.
+            services.AddTransient<IEmailSender, EmailSender>();
+
+            services.AddMvc()
+                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,7 +70,6 @@ namespace WHMSWebApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {

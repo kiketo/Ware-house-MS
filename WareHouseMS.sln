@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WHMS.Services.Tests", "WHMS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WHMSWebApp", "WHMSWebApp\WHMSWebApp.csproj", "{951E8C31-3771-4E9D-BAAD-1A2EF5CD7DC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WHMSWebApp2", "WHMSWebApp2\WHMSWebApp2.csproj", "{0F2CE173-63EF-426A-AF88-1E934252D358}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{951E8C31-3771-4E9D-BAAD-1A2EF5CD7DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{951E8C31-3771-4E9D-BAAD-1A2EF5CD7DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{951E8C31-3771-4E9D-BAAD-1A2EF5CD7DC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F2CE173-63EF-426A-AF88-1E934252D358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F2CE173-63EF-426A-AF88-1E934252D358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F2CE173-63EF-426A-AF88-1E934252D358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F2CE173-63EF-426A-AF88-1E934252D358}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
