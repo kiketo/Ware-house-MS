@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WHMSData.Context;
 
-namespace WHMSWebApp.Data.Migrations
+namespace WHMSWebApp2.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20190426094453_Initial")]

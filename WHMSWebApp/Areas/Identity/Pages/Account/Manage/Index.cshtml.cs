@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WHMSData.Models;
 
-namespace WHMSWebApp.Areas.Identity.Pages.Account.Manage
+namespace WHMSWebApp2.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {

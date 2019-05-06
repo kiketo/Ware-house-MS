@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using WHMSData.Models;
 
-namespace WHMSWebApp.Areas.Identity.Pages.Account
+namespace WHMSWebApp2.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LogoutModel : PageModel

@@ -1,0 +1,50 @@
+﻿@model ProductViewModel
+
+@{
+    ViewData["Title"] = "SearchProductsByCategory";
+}
+@*<partial name="_SearchProduct" />*@
+
+<h3>Search for Product by Category</h3>
+
+<div class="row mt-5">
+    <form class="col-lg-6" asp-controller="Product" asp-action="SearchProductByCategory" method="get">
+        <div class="row">
+            <div class="col-sm-9">
+                @*<input asp-for="@Model.Category" placeholder="Search..." class="form-control" />*@
+                <select asp-for="Category" class="form-control" asp-items="ViewBag.Category"></select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-success">Search!</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row mt-5">
+    <div class="col-lg-6">
+        @if (Model != null)
+        {
+
+            if (string.IsNullOrWhiteSpace(Model.Category))
+            {
+                <p class="alert alert-info">There are no products</p>
+            }
+            else
+            {
+                foreach (var product in Model.SearchResults)
+                {
+                    <partial name="_ProductPartial" model="product" />
+
+                }
+
+            }
+        }
+    </div>
+</div>
+
+@section Scripts
+    {
+    <partial name="_ValidationScriptsPartial" />
+}

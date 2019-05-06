@@ -14,7 +14,7 @@ using WHMSData.Context;
 using WHMSData.Models;
 using WHMSData.Utills;
 
-namespace WHMSWebApp
+namespace WHMSWebApp2
 {
     public class Startup
     {
