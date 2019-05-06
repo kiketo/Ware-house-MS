@@ -110,48 +110,54 @@ namespace WHMSWebApp.Controllers
 
 
         [HttpGet]
-        [Route("[controller]/[action]/id")]
+        //[Route("[controller]/[action]/id")]
         public async Task<IActionResult> Create(int warehouseId)
         {
-            var productsOverZero = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(warehouseId);
-            var productsList = new List<Product>();
-            foreach (var pw in productsOverZero)
+            var productNQuantity = new Dictionary<ProductWarehouse, int>();
+            var pw = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(4);//TODO change warehouse id after setting set up window
+            foreach (var item in pw)
             {
-                productsList.Add(pw.Product);
+                productNQuantity.Add(item, 0);
             }
-
-            OrderViewModel model = new OrderViewModel()
+            
+            var order = new OrderViewModel()
             {
-                ProductsInWarehouse = new SelectList(productsList, "Id","Name").OrderBy(x => x.Text)
+                ProductsInWarehouse = new MultiSelectList(productNQuantity.Keys.Select(p => p.Product), "Id", "Name").OrderBy(x => x.Text),
+                Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text),
                 
             };
-            return View(model);
-        }//TODO
+
+            return View(order);
+        }
 
 
 
-        //[HttpPost]
-        //public IActionResult Create(OrderViewModel order)
-        //{
+        [HttpPost]
+        public async Task<IActionResult> Create(OrderViewModel order)
+        {
+            var pw = (await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(4));//TODO change warehouse id after setting set up window
 
-        //    if (ModelState.IsValid)
-        //    {
+            order.ProductsInWarehouse = new MultiSelectList(pw.Select(p=>p.Product), "Id", "Name").OrderBy(x => x.Text);
+            order.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
+            var productNQuantity = new Dictionary<ProductWarehouse, int>();
+            if (ModelState.IsValid)
+            {
+                var temp = new Dictionary<ProductWarehouse, int>();
 
-        //        var newOrder = this.orderService.AddAsync(
-        //            order.Type,
-        //            this.partnerService.FindByNameAsync(order.Partner),
-        //            this.productService.FindByName(order.Products),//TODO change logic, wrong!!!
-        //            order.quantity,//TODO
-        //            order.Comment
-        //            );
+                var newOrder = this.orderService.AddAsync(
+                    order.TypeOrder,
+                    await this.partnerService.FindByNameAsync(order.Partner), new Dictionary<ProductWarehouse, int>()
+                    //productNQuantity.Keys =
+                   // order.Comment
+                    );
 
-        //        return RedirectToAction(nameof(Details), new { id = newOrder.Id });
-        //    }
-        //    else
-        //    {
-        //        return View();
-        //    }
-        //}
+                return RedirectToAction(nameof(Details), new { id = newOrder.Id });
+            }
+            else
+            {
+                return View();
+            }
+        }
 
         public IActionResult Details(int id)
         {

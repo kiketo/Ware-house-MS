@@ -19,16 +19,25 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Order> AddAsync(OrderType type, Partner partner, ProductWarehouse pw, int qty, string comment = null)
+        public async Task<Order> AddAsync(OrderType type, Partner partner, IDictionary<ProductWarehouse, int> pws, string comment = null)
         {
-            decimal totalValue;
+            decimal totalValue = 0;
+            
             if (type == OrderType.Buy)
             {
-                totalValue = pw.Product.BuyPrice * qty;
+                foreach (var pw in pws)
+                {
+                    totalValue = pw.Key.Product.BuyPrice * pw.Value;
+                }
+                
             }
             else
             {
-                totalValue = pw.Product.SellPrice * qty;
+                foreach (var pw in pws)
+                {
+                    totalValue = pw.Key.Product.SellPrice * pw.Value;
+                }
+                
             }
 
             Order newOrder = new Order
@@ -38,10 +47,10 @@ namespace WHMS.Services
                 Partner = partner,
                 Comment = comment,
                 ModifiedOn = DateTime.Now,
-                ProductsWarehouses = new List<ProductWarehouse> { pw },
+                ProductsWarehouses = new List<ProductWarehouse>(pws.Keys),
                 TotalValue = totalValue
             };
-
+            
             await this.context.Orders.AddAsync(newOrder);
             await this.context.SaveChangesAsync();
             return newOrder;

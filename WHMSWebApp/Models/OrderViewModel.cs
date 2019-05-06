@@ -48,5 +48,12 @@ namespace WHMSWebApp.Models.OrderViewModels
         public IOrderedEnumerable<SelectListItem> ProductsInWarehouse { get; set; }
 
         public IOrderedEnumerable<SelectListItem> Warehouses { get; set; }
+
+        public IOrderedEnumerable<SelectListItem> Partners { get; set; }
+
+        public IOrderedEnumerable<SelectListItem> ProductsList { get; set; }
+        public OrderType TypeOrder { get; set; }
+
+        public Dictionary<ProductWarehouse, int> ProductsQuantities { get; set; }
     }
 }

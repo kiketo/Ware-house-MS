@@ -34,32 +34,12 @@ namespace WHMSWebApp.Controllers
         {
             return View();
         }
-        
-        public async Task<IActionResult> Add()
+
+        public IActionResult Add()
         {
-            OrderViewModel model = new OrderViewModel()
-            {
-                Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text)
-        };
-
-            return View(model);
+            return View();
         }
-        [HttpPost]
-        public async Task<IActionResult> Add(OrderViewModel model)
-        {
-            model.Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text);
-            var warehouse = await this.warehouseService.GetByNameAsync(model.Warehouse);
-                    
 
 
-            return RedirectToAction("Create", "Order", new { id = model.Id });
-
-    
-        }
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }
