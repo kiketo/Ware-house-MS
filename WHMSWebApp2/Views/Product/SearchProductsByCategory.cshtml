@@ -27,9 +27,9 @@
         @if (Model != null)
         {
 
-            if (string.IsNullOrWhiteSpace(Model.Category))
+            if (string.IsNullOrWhiteSpace(Model.Category)||Model.SearchResults.Count==0)
             {
-                <p class="alert alert-info">There are no products</p>
+                <p class="alert alert-info">There are no products in category: @Model.Category</p>
             }
             else
             {

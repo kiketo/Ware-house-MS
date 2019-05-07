@@ -25,9 +25,9 @@
         @if (Model != null)
         {
 
-            if (Model.Id == 0 && Model.SearchResults.Count == 0)
+            if (Model.Id == 0 || Model.SearchResults.Count == 0)
             {
-                <p class="alert alert-info">There are no products</p>
+                <p class="alert alert-info">There is no product with ID: @Model.Id</p>
             }
             else
             {

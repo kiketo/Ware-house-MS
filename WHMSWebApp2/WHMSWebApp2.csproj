@@ -6,6 +6,22 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="Views\Order\NoOrdersFound.cshtml" />
+    <Content Remove="Views\Order\OrdersByType.cshtml" />
+    <Content Remove="Views\Order\Search.cshtml" />
+    <Content Remove="Views\Partner\NoPartnerFound.cshtml" />
+    <Content Remove="Views\Partner\Search.cshtml" />
+    <Content Remove="Views\Product\NoProductFound.cshtml" />
+    <Content Remove="Views\Product\Search.cshtml" />
+    <Content Remove="Views\Shared\ErrorVer2.cshtml" />
+    <Content Remove="Views\Shared\_Layout1.cshtml" />
+    <Content Remove="Views\Shared\_LoginPartial1.cshtml" />
+    <Content Remove="Views\Shared\_SearchOrder.cshtml" />
+    <Content Remove="Views\Shared\_SearchPartner.cshtml" />
+    <Content Remove="Views\Shared\_SearchProduct.cshtml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />

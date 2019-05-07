@@ -1,0 +1,29 @@
+﻿@model OrderViewModel
+@{
+    ViewData["Title"] = "OrdersByType";
+}
+
+<h1>Orders By Type</h1>
+
+<div class="row mt-5">
+    <div class="col-lg-6">
+        @if (Model != null)
+        {
+
+            if (Model.SearchResults.Count == 0)
+            {
+                <p class="alert alert-info">There are no orders</p>
+            }
+            else
+            {
+                foreach (var order in Model.SearchResults)
+                {
+                    <partial name="_OrderPartial" model="order" />
+
+                }
+
+            }
+            <a href='javascript:history.go(-1)'>Go Back to Previous Page</a>
+        }
+    </div>
+</div>
