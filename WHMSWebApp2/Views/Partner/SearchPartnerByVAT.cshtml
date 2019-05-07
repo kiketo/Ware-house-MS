@@ -28,9 +28,9 @@
         @if (Model != null)
         {
 
-            if (!string.IsNullOrWhiteSpace(Model.VAT) && Model.VAT == null)
+            if (string.IsNullOrWhiteSpace(Model.VAT) || Model.VAT == null)
             {
-                <p class="alert alert-info">There are no partners</p>
+                <p class="alert alert-info">There is no partner with VAT: @Model.VAT</p>
             }
             else
             {

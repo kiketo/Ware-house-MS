@@ -10,7 +10,7 @@ namespace WHMSWebApp2.Models
 {
     public class PartnerViewModel
     {
-        [Range(0, int.MaxValue, ErrorMessage = "ID should be a positive number")]
+        [Range(1, int.MaxValue, ErrorMessage = "ID should be a positive number")]
         public int Id { get; set; }
 
         [MinLength(4, ErrorMessage = "Partner Name is required!")]

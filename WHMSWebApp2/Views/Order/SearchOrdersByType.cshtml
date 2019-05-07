@@ -4,7 +4,7 @@
 <h3>Search for Orders by Type</h3>
 
 <div class="row mt-5">
-    <form class="col-lg-6" asp-controller="Order" asp-action="SearchOrdersByType">
+    <form class="col-lg-6" asp-controller="Order" asp-action="SearchOrdersByType"  method="get">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row">
             <div class="col-sm-9">
@@ -27,26 +27,19 @@
 
             <div class="col-sm-3">
                 <button type="submit" class="btn btn-success">Search!</button>
-
-                @*@{ var referrer = this.Context.Request.Headers["Referer"]; }
-
-                @if (referrer != default(StringValues))
-                {
-                    <a href="@referrer.ToString()" class="btn btn-default">Go Back</a>
-                }*@
-
             </div>
         </div>
     </form>
 </div>
 
-@*<div class="row mt-5">
+<div class="row mt-5">
     <div class="col-lg-6">
         @if (Model != null)
         {
+
             if (!string.IsNullOrWhiteSpace(Model.Type) && !Model.SearchResults.Any())
             {
-                <p class="alert alert-info">There are no orders</p>
+                <p class="alert alert-info">There are no orders with type: @Model.Type, created between @Model.FromDate and @Model.ToDate</p>
             }
             else
             {
@@ -57,7 +50,7 @@
             }
         }
     </div>
-</div>*@
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

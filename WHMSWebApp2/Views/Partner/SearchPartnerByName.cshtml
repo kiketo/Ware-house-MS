@@ -28,9 +28,9 @@
         @if (Model != null)
         {
 
-            if (!string.IsNullOrWhiteSpace(Model.Name) && Model.Name==null)
+            if (!string.IsNullOrWhiteSpace(Model.Name) || Model.Id==0)
             {
-                <p class="alert alert-info">There are no partners</p>
+                <p class="alert alert-info">There is no partner with name: @Model.Name</p>
             }
             else
             {

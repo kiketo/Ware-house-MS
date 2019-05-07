@@ -88,11 +88,6 @@ namespace WHMSWebApp2.Controllers
             return View();
         }
 
-        public IActionResult Search()
-        {
-            return View();
-        }
-
         [HttpGet]
         public async Task<IActionResult> SearchProductById([FromQuery]ProductViewModel model)
         {
@@ -109,7 +104,7 @@ namespace WHMSWebApp2.Controllers
             }
             catch (ArgumentException)
             {
-                return View("NoProductFound");
+                return View(model);
             }
 
             return View(model);
@@ -131,7 +126,7 @@ namespace WHMSWebApp2.Controllers
             }
             catch (ArgumentException)
             {
-                return View("NoProductFound");
+                return View(model);
             }
 
             return View(model);
@@ -155,7 +150,7 @@ namespace WHMSWebApp2.Controllers
             }
             catch (ArgumentException)
             {
-                return View("NoProductFound");
+                return View(model);
             }
 
             return View(model);

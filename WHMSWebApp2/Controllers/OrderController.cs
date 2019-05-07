@@ -52,7 +52,7 @@ namespace WHMSWebApp2.Controllers
             }
             catch (ArgumentException)
             {
-                return View("NoOrdersFound");
+                return View(model);
             }
 
             return View(model);
@@ -75,20 +75,14 @@ namespace WHMSWebApp2.Controllers
             }
             catch (ArgumentException)
             {
-                return View("NoOrdersFound");
+                return View(model);
             }
 
             return View(model);
         }
-
-        [HttpGet]
-        public IActionResult SearchOrdersByType()
-        {
-            return View();
-        }
         
-        [HttpPost]
-        public async Task<IActionResult> SearchOrdersByType(OrderViewModel model)
+        [HttpGet]
+        public async Task<IActionResult> SearchOrdersByType([FromQuery]OrderViewModel model)
         {
             if (model.Type!="Sell"&&model.Type!="Buy")
             {
@@ -107,19 +101,13 @@ namespace WHMSWebApp2.Controllers
                     .Select(this.orderMapper.MapFrom)
                     .ToList();
 
-                return View("OrdersByType",model);
+                return View(model);
             }
             catch (ArgumentException)
             {
-                return View("NoOrdersFound");
+                return View(model);
             }
         }
-
-        //[HttpPost]
-        //public IActionResult OrdersByType(OrderViewModel model)
-        //{
-        //   return View(model);
-        //}
 
         [HttpGet]
         //[Route("[controller]/[action]/id")]

@@ -27,11 +27,6 @@ namespace WHMSWebApp2.Controllers
             this.partnerMapper = partnerMapper ?? throw new ArgumentNullException(nameof(partnerMapper));
         }
 
-        public IActionResult Search()
-        {
-            return View();
-        }
-
         [HttpGet]
         public async Task<IActionResult> SearchPartnerById([FromQuery]PartnerViewModel model)
         {
@@ -45,7 +40,7 @@ namespace WHMSWebApp2.Controllers
             }
             catch (ArgumentException)
             {
-                return View("NoPartnerFound");
+                return View(model);
             }
 
             return View(model);
@@ -65,7 +60,7 @@ namespace WHMSWebApp2.Controllers
             }
             catch (ArgumentException)
             {
-                return View("NoPartnerFound");
+                return View(model);
             }
 
             return View(model);
@@ -85,7 +80,7 @@ namespace WHMSWebApp2.Controllers
             }
             catch (ArgumentException)
             {
-                return View("NoPartnerFound");
+                return View(model);
             }
 
             return View(model);
