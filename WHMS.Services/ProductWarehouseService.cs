@@ -87,5 +87,12 @@ namespace WHMS.Services
                                                     .ToListAsync();
             return task;
         }
+        public async Task<ProductWarehouse> FindPairProductWarehouse(int warehouseId, int productId)
+        {
+
+            var pair = await this.context.ProductWarehouse.Where(p => p.ProductId == productId).FirstOrDefaultAsync(w => w.WarehouseId == warehouseId);
+
+            return pair;
+        }
     }
 }

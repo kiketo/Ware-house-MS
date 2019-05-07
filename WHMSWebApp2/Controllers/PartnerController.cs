@@ -41,7 +41,7 @@ namespace WHMSWebApp2.Controllers
             }
             try
             {
-                model.SearchResult = this.partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(model.Id));            
+                model.SearchResult = this.partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(model.Id));
             }
             catch (ArgumentException)
             {
@@ -99,7 +99,7 @@ namespace WHMSWebApp2.Controllers
                 Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name")
                 .OrderBy(x => x.Text)
             };
-           
+
             return View(model);
         }
 
@@ -108,36 +108,30 @@ namespace WHMSWebApp2.Controllers
         public async Task<IActionResult> Create(PartnerViewModel partner)
         {
             partner.Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name").OrderBy(x => x.Text);
-
+            
             if (ModelState.IsValid)
             {
-                Town town = await this.townService.GetTownByIdAsync(int.Parse( partner.City));
+                Town town = await this.townService.GetTownByIdAsync(int.Parse(partner.City));
 
                 if (town == null || town.IsDeleted)
                 {
                     town = await this.townService.AddAsync(partner.City);
 
                 }
-                Address address = new Address()
+                Address address = await this.addressService.GetAddressAsync(town, partner.Address);
+
+                if (address == null || address.IsDeleted)
                 {
-                    Town = town,
-                    Text = partner.Address
-                };
-                //TODO async  method GetAddress
-                //await this.addressService.GetAddress(town, partner.Address);
+                    address = await this.addressService.AddAsync(town, partner.Address);
 
-                //if (address == null || address.IsDeleted)
-                //{
-                //    address = await this.addressService.AddAsync(town, partner.Address);
-
-                //}
+                }
 
                 var newPartner = await this.partnerService.AddAsync(
                     partner.Name,
                     address,
                     partner.VAT
                     );
-                
+
                 return RedirectToAction(nameof(Details), new { id = newPartner.Id });
             }
             else
