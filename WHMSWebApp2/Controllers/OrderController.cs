@@ -82,32 +82,44 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SearchOrdersByType([FromQuery]OrderViewModel model)
+        public IActionResult SearchOrdersByType()
         {
-            if (string.IsNullOrWhiteSpace(model.Type))
+            return View();
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> SearchOrdersByType(OrderViewModel model)
+        {
+            if (model.Type!="Sell"&&model.Type!="Buy")
             {
-                return View();
+                return View(model);
             }
+
+            DateTime fromDate = model.FromDate ?? DateTime.MinValue;
+            DateTime toDate = model.ToDate ?? DateTime.MaxValue;
+
             OrderType orderType;
             var type = Enum.TryParse(model.Type, true, out orderType);
 
             try
             {
-                model.SearchResults = (await this.orderService.GetOrdersByTypeAsync(orderType, DateTime.MinValue, DateTime.MaxValue))
+                model.SearchResults = (await this.orderService.GetOrdersByTypeAsync(orderType, fromDate, toDate))
                     .Select(this.orderMapper.MapFrom)
                     .ToList();
+
+                return View("OrdersByType",model);
             }
             catch (ArgumentException)
             {
-
                 return View("NoOrdersFound");
             }
-
-            return View(model);
         }
 
-
-
+        //[HttpPost]
+        //public IActionResult OrdersByType(OrderViewModel model)
+        //{
+        //   return View(model);
+        //}
 
         [HttpGet]
         //[Route("[controller]/[action]/id")]
@@ -133,6 +145,7 @@ namespace WHMSWebApp2.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(OrderViewModel order)
         {
             var pw = (await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(4));//TODO change warehouse id after setting set up window
