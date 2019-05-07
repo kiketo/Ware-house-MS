@@ -1,17 +1,30 @@
 ﻿@model OrderViewModel
-
-@*<partial name="_SearchOrder" />*@
+@using Microsoft.Extensions.Primitives;
 
 <h3>Search for Orders by Type</h3>
 
 <div class="row mt-5">
-    <form class="col-lg-6" asp-controller="Order" asp-action="SearchOrdersByType" method="get">
+    <form class="col-lg-6" asp-controller="Order" asp-action="SearchOrdersByType"  method="get">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row">
             <div class="col-sm-9">
-                <select class="form-control" id="sel1" name="sellist1" asp-for="@Model.Type" asp-items="@Html.GetEnumSelectList<OrderType>()"></select>
+                <select class="form-control" id="sel1" input asp-for="@Model.Type">
+                    <option>--- SELECT ---</option>
+                    <option>Sell</option>
+                    <option>Buy</option>
+                </select>
                 <span asp-validation-for="@Model.Type" class="text-danger"></span>
             </div>
+
+            <div class="col-sm-9">
+                <label>From date:</label>
+                <input asp-for="@Model.FromDate" type="date" class="form-control">
+            </div>
+            <div class="col-sm-9">
+                <label>To date:</label>
+                <input asp-for="@Model.ToDate" type="date" class="form-control">
+            </div>
+
             <div class="col-sm-3">
                 <button type="submit" class="btn btn-success">Search!</button>
             </div>
@@ -23,9 +36,10 @@
     <div class="col-lg-6">
         @if (Model != null)
         {
+
             if (!string.IsNullOrWhiteSpace(Model.Type) && !Model.SearchResults.Any())
             {
-                <p class="alert alert-info">There are no orders</p>
+                <p class="alert alert-info">There are no orders with type: @Model.Type, created between @Model.FromDate and @Model.ToDate</p>
             }
             else
             {

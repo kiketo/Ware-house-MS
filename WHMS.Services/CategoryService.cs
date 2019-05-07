@@ -71,6 +71,7 @@ namespace WHMS.Services
         {
             var category = await this.context.Categories
                         .Where(c => c.Name == name)
+                        .Include(c=>c.Products)
                         .FirstOrDefaultAsync();
             return category;
         }

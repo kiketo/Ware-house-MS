@@ -58,7 +58,7 @@ namespace WHMSWebApp2.Controllers
             }
             catch (ArgumentException)
             {
-                return View("NoOrdersFound");
+                return View(model);
             }
 
             return View(model);
@@ -81,35 +81,38 @@ namespace WHMSWebApp2.Controllers
             }
             catch (ArgumentException)
             {
-                return View("NoOrdersFound");
+                return View(model);
             }
 
             return View(model);
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> SearchOrdersByType([FromQuery]OrderViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(model.Type))
+            if (model.Type!="Sell"&&model.Type!="Buy")
             {
-                return View();
+                return View(model);
             }
+
+            DateTime fromDate = model.FromDate ?? DateTime.MinValue;
+            DateTime toDate = model.ToDate ?? DateTime.MaxValue;
+
             OrderType orderType;
             var type = Enum.TryParse(model.Type, true, out orderType);
 
             try
             {
-                model.SearchResults = (await this.orderService.GetOrdersByTypeAsync(orderType, DateTime.MinValue, DateTime.MaxValue))
+                model.SearchResults = (await this.orderService.GetOrdersByTypeAsync(orderType, fromDate, toDate))
                     .Select(this.orderMapper.MapFrom)
                     .ToList();
+
+                return View(model);
             }
             catch (ArgumentException)
             {
-
-                return View("NoOrdersFound");
+                return View(model);
             }
-
-            return View(model);
         }
 
         [HttpGet]
@@ -157,6 +160,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [ActionName(nameof(Create))]
         public async Task<IActionResult> Create(OrderViewModel order)
         {

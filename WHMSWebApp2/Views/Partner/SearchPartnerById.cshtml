@@ -2,9 +2,6 @@
 @{
     ViewData["Title"] = "SearchPartnerById";
 }
-@*<partial name="_Search" />*@
-
-@*<partial name="_SearchPartner" />*@
 
 <h3>Search for Partner by ID</h3>
 
@@ -27,9 +24,9 @@
         @if (Model != null)
         {
 
-            if (Model.Id == 0 && Model.SearchResult == null)
+            if (Model.Id == 0 || Model.SearchResult == null)
             {
-                <p class="alert alert-info">There are no partners</p>
+                <p class="alert alert-info">There is no partner with ID: @Model.Id</p>
             }
             else
             {

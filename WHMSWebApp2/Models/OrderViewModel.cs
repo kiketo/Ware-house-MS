@@ -20,6 +20,7 @@ namespace WHMSWebApp2.Models.OrderViewModels
 
         public bool IsDeleted { get; set; }
 
+        [Required(ErrorMessage = "Type is required!")]
         public string Type { get; set; }
 
         public int PartnerId { get; set; }
@@ -54,6 +55,11 @@ namespace WHMSWebApp2.Models.OrderViewModels
 
         public OrderType TypeOrder { get; set; }
 
+        public Dictionary<ProductWarehouse, int> ProductsQuantities { get; set; }
+                
+        public DateTime? FromDate { get; set; }
+
+        public DateTime? ToDate { get; set; }
         public IOrderedEnumerable<SelectListItem> ProductsQuantities { get; set; }
 
         public int WarehouseId { get; set; }

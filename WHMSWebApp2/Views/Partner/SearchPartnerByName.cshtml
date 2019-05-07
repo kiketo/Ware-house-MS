@@ -3,10 +3,6 @@
     ViewData["Title"] = "SearchPartnerByName";
 }
 
-@*<partial name="_Search" />*@
-
-@*<partial name="_SearchPartner" />*@
-
 <h3>Search for Partner by Name</h3>
 
 <div class="row mt-5">
@@ -28,9 +24,9 @@
         @if (Model != null)
         {
 
-            if (!string.IsNullOrWhiteSpace(Model.Name) && Model.Name==null)
+            if (string.IsNullOrWhiteSpace(Model.Name) || Model.SearchResult==null)
             {
-                <p class="alert alert-info">There are no partners</p>
+                <p class="alert alert-info">There is no partner with name: @Model.Name</p>
             }
             else
             {
