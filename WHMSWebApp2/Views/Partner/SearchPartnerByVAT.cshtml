@@ -3,10 +3,6 @@
     ViewData["Title"] = "SearchPartnerByVAT";
 }
 
-@*<partial name="_Search" />*@
-
-@*<partial name="_SearchPartner" />*@
-
 <h3>Search for Partner by VAT</h3>
 
 <div class="row mt-5">
@@ -28,7 +24,7 @@
         @if (Model != null)
         {
 
-            if (string.IsNullOrWhiteSpace(Model.VAT) || Model.VAT == null)
+            if (string.IsNullOrWhiteSpace(Model.VAT) || Model.SearchResult == null)
             {
                 <p class="alert alert-info">There is no partner with VAT: @Model.VAT</p>
             }
