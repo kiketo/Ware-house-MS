@@ -60,7 +60,6 @@ namespace WHMSWebApp2.Models.OrderViewModels
         public DateTime? FromDate { get; set; }
 
         public DateTime? ToDate { get; set; }
-        public IOrderedEnumerable<SelectListItem> ProductsQuantities { get; set; }
 
         public int WarehouseId { get; set; }
 
