@@ -1,16 +1,13 @@
 ﻿@model PartnerViewModel
-
-
 @{
     ViewData["Title"] = "Create";
-
 }
 
 <h2>Add New Partner</h2>
 
-<div asp-validation-summary="All">
+@*<div asp-validation-summary="All">
     <span>Please correct the following errors</span>
-</div>
+</div>*@
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -62,6 +59,6 @@
 </div>
 
 <div>
-    <a asp-controller="Home" asp-action="Add">Back to List</a>
+    <a href='javascript:history.go(-1)'>Go Back</a>
 </div>
 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,34 +56,22 @@ namespace WHMS.Services
             return newPartner;
         }
 
-        public async Task<Partner> EditAsync(string partnerName, string newPartnerName, string newVat = null)
+        public async Task<Partner> UpdateAsync(Partner partner)
         {
-            Partner partnerToEdit =await this.context.Partners.FirstOrDefaultAsync(p => p.Name == partnerName);
-
-            if (partnerToEdit == null)
-            {
-                throw new ArgumentException($"Partner with name `{partnerName}` doesn't exist!");
-            }
-
-            partnerToEdit.Name = newPartnerName;
-
-            if (newVat != null)
-            {
-                partnerToEdit.VAT = newVat;
-            }
-            partnerToEdit.ModifiedOn = DateTime.Now;
-
+            this.context.Attach(partner).State =
+                Microsoft.EntityFrameworkCore
+                .EntityState.Modified;
             await this.context.SaveChangesAsync();
-            return partnerToEdit;
+            return partner;
         }
 
-        public async Task<Partner> DeleteAsync(string partnerName)
+        public async Task<Partner> DeleteAsync(int id)
         {
-            Partner partnerToDelete =await this.context.Partners.FirstOrDefaultAsync(p => p.Name == partnerName);
+            Partner partnerToDelete = await this.context.Partners.FirstOrDefaultAsync(p => p.Id == id);
 
             if (partnerToDelete == null || partnerToDelete.IsDeleted)
             {
-                throw new ArgumentException($"Partner with name `{partnerName}` doesn't exist!");
+                throw new ArgumentException($"Partner with ID `{id}` doesn't exist!");
             }
 
             partnerToDelete.IsDeleted = true;
@@ -111,8 +98,8 @@ namespace WHMS.Services
         {
             var partner = await this.context.Partners
                 .Include(p => p.PastOrders)
-                .Include(a=>a.Address)
-                .ThenInclude(t=>t.Town)
+                .Include(a => a.Address)
+                .ThenInclude(t => t.Town)
                 .FirstOrDefaultAsync(p => p.Id == Id);
             if (partner == null || partner.IsDeleted)
             {
@@ -136,10 +123,10 @@ namespace WHMS.Services
         }
         public async Task<IEnumerable<Partner>> GetAllPartners()
         {
-            var partners = await this.context.Partners.Where(p=>p.IsDeleted != true).ToListAsync();
-               
-                
-            
+            var partners = await this.context.Partners.Where(p => p.IsDeleted != true).ToListAsync();
+
+
+
 
             return partners;
         }

@@ -71,6 +71,7 @@ namespace WHMS.Services
             await this.context.SaveChangesAsync();
             return unitToDel;
         }
+
         public async Task<Unit> GetUnitAsync(string name)
         {
             var unit = await this.context.Units.Where(u => u.UnitName == name).FirstOrDefaultAsync();
@@ -80,6 +81,7 @@ namespace WHMS.Services
             }
             return unit;
         }
+
         public async Task<Unit> GetUnitByIDAsync(int id)
         {
             var unit = await this.context.Units.Where(u => u.Id == id).FirstOrDefaultAsync();
@@ -89,6 +91,5 @@ namespace WHMS.Services
             }
             return unit;
         }
-
     }
 }

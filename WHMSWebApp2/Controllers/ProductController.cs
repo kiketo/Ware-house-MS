@@ -16,20 +16,21 @@ namespace WHMSWebApp2.Controllers
         private IProductService productService;
         private IUnitService unitService;
         private ICategoryService categoryService;
+        private IProductWarehouseService productWarehouseService;
         private IViewModelMapper<Product, ProductViewModel> productMapper;
 
-        public ProductController(IProductService productService, IUnitService unitService, ICategoryService categoryService, IViewModelMapper<Product, ProductViewModel> productMapper)
+        public ProductController(IProductService productService, IUnitService unitService, ICategoryService categoryService, IProductWarehouseService productWarehouseService, IViewModelMapper<Product, ProductViewModel> productMapper)
         {
             this.productService = productService ?? throw new ArgumentNullException(nameof(productService));
             this.unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
             this.categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
+            this.productWarehouseService = productWarehouseService ?? throw new ArgumentNullException(nameof(productWarehouseService));
             this.productMapper = productMapper ?? throw new ArgumentNullException(nameof(productMapper));
         }
 
         [HttpGet]
         public async Task< IActionResult> Create()
         {
-            
             ProductViewModel product = new ProductViewModel()
             {
                 Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
@@ -38,26 +39,24 @@ namespace WHMSWebApp2.Controllers
                 .OrderBy(x => x.Text)
             };
             return View(product);
-
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel product)
         {
-            
             var allProducts = await this.productService.GetAllProductsAsync();
 
             if (allProducts.Any(p => p.Name == product.Name))
             {
                 ModelState.AddModelError("Name", "The name must be unique.");
             }
+
             product.Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "Name").OrderBy(x => x.Text);
             product.Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name").OrderBy(x => x.Text);
 
             if (ModelState.IsValid)
             {
-
                 var newProduct =await this.productService.CreateProductAsync(
                     product.Name,
                     await unitService.GetUnitByIDAsync(int.Parse(product.Unit)),
@@ -83,9 +82,67 @@ namespace WHMSWebApp2.Controllers
             return View(viewModel);
         }
 
-        public IActionResult Edit()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            Product productToDelete = await this.productService.DeleteProductAsync(id);
+            ProductViewModel model = this.productMapper.MapFrom(productToDelete);
+
+            return View(model);
+        }
+
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            ProductViewModel model = this.productMapper.MapFrom(await this.productService.GetProductByIdAsync(id));
+            model.Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
+                                .OrderBy(x => x.Text);
+            model.Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "UnitName")
+                               .OrderBy(x => x.Text);
+            
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(ProductViewModel model)
+        {
+            var allProducts = await this.productService.GetAllProductsAsync();
+
+            if (allProducts.Any(p => p.Name == model.Name))
+            {
+                ModelState.AddModelError("Name", "The name must be unique.");
+            }
+
+            model.Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
+                                .OrderBy(x => x.Text);
+            model.Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "UnitName")
+                               .OrderBy(x => x.Text);
+
+            if (ModelState.IsValid)
+            {
+                Product updatedProduct = await this.productService.GetProductByIdAsync(model.Id);
+                updatedProduct.BuyPrice = model.BuyPrice;
+                updatedProduct.Category = await this.categoryService.FindByIDAsync(int.Parse(model.Category));
+                updatedProduct.Description = model.Description;
+                updatedProduct.MarginInPercent = model.MarginInPercent;
+                updatedProduct.ModifiedOn = DateTime.Now;
+                updatedProduct.Name = model.Name;
+                updatedProduct.SellPrice = model.SellPrice;
+                updatedProduct.Unit = await this.unitService.GetUnitByIDAsync(int.Parse(model.Unit));
+
+                await this.productService.UpdateAsync(updatedProduct);
+
+                return RedirectToAction(nameof(Details), new { id = updatedProduct.Id });
+            }
+            else
+            {
+                return View(model);
+            }
         }
 
         [HttpGet]

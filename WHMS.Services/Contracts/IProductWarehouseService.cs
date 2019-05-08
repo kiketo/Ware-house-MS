@@ -16,5 +16,8 @@ namespace WHMS.Services.Contracts
 
         Task<ProductWarehouse> FindPairProductWarehouse(int warehouseId, int productId);
 
+        Task<ProductWarehouse> UpdateAsync(ProductWarehouse pw);
+
+        Task<ProductWarehouse> GetByIdPair(int productId, int warehouseId);
     }
 }

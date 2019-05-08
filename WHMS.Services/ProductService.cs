@@ -55,6 +55,15 @@ namespace WHMS.Services
             return newProduct;
         }
 
+        public async Task<Product> UpdateAsync(Product product)
+        {
+            this.context.Attach(product).State =
+                Microsoft.EntityFrameworkCore
+                .EntityState.Modified;
+            await this.context.SaveChangesAsync();
+            return product;
+        }
+
         public async Task<Product> SetMarginAsync(int productId, double newMargin)
         {
             var product = await this.context.Products.FirstOrDefaultAsync(i => i.Id == productId);
@@ -189,20 +198,19 @@ namespace WHMS.Services
             return product;
         }
 
-        public async Task<Product> DeleteProductAsync(string name)
+        public async Task<Product> DeleteProductAsync(int id)
         {
             var productToDelete = await this.context.Products
-                .FirstOrDefaultAsync(u => u.Name == name);
+                .FirstOrDefaultAsync(u => u.Id == id);
 
             if (productToDelete == null || productToDelete.IsDeleted)
             {
-                throw new ArgumentException($"Product `{name}` doesn't exist!");
+                throw new ArgumentException($"Product with ID: `{id}` doesn't exist!");
             }
             productToDelete.ModifiedOn = DateTime.Now;
             productToDelete.IsDeleted = true;
             await this.context.SaveChangesAsync();
             return productToDelete;
         }
-
     }
 }

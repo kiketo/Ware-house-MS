@@ -8,9 +8,9 @@ namespace WHMS.Services.Contracts
     {
         Task<Partner> AddAsync(string partnerName, Address address=null, string vat = null);
 
-        Task<Partner> EditAsync(string partnerName, string newPartnerName, string newVat = null);
+        Task<Partner> UpdateAsync(Partner partner);
 
-        Task<Partner> DeleteAsync(string partnerName);
+        Task<Partner> DeleteAsync(int id);
 
         Task<Partner> FindByNameAsync(string partnerName);
 
