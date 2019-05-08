@@ -1,10 +1,9 @@
 ﻿@model ProductViewModel
-
 @{
     ViewData["Title"] = "Create";
 }
 
-<h2>Create Product</h2>
+<h2>Edit Product</h2>
 
 <div asp-validation-summary="All">
     <span>Please correct the following errors</span>
@@ -12,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -50,7 +49,7 @@
                 <span asp-validation-for="SellPrice" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Edit" class="btn btn-default" />
             </div>
         </form>
     </div>

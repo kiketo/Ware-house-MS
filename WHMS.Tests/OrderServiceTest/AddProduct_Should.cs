@@ -19,13 +19,14 @@ namespace WHMS.Services.Tests.OrderServiceTest
             Unit unit = new Unit { Id = 1, UnitName = "pc" };
             Partner partner = new Partner { Id = 1, Name = "Partner1" };
             Product product1 = new Product { Id = 1, Unit = unit, Name = "Product1", MarginInPercent = 10 };
+            Warehouse wh = new Warehouse { Id = 1, Name = "WH1" };
             product2 = new Product { Id = 2, Unit = unit, Name = "Product2", MarginInPercent = 20 };
             //arrangeContext.SaveChanges();
-            ProductWarehouse pw = new ProductWarehouse() { Product = product1 };
+            ProductWarehouse pw = new ProductWarehouse() { Product = product1, Warehouse = wh };
             using (var arrangeContext = new ApplicationDbContext(options))
             {
-                arrangeContext.Partners.Add(partner);
-                arrangeContext.Products.Add(product1);
+                //arrangeContext.Partners.Add(partner);
+                //arrangeContext.Products.Add(product1);
                 arrangeContext.Products.Add(product2);
                 arrangeContext.Units.Add(unit);
                 arrangeContext.Orders.Add(new Order { Id = 1, ProductsWarehouses = new List<ProductWarehouse> { pw }, Partner = partner });

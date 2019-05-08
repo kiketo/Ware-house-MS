@@ -87,5 +87,24 @@ namespace WHMS.Services
                                                     .ToListAsync();
             return task;
         }
+
+        public async Task<ProductWarehouse> UpdateAsync(ProductWarehouse pw)
+        {
+            this.context.Attach(pw).State =
+                Microsoft.EntityFrameworkCore
+                .EntityState.Modified;
+            await this.context.SaveChangesAsync();
+            return pw;
+        }
+
+        public Task<ProductWarehouse> GetByIdPair(int productId, int warehouseId)
+        {
+            var pw = this.context.ProductWarehouse
+                .Where(p => p.ProductId == productId && p.WarehouseId == warehouseId)
+                .Include(p => p.Product)
+                .Include(p => p.Warehouse)
+                .FirstOrDefaultAsync();
+            return pw;
+        }
     }
 }

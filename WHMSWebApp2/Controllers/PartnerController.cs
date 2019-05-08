@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Models;
 using WHMSWebApp2.Mappers;
 using WHMSWebApp2.Models;
-using WHMS.Services;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace WHMSWebApp2.Controllers
 {
@@ -36,7 +34,7 @@ namespace WHMSWebApp2.Controllers
             }
             try
             {
-                model.SearchResult = this.partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(model.Id));            
+                model.SearchResult = this.partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(model.Id));
             }
             catch (ArgumentException)
             {
@@ -94,7 +92,7 @@ namespace WHMSWebApp2.Controllers
                 Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name")
                 .OrderBy(x => x.Text)
             };
-           
+
             return View(model);
         }
 
@@ -106,12 +104,11 @@ namespace WHMSWebApp2.Controllers
 
             if (ModelState.IsValid)
             {
-                Town town = await this.townService.GetTownByIdAsync(int.Parse( partner.City));
+                Town town = await this.townService.GetTownByIdAsync(int.Parse(partner.City));
 
                 if (town == null || town.IsDeleted)
                 {
                     town = await this.townService.AddAsync(partner.City);
-
                 }
                 Address address = new Address()
                 {
@@ -132,14 +129,13 @@ namespace WHMSWebApp2.Controllers
                     address,
                     partner.VAT
                     );
-                
+
                 return RedirectToAction(nameof(Details), new { id = newPartner.Id });
             }
             else
             {
                 return View();
             }
-
         }
 
         public async Task<IActionResult> Details(int id)
@@ -148,10 +144,66 @@ namespace WHMSWebApp2.Controllers
             return View(viewModel);
         }
 
-        public IActionResult Edit()
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            PartnerViewModel model = this.partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(id));
+            model.Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name")
+                         .OrderBy(x => x.Text);
+            return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(PartnerViewModel model)
+        {
+            model.Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name").OrderBy(x => x.Text);
+
+            if (ModelState.IsValid)
+            {
+                Town town = await this.townService.GetTownByIdAsync(int.Parse(model.City));
+
+                if (town == null || town.IsDeleted)
+                {
+                    town = await this.townService.AddAsync(model.City);
+                }
+                Address address = new Address()
+                {
+                    Town = town,
+                    Text = model.Address
+                };
+                //TODO async  method GetAddress
+                //await this.addressService.GetAddress(town, partner.Address);
+
+                //if (address == null || address.IsDeleted)
+                //{
+                //    address = await this.addressService.AddAsync(town, partner.Address);
+
+                //}
+                Partner updatedPartner = await this.partnerService.FindByIdAsync(model.Id);
+                updatedPartner.Address = address;
+                updatedPartner.ModifiedOn = DateTime.Now;
+                updatedPartner.Name = model.Name;
+                updatedPartner.VAT = model.VAT;
+
+                await this.partnerService.UpdateAsync(updatedPartner);
+
+                return RedirectToAction(nameof(Details), new { id = updatedPartner.Id });
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+            
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            Partner partnerToDelete = await this.partnerService.DeleteAsync(id);
+            PartnerViewModel model = this.partnerMapper.MapFrom(partnerToDelete);
+
+            return View(model);
+        }
     }
 }

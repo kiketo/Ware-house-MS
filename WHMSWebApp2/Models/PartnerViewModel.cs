@@ -30,5 +30,7 @@ namespace WHMSWebApp2.Models
         public PartnerViewModel SearchResult { get; set; }
 
         public IOrderedEnumerable<SelectListItem> Cities { get; set; }
+
+        public bool ConfirmationToDelete { get; set; }
     }
 }
