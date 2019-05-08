@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -128,6 +129,7 @@ namespace WHMSWebApp2.Controllers
 
         }
         [HttpPost]
+
         [ActionName(nameof(ChooseWarehouse))]
         public async Task<IActionResult> ChooseWarehouse(OrderViewModel model) //choose a warehouse
         {
@@ -144,16 +146,21 @@ namespace WHMSWebApp2.Controllers
 
         [HttpGet]
         [ActionName(nameof(Create))]
-        public async Task<IActionResult> Create(int warehouseId)
+        public async Task<IActionResult> Create(int id)
 
         {
-            // int warehouseId = 1;
-            var pw = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(warehouseId);
+           
+            var pw = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(id);
+            var pwDic = new Dictionary<ProductWarehouse, int>();
+            foreach (var product in pw)
+            {
+                pwDic.Add(await this.productWarehouseService.FindPairProductWarehouse(id, product.ProductId), 0);
+            }
             var order = new OrderViewModel()
             {
-                Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text),
-                ProductsInWarehouse = new MultiSelectList(pw.Select(p => p.Product), "Id", "Name").OrderBy(x => x.Text), //products
-                Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text)
+                //ProductsInWarehouse = new MultiSelectList((IEnumerable)pwDic, "Key", "Value", pwDic.Keys.Select(w=>w.ProductId).ToArray()), //products
+                Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text),
+                WantedQuantityByProduct = pwDic
             };
 
             return View("Create", order);
@@ -162,24 +169,23 @@ namespace WHMSWebApp2.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName(nameof(Create))]
-        public async Task<IActionResult> Create(OrderViewModel order)
+        public async Task<IActionResult> Create(OrderViewModel order, int id)
         {
+            var pw = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(id);
+            var pwDic = new Dictionary<ProductWarehouse, int>();
+            foreach (var product in pw)
+            {
+                pwDic.Add(await this.productWarehouseService.FindPairProductWarehouse(id, product.ProductId), 0);
+            }
 
-            int warehouseId = 1;//order.WarehouseId;
-            var pw = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(warehouseId);
-            order.ProductsInWarehouse = new MultiSelectList(pw.Select(p => p.Product), "Id", "Name").OrderBy(x => x.Text); //products
+            order.WantedQuantityByProduct = pwDic; 
             order.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
 
-            var pwDic = new Dictionary<ProductWarehouse, int>();
-            foreach (var product in order.ProductsInWarehouse)
-            {
-                pwDic.Add(await this.productWarehouseService.FindPairProductWarehouse(warehouseId, int.Parse(product.Value)), 0);
-            }
-            var partner = await this.partnerService.FindByIdAsync(int.Parse(order.Partner));
+            
 
             if (ModelState.IsValid)
             {
-
+                var partner = await this.partnerService.FindByIdAsync(int.Parse(order.Partner));
 
                 var newOrder = await this.orderService.AddAsync(
                     order.TypeOrder,

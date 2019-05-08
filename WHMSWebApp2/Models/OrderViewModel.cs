@@ -65,6 +65,6 @@ namespace WHMSWebApp2.Models.OrderViewModels
 
         public string ProductWarehouse { get; set; }
 
-        public Dictionary<Product, int> WantedQuantityByProduct { get; set; }
+        public Dictionary<ProductWarehouse, int> WantedQuantityByProduct { get; set; }
     }
 }

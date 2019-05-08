@@ -5,6 +5,7 @@ using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace WHMS.Services
 {
@@ -104,17 +105,20 @@ namespace WHMS.Services
             return address;
         }
 
-        public async Task<Address> GetAddressAsync(Town town, string addressToGet)
+        public async Task<Address> GetAddressAsync(Town town, int addressId)
         {
-            Address address = await this.context.Addresses.FirstOrDefaultAsync(a => a.Text == addressToGet && a.Town == town);
-
-            if (address == null || address.IsDeleted)
-            {
-                throw new ArgumentException($"Address `{addressToGet}` in town `{town.Name}` doesn't exist!");
-            }
+            Address address = await this.context.Addresses.FirstOrDefaultAsync(a => a.Id == addressId && a.Town == town);
 
             return address;
         }
+        public async Task<List<Address>> GetAllAddressesAsync()
+        {
+            var addresses = await this.context.Addresses
+                .Include(a=>a.Town)
+                .ToListAsync();
 
+           
+            return addresses;
+        }
     }
 }
