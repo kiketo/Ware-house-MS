@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WHMSData.Models;
 
 namespace WHMS.Services.Contracts
@@ -13,7 +14,9 @@ namespace WHMS.Services.Contracts
 
         Task<Address> DeleteAsync(Town town, string addressToDelete);
 
-        Task<Address> GetAddressAsync(Town town, string addressToGet);
+        Task<Address> GetAddressAsync(Town town, int addressId);
+
+        Task<List<Address>> GetAllAddressesAsync();
     }
 }
 

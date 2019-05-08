@@ -1,0 +1,23 @@
+﻿@model Dictionary<ProductWarehouse, int>
+
+
+
+        @foreach (var pair in Model)
+        {
+            <option value='elem_1'> @pair.Key.Product.Name @pair.Value</option>
+
+        }
+
+
+
+    @*<select asp-for="ProductsInWarehouse" class="custom-select" asp-items="@Model.Values">
+            <option value=""></option>
+
+        </select>
+        <hr />
+        <label asp-for="ProductsInWarehouse" class="control-label"></label>
+        <select asp-for="ProductsInWarehouse" asp-items="Model.ProductsInWarehouse">
+            <option value=""></option>
+        </select>
+        <input type="text" name="@Model.ProductsQuantities.Where(pw=>pw.Key.Product==@Model.ProductsInWarehouse).FirstOrDefault().Value" value="" />*@
+

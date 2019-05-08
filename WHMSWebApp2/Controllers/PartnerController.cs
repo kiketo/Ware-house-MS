@@ -89,10 +89,15 @@ namespace WHMSWebApp2.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+
+
             PartnerViewModel model = new PartnerViewModel()
             {
-                Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name")
-                .OrderBy(x => x.Text)
+                //Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name")
+                //.OrderBy(x => x.Text),
+                //Addresses = new SelectList(listAddress, "Id", "Text")
+                //.OrderBy(x => x.Text)
+                AddressesList = await this.addressService.GetAllAddressesAsync()
             };
 
             return View(model);
@@ -102,36 +107,48 @@ namespace WHMSWebApp2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PartnerViewModel partner)
         {
-            partner.Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name").OrderBy(x => x.Text);
-            
+            var listAddress = new List<string>();
+            foreach (var address in await this.addressService.GetAllAddressesAsync())
+            {
+                listAddress.Add($"{address.Town.Name} ,{address.Text}");
+            }
+            //partner.Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name").OrderBy(x => x.Text);
+            partner.Addresses = new SelectList(await this.addressService.GetAllAddressesAsync(), "Id", "Text").OrderBy(x => x.Text);
+            if ((await this.partnerService.GetAllPartners()).Any(p=>p.Name == partner.Name))
+            {
+                ModelState.AddModelError("Name", "Name is already used");
+            }
+            ModelState.Remove("Id");
+            ModelState.Remove("City");
+
             if (ModelState.IsValid)
             {
-                Town town = await this.townService.GetTownByIdAsync(int.Parse(partner.City));
+                //Town town = await this.townService.GetTownByIdAsync(int.Parse(partner.City));
 
-                if (town == null || town.IsDeleted)
-                {
-                    town = await this.townService.AddAsync(partner.City);
+                //if (town == null || town.IsDeleted)
+                //{
+                //    town = await this.townService.AddAsync(partner.City);
 
-                }
-                Address address = await this.addressService.GetAddressAsync(town, partner.Address);
+                //}
+                //Address address = await this.addressService.GetAddressAsync(town, int.Parse(partner.Address));
 
-                if (address == null || address.IsDeleted)
-                {
-                    address = await this.addressService.AddAsync(town, partner.Address);
+                //if (address == null || address.IsDeleted)
+                //{
+                //    address = await this.addressService.AddAsync(town, partner.Address);
 
-                }
+                //}
 
-                var newPartner = await this.partnerService.AddAsync(
-                    partner.Name,
-                    address,
-                    partner.VAT
-                    );
+                var newPartner = new Partner();// await this.partnerService.AddAsync(
+                //    partner.Name,
+                //    await this.addressService.GetAddressAsync((await this.addressService.GetTownByIdAsync(int.Parse(partner.City))), int.Parse(partner.Address)),
+                //    partner.VAT
+                //    );
 
                 return RedirectToAction(nameof(Details), new { id = newPartner.Id });
             }
             else
             {
-                return View();
+                return View(partner);
             }
 
         }

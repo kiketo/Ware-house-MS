@@ -30,5 +30,12 @@ namespace WHMSWebApp2.Models
         public PartnerViewModel SearchResult { get; set; }
 
         public IOrderedEnumerable<SelectListItem> Cities { get; set; }
+
+        public IOrderedEnumerable<SelectListItem> Addresses { get; set; }
+
+        public List<Address> AddressesList { get; set; }
+
+        public int AddressId { get; set; }
+
     }
 }
