@@ -101,7 +101,7 @@ namespace WHMSWebApp2.Controllers
         public async Task<IActionResult> Create(PartnerViewModel partner)
         {
             partner.Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name").OrderBy(x => x.Text);
-
+            
             if (ModelState.IsValid)
             {
                 Town town = await this.townService.GetTownByIdAsync(int.Parse(partner.City));
@@ -110,19 +110,13 @@ namespace WHMSWebApp2.Controllers
                 {
                     town = await this.townService.AddAsync(partner.City);
                 }
-                Address address = new Address()
+                Address address = await this.addressService.GetAddressAsync(town, partner.Address);
+
+                if (address == null || address.IsDeleted)
                 {
-                    Town = town,
-                    Text = partner.Address
-                };
-                //TODO async  method GetAddress
-                //await this.addressService.GetAddress(town, partner.Address);
+                    address = await this.addressService.AddAsync(town, partner.Address);
 
-                //if (address == null || address.IsDeleted)
-                //{
-                //    address = await this.addressService.AddAsync(town, partner.Address);
-
-                //}
+                }
 
                 var newPartner = await this.partnerService.AddAsync(
                     partner.Name,

@@ -25,10 +25,9 @@ namespace WHMSWebApp2.Models.OrderViewModels
 
         public int PartnerId { get; set; }
 
-        [MinLength(0,ErrorMessage = "Partner is required!")]
+        [MinLength(0, ErrorMessage = "Partner is required!")]
         public string Partner { get; set; }
 
-        [Required(ErrorMessage = "Product is required!")]
         public IEnumerable<Product> Products { get; set; } //TODO string
 
         public string Comment { get; set; }
@@ -45,7 +44,7 @@ namespace WHMSWebApp2.Models.OrderViewModels
 
         public IReadOnlyCollection<OrderViewModel> SearchResults { get; set; } = new List<OrderViewModel>();
 
-        [Required(ErrorMessage = "Product is required!")]
+
         public IOrderedEnumerable<SelectListItem> ProductsInWarehouse { get; set; }
 
         public IOrderedEnumerable<SelectListItem> Warehouses { get; set; }
@@ -61,5 +60,12 @@ namespace WHMSWebApp2.Models.OrderViewModels
         public DateTime? FromDate { get; set; }
 
         public DateTime? ToDate { get; set; }
+        public IOrderedEnumerable<SelectListItem> ProductsQuantities { get; set; }
+
+        public int WarehouseId { get; set; }
+
+        public string ProductWarehouse { get; set; }
+
+        public Dictionary<Product, int> WantedQuantityByProduct { get; set; }
     }
 }

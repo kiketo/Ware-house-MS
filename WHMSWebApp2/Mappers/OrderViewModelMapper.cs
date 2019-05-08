@@ -25,7 +25,8 @@ namespace WHMSWebApp2.Mappers
             //Products=entity.Products,
             TotalValue=entity.TotalValue,
             Type=entity.Type.ToString(),
-            TypeOrder= entity.Type
+            TypeOrder= entity.Type,
+            
             
         };
     }
