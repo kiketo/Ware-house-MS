@@ -17,6 +17,8 @@ namespace WHMS.Services.Contracts
         Task<Address> GetAddressAsync(Town town, int addressId);
 
         Task<List<Address>> GetAllAddressesAsync();
+
+        Task<Address> GetAddressByIdAsync(int addressId);
     }
 }
 

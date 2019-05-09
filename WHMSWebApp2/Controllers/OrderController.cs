@@ -158,7 +158,7 @@ namespace WHMSWebApp2.Controllers
             }
             var order = new OrderViewModel()
             {
-                //ProductsInWarehouse = new MultiSelectList((IEnumerable)pwDic, "Key", "Value", pwDic.Keys.Select(w=>w.ProductId).ToArray()), //products
+                
                 Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text),
                 WantedQuantityByProduct = pwDic
             };
@@ -180,30 +180,36 @@ namespace WHMSWebApp2.Controllers
 
             order.WantedQuantityByProduct = pwDic; 
             order.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
-
-            
+            ;
+            if (!(await this.partnerService.GetAllPartners()).Any(o=>o.Id == int.Parse(order.Partner)))
+            {
+                ModelState.AddModelError("Partner", "Partner is required!");
+            }
+            if (order.WantedQuantityByProduct.Count == 0)
+            {
+                ModelState.AddModelError("WantedQuantityByProduct", "At least one product is required!");
+            }
 
             if (ModelState.IsValid)
             {
-                var partner = await this.partnerService.FindByIdAsync(int.Parse(order.Partner));
-
                 var newOrder = await this.orderService.AddAsync(
                     order.TypeOrder,
-                    partner,
-                    pwDic
+                    await this.partnerService.FindByIdAsync(int.Parse(order.Partner)),
+                    order.WantedQuantityByProduct
                     );
 
                 return RedirectToAction(nameof(Details), new { id = newOrder.Id });
             }
             else
             {
-                return View();
+                return View(order);
             }
         }
         public async Task<IActionResult> Details(int id)
         {
             var model = await this.orderService.GetOrderByIdAsync(id);
             var viewModel = orderMapper.MapFrom(model);
+
             return View(viewModel);
         }
 

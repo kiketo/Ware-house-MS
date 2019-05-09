@@ -3,12 +3,11 @@
 @{
     ViewData["Title"] = "Create";
 }
-<h1>Create</h1>
+<h2>Create Order</h2>
 
-<h4>Order</h4>
 <hr />
 
-<div class="row">
+<div class="row" >
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -16,61 +15,70 @@
             <div class=" form-group">
                 <label asp-for="Partner" class="control-label"></label>
                 <select asp-for="Partner" class="form-control" asp-items="Model.Partners">
-                    <option value=""></option>
+                    <option>Please choose partner</option>
                 </select>
-            </div>
 
-            <div class="form-group">
+            </div>
+            <div class=" form-group">
                 <label asp-for="Type" class="control-label"></label>
+                <select asp-for="Type" class="form-control" asp-items="@Html.GetEnumSelectList<OrderType>()">
+                    <option>Please choose order type</option>
+                </select>
 
-                <select asp-for="Type" asp-items="@Html.GetEnumSelectList<OrderType>()"></select>
-                <span asp-validation-for="Type" class="text-danger"></span>
             </div>
-
             <div>
-
-                <div class="form-group">
-                    <table>
+                <label asp-for="WantedQuantityByProduct" class="control-label font-weight-bold">Select Products Quantities </label>
+                <table id="table" class="table table-hover table-mc-light-blue" border="0" align="center">
+                    <thead>
                         <tr>
-                            <td># | </td>
-                            <td>Products | </</td>
-                            <td>InStock | </</td>
-                            <td>OrderedQuantity</td>
+                            <th>Products</th>
+                            <th>InStock</th>
+                            <th>OrderedQuantity</th>
 
                         </tr>
+                    </thead>
+                    <tbody>
+
                         @foreach (var pair in Model.WantedQuantityByProduct)
                         {
                             <tr>
-                                <td><input type="checkbox" id="@pair.Key.ProductId" name="@pair.Key.Product.Name"></td>
                                 <td> @pair.Key.Product.Name</td>
                                 <td>@pair.Key.Quantity</td>
-                                <td><input type="text" id="@pair.Value" name="Quantity" value=""></td>
+                                <td><input type="text" id="@pair.Value" name="@pair.Value" value=""></td>
 
 
                             </tr>
-
                         }
 
-                    </table>
-                </div>
-                @*<button onclick="myFunction()">Try it</button>*@
 
+                    </tbody>
+                </table>
 
-                <span asp-validation-for="ProductsInWarehouse" class="text-danger"></span>
+                <span asp-validation-for="WantedQuantityByProduct" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+
+            @*<button onclick="myFunction()">Try it</button>*@
+
+            <div class="md-form mb-4 pink-textarea active-pink-textarea">
+
                 <label asp-for="Comment" class="control-label"></label>
-                <textarea name="Comment"></textarea>
+                <textarea id="form18" name="Comment" class="md-textarea form-control" rows="3" cols="60" placeholder="Add notes">Add notes</textarea>
                 <span asp-validation-for="Comment" class="text-danger"></span>
+
             </div>
 
-
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+
+                <input type="submit" value="Submit Order" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+
+
+
+
 
 <div>
     <a href='javascript:history.go(-1)'>Go Back</a>
@@ -78,7 +86,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    
+
     <script>
         function myFunction() {
             var btn = document.createElement("BUTTON");

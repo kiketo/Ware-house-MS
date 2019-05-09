@@ -1,0 +1,25 @@
+﻿@model PartnerViewModel
+
+<text>Or</text>
+<div class="dropdown-divider">
+
+    <label asp-for="City" class="control-label">Enter City</label><br />
+    <input list="AddressesList" name="Address" />
+    <datalist id="browsers">
+        <select asp-for="City">
+            <option asp-for="AddressId" class="form-control" />
+            @foreach (var city in Model.Cities)
+            {
+                <option value="City">@city.Text </option>
+            }
+
+        </select>
+
+    </datalist>
+</div>
+<div class="form-group">
+    <label asp-for="Address" class="control-label"></label>
+    <input asp-for="Address" class="form-control" />
+    <span asp-validation-for="Address" class="text-danger"></span>
+
+</div>

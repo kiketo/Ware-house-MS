@@ -7,7 +7,7 @@
 <h2>Create Product</h2>
 
 <div asp-validation-summary="All">
-    <span>Please correct the following errors</span>
+    
 </div>
 <hr />
 <div class="row">
@@ -16,41 +16,41 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" placeholder="Enter product name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <input asp-for="Description" placeholder="Enter product description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Category" class="control-label"></label>
-                <select asp-for="Category" class="form-control" asp-items="Model.Categories"></select>
+                <select asp-for="Category" class="form-control" asp-items="Model.Categories">
+                    <option>Please choose category</option>
+                </select>
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Unit" class="control-label"></label>
-                <select asp-for="Unit" class="form-control" asp-items="Model.Units"></select>
+                <select asp-for="Unit" class="form-control" asp-items="Model.Units">
+                    <option>Please choose unit</option>
+                </select>
                 <span asp-validation-for="Unit" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="BuyPrice" class="control-label"></label>
-                <input asp-for="BuyPrice" class="form-control" />
+                <input asp-for="BuyPrice" placeholder="Product buy price" class="form-control" />
                 <span asp-validation-for="BuyPrice" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MarginInPercent" class="control-label"></label>
-                <input asp-for="MarginInPercent" class="form-control" />
+                <input asp-for="MarginInPercent" placeholder="Product margin percentage" class="form-control" />
                 <span asp-validation-for="MarginInPercent" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="SellPrice" class="control-label"></label>
-                <input asp-for="SellPrice" class="form-control" />
-                <span asp-validation-for="SellPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+
+                <input type="submit" value="Add Product" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -59,3 +59,4 @@
 <div>
     <a href='javascript:history.go(-1)'>Go Back</a>
 </div>
+

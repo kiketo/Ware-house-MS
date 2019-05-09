@@ -120,5 +120,10 @@ namespace WHMS.Services
            
             return addresses;
         }
+        public async Task<Address> GetAddressByIdAsync(int addressId)
+        {
+            var address = await this.context.Addresses.FirstOrDefaultAsync(i => i.Id == addressId);
+            return address;
+        }
     }
 }

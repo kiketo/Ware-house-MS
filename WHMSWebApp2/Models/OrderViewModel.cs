@@ -23,6 +23,7 @@ namespace WHMSWebApp2.Models.OrderViewModels
         [Required(ErrorMessage = "Type is required!")]
         public string Type { get; set; }
 
+        [Required]
         public int PartnerId { get; set; }
 
         [MinLength(0, ErrorMessage = "Partner is required!")]
@@ -66,5 +67,7 @@ namespace WHMSWebApp2.Models.OrderViewModels
         public string ProductWarehouse { get; set; }
 
         public Dictionary<ProductWarehouse, int> WantedQuantityByProduct { get; set; }
+
+
     }
 }

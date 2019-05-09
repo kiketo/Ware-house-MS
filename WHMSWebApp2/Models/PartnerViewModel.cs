@@ -39,5 +39,7 @@ namespace WHMSWebApp2.Models
 
         public int AddressId { get; set; }
 
+        public ICollection<Order> Orders { get; set; }
+
     }
 }
