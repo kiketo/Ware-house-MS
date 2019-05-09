@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using WHMS.Services.Contracts;
@@ -29,17 +30,16 @@ namespace WHMSWebApp2.Controllers
         {
             return View();
         }
-
-        public IActionResult Search()
+               
+        public IActionResult About()
         {
             return View();
         }
 
-        public IActionResult Add()
+        public IActionResult Contact()
         {
             return View();
         }
-
 
     }
 }

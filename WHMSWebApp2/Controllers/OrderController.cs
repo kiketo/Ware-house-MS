@@ -11,6 +11,8 @@ using WHMSData.Utills;
 using WHMSWebApp2.Mappers;
 using WHMSWebApp2.Models;
 using WHMSWebApp2.Models.OrderViewModels;
+using WHMSWebApp2.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WHMSWebApp2.Controllers
 {
@@ -44,6 +46,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> SearchOrderById([FromQuery]OrderViewModel model)
         {
             if (model.Id == 0)
@@ -66,6 +69,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> SearchOrdersByPartner([FromQuery]OrderViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Partner))
@@ -89,6 +93,7 @@ namespace WHMSWebApp2.Controllers
         }
         
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> SearchOrdersByType([FromQuery]OrderViewModel model)
         {
             if (model.Type!="Sell"&&model.Type!="Buy")
@@ -117,6 +122,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [ActionName(nameof(ChooseWarehouse))]
         public async Task<IActionResult> ChooseWarehouse() //choose a warehouse
         {
@@ -128,8 +134,9 @@ namespace WHMSWebApp2.Controllers
             return View("ChooseWarehouse", order);
 
         }
-        [HttpPost]
 
+        [HttpPost]
+        [Authorize]
         [ActionName(nameof(ChooseWarehouse))]
         public async Task<IActionResult> ChooseWarehouse(OrderViewModel model) //choose a warehouse
         {
@@ -145,6 +152,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [ActionName(nameof(Create))]
         public async Task<IActionResult> Create(int id)
 
@@ -167,6 +175,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         [ActionName(nameof(Create))]
         public async Task<IActionResult> Create(OrderViewModel order, int id)
@@ -202,12 +211,25 @@ namespace WHMSWebApp2.Controllers
         }
         public async Task<IActionResult> Details(int id)
         {
-            var model = await this.orderService.GetOrderByIdAsync(id);
-            var viewModel = orderMapper.MapFrom(model);
-            return View(viewModel);
+            var order = await this.orderService.GetOrderByIdAsync(id);
+            var model = orderMapper.MapFrom(order);
+
+            model.CanUserEdit = model.CreatorId == this.User.GetId()|| this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+            model.CanUserDelete= this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+
+            return View(model);
         }
 
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            Order orderToDelete = await this.orderService.DeleteOrderAsync(id);
+            OrderViewModel model = this.orderMapper.MapFrom(orderToDelete);
 
+            return View(model);
+        }
 
 
         //// GET: Orders

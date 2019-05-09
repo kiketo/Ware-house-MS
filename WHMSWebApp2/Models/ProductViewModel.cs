@@ -34,6 +34,14 @@ namespace WHMSWebApp2.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal SellPrice { get; set; }
 
+        public string CreatorId { get; set; }
+
+        public string Creator { get; set; }
+
+        public bool CanUserEdit { get; set; }
+
+        public bool CanUserDelete { get; set; }
+
         public IReadOnlyCollection<ProductViewModel> SearchResults { get; set; } = new List<ProductViewModel>();
 
         public IOrderedEnumerable<SelectListItem> Categories { get; set; }

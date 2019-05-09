@@ -37,60 +37,72 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Search
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li class="dropdown-submenu">
-                                    <a class="dropdown-item dropdown-toggle" asp-controller="Order" asp-action="Search">For Order</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-controller="Order" asp-action="SearchOrderById">By ID</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Order" asp-action="SearchOrdersByPartner">By Partner</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Order" asp-action="SearchOrdersByType">By Type</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu">
-                                    <a class="dropdown-item dropdown-toggle" href="#">For Partner</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-controller="Partner" asp-action="SearchPartnerById">By ID</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Partner" asp-action="SearchPartnerByName">By Name</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Partner" asp-action="SearchPartnerByVAT">By VAT</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu">
-                                    <a class="dropdown-item dropdown-toggle" href="#">For Product</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" asp-controller="Product" asp-action="SearchProductById">By ID</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Product" asp-action="SearchProductsByName">By Name</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Product" asp-action="SearchProductsByCategory">By Category</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
                         </li>
 
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <!--Dropdown for Search -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Search
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" asp-controller="Order" asp-action="Search">For Order</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" asp-controller="Order" asp-action="SearchOrderById">By ID</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Order" asp-action="SearchOrdersByPartner">By Partner</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Order" asp-action="SearchOrdersByType">By Type</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">For Partner</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" asp-controller="Partner" asp-action="SearchPartnerById">By ID</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Partner" asp-action="SearchPartnerByName">By Name</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Partner" asp-action="SearchPartnerByVAT">By VAT</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#">For Product</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" asp-controller="Product" asp-action="SearchProductById">By ID</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Product" asp-action="SearchProductsByName">By Name</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Product" asp-action="SearchProductsByCategory">By Category</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
 
+                            <!--Dropdown for Create -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Create
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <li><a class="dropdown-item" asp-controller="Order" asp-action="Create">Order</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Partner" asp-action="Create">Partner</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Product" asp-action="Create">Product</a></li>
+                                </ul>
+                            </li>
+                        }
 
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Create
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" asp-controller="Order" asp-action="Create">Order</a></li>
-                                <li><a class="dropdown-item" asp-controller="Partner" asp-action="Create">Partner</a></li>
-                                <li><a class="dropdown-item" asp-controller="Product" asp-action="Create">Product</a></li>
-                            </ul>
-                        </li>
-
+                        @if (User.IsInRole("SuperAdmin"))
+                        {
+                            <li><a asp-area="SuperAdmin" asp-controller="Users" asp-action="Index">Dashbord</a></li>
+                        }
 
 
                         @*<li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Add">Add</a>
-                        </li>*@
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Add">Add</a>
+                            </li>*@
 
                         @*<partial name="_LoginPartial" />*@
                     </ul>

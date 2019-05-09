@@ -8,6 +8,8 @@ using WHMS.Services.Contracts;
 using WHMSData.Models;
 using WHMSWebApp2.Mappers;
 using WHMSWebApp2.Models;
+using WHMSWebApp2.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WHMSWebApp2.Controllers
 {
@@ -29,6 +31,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task< IActionResult> Create()
         {
             ProductViewModel product = new ProductViewModel()
@@ -42,6 +45,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel product)
         {
@@ -77,12 +81,17 @@ namespace WHMSWebApp2.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var model = await this.productService.GetProductByIdAsync(id);
-            var viewModel = productMapper.MapFrom(model);
-            return View(viewModel);
+            var product = await this.productService.GetProductByIdAsync(id);
+            var model = productMapper.MapFrom(product);
+
+            model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+            model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+
+            return View(model);
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
@@ -96,6 +105,7 @@ namespace WHMSWebApp2.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             ProductViewModel model = this.productMapper.MapFrom(await this.productService.GetProductByIdAsync(id));
@@ -108,6 +118,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProductViewModel model)
         {
@@ -146,6 +157,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> SearchProductById([FromQuery]ProductViewModel model)
         {
             if (model.Id == 0)
@@ -168,6 +180,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> SearchProductsByName([FromQuery]ProductViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Name))
@@ -190,6 +203,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> SearchProductsByCategory([FromQuery]ProductViewModel model)
         {
             ViewData["Category"] = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Name", "Name").OrderBy(x => x.Text);

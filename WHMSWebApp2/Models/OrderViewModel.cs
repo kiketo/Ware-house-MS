@@ -36,7 +36,11 @@ namespace WHMSWebApp2.Models.OrderViewModels
 
         public string CreatorId { get; set; }
 
-        public ApplicationUser Creator { get; set; }
+        public string Creator { get; set; }
+
+        public bool CanUserEdit { get; set; }
+
+        public bool CanUserDelete { get; set; }
 
         public int Quantity { get; set; }
 

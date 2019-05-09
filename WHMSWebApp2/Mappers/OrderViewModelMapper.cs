@@ -17,7 +17,7 @@ namespace WHMSWebApp2.Mappers
             Partner=entity.Partner.Name,
             Comment=entity.Comment,
             CreatedOn=entity.CreatedOn,
-            Creator=entity.Creator,
+            Creator=entity.Creator.UserName,
             CreatorId=entity.CreatorId,
             IsDeleted=entity.IsDeleted,
             ModifiedOn=entity.ModifiedOn,

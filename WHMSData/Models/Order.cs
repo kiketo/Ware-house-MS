@@ -32,6 +32,5 @@ namespace WHMSData.Models
         public string CreatorId { get; set; }
 
         public ApplicationUser Creator { get; set; }
-
     }
 }

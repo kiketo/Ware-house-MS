@@ -19,7 +19,8 @@ namespace WHMSWebApp2.Mappers
             MarginInPercent = entity.MarginInPercent,
             Category = entity.Category?.Name,
             Description = entity.Description,
-            Unit = entity.Unit?.UnitName
+            Unit = entity.Unit?.UnitName,
+            Creator=entity.Creator.UserName
         };
     }
 }
