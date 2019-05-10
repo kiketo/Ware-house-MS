@@ -48,6 +48,191 @@ namespace WHMSWebApp2.Controllers
             this.orderProductWarehouseService = orderProductWarehouseService ?? throw new ArgumentNullException(nameof(orderProductWarehouseService));
         }
 
+        
+        [HttpGet]
+        [Authorize]
+        [ActionName(nameof(ChooseWarehouse))]
+        public async Task<IActionResult> ChooseWarehouse() //choose a warehouse
+        {
+            var order = new OrderViewModel()
+            {
+                Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text)
+            };
+
+            return View("ChooseWarehouse", order);
+
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ActionName(nameof(ChooseWarehouse))]
+        public async Task<IActionResult> ChooseWarehouse(OrderViewModel model) //choose a warehouse
+        {
+
+            if (model.Warehouse == null)
+            {
+                ModelState.AddModelError("Warehouse", "Choose Warehouse");
+                model.Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text);
+                return View("ChooseWarehouse", model);
+            }
+
+            return RedirectToAction(nameof(Create), new { id = int.Parse(model.Warehouse) });
+        }
+
+        [HttpGet]
+        [Authorize]
+        [ActionName(nameof(Create))]
+        public async Task<IActionResult> Create(int warehouseId)
+        {
+            var OrderProductModels = new List<OrderProductViewModel>();
+            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(warehouseId);
+            foreach (var pw in pwList)
+            {
+                OrderProductModels.Add(new OrderProductViewModel()
+                {
+                    inStock = pw.Quantity,
+                    product = await this.productService.GetProductByIdAsync(pw.ProductId),
+                    wantedQuantity = 0
+
+                });
+            }
+            var model = new OrderViewModel()
+            {
+                listProductsWithQuantities = OrderProductModels,
+                Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text)
+                
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        [ActionName(nameof(Create))]
+        public async Task<IActionResult> Create(OrderViewModel model, int id)
+        {
+            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(id);
+            var listProducts = new List<OrderProductViewModel>();
+            foreach (var pw in pwList)
+            {
+                listProducts.Add(new OrderProductViewModel()
+                {
+                    inStock = pw.Quantity,
+                    product = await this.productService.GetProductByIdAsync(pw.ProductId),
+                    wantedQuantity = 0
+
+                });
+            }
+           model.SelectedProductsWithQuantities = listProducts;
+            model.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
+            if (!(await this.partnerService.GetAllPartners()).Any(o => o.Id == int.Parse(model.Partner)))
+            {
+                ModelState.AddModelError("Partner", "Partner is required!");
+            }
+            if (model.SelectedProductsWithQuantities.Count == 0)
+            {
+                ModelState.AddModelError("SelectedProductsWithQuantities", "At least one product is required!");
+            }
+            
+            if (ModelState.IsValid)
+            {
+                var newOrder = await this.orderService.AddAsync(
+                    model.TypeOrder,
+                    await this.partnerService.FindByIdAsync(int.Parse(model.Partner)),
+                    model.WantedQuantityByProduct
+                    );
+
+                return RedirectToAction(nameof(Details), new { id = newOrder.Id });
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            OrderViewModel model = this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(id));
+            
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(OrderViewModel model)
+        {
+
+            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(model.WarehouseId);
+            var listProducts = new List<OrderProductViewModel>();
+            foreach (var pw in pwList)
+            {
+                listProducts.Add(new OrderProductViewModel()
+                {
+                    inStock = pw.Quantity+model.WantedQuantityByProduct[pw],
+                    product = await this.productService.GetProductByIdAsync(pw.ProductId),
+                    wantedQuantity = model.WantedQuantityByProduct[pw]
+                });
+            }
+            model.SelectedProductsWithQuantities = listProducts;
+            model.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
+            if (!(await this.partnerService.GetAllPartners()).Any(o => o.Id == int.Parse(model.Partner)))
+            {
+                ModelState.AddModelError("Partner", "Partner is required!");
+            }
+            if (model.SelectedProductsWithQuantities.Count == 0)
+            {
+                ModelState.AddModelError("SelectedProductsWithQuantities", "At least one product is required!");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var newOrder = await this.orderService.AddAsync(
+                    model.TypeOrder,
+                    await this.partnerService.FindByIdAsync(int.Parse(model.Partner)),
+                    model.WantedQuantityByProduct
+                    );
+
+                return RedirectToAction(nameof(Details), new { id = newOrder.Id });
+            }
+            else
+            {
+                return View(model);
+            }
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Details(int id)
+        {
+            var order = await this.orderService.GetOrderByIdAsync(id);
+            var model = orderMapper.MapFrom(order);
+
+            var orderProductsIdNQuantities = await this.orderProductWarehouseService.GetProductsByOrderIdWhereWantedQuantityIsOverZeroAsync(id);
+            foreach (var opw in orderProductsIdNQuantities)
+            {
+                model.ProductsQuantity.Add((await this.productService.GetProductByIdAsync(opw.ProductId)), opw.WantedQuantity);
+            }
+
+            model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+            model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            Order orderToDelete = await this.orderService.DeleteOrderAsync(id);
+            OrderViewModel model = this.orderMapper.MapFrom(orderToDelete);
+
+            return View(model);
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> SearchOrderById([FromQuery]OrderViewModel model)
@@ -122,142 +307,6 @@ namespace WHMSWebApp2.Controllers
             {
                 return View(model);
             }
-        }
-
-        [HttpGet]
-        [Authorize]
-        [ActionName(nameof(ChooseWarehouse))]
-        public async Task<IActionResult> ChooseWarehouse() //choose a warehouse
-        {
-            var order = new OrderViewModel()
-            {
-                Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text)
-            };
-
-            return View("ChooseWarehouse", order);
-
-        }
-
-        [HttpPost]
-        [Authorize]
-        [ActionName(nameof(ChooseWarehouse))]
-        public async Task<IActionResult> ChooseWarehouse(OrderViewModel model) //choose a warehouse
-        {
-
-            if (model.Warehouse == null)
-            {
-                ModelState.AddModelError("Warehouse", "Choose Warehouse");
-                model.Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text);
-                return View("ChooseWarehouse", model);
-            }
-
-            return RedirectToAction(nameof(Create), new { id = int.Parse(model.Warehouse) });
-        }
-
-        [HttpGet]
-        [Authorize]
-        [ActionName(nameof(Create))]
-        public async Task<IActionResult> Create(int id)
-        {
-            var listProducts = new List<OrderProductViewModel>();
-            var pw = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(id);
-            foreach (var product in pw)
-            {
-                listProducts.Add(new OrderProductViewModel()
-                {
-                    inStock = product.Quantity,
-                    product = await this.productService.GetProductByIdAsync(product.ProductId),
-                    wantedQuantity = 0
-
-                });
-            }
-            var order = new OrderViewModel()
-            {
-                listProductsWithQuantities = listProducts,
-                Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text)
-                
-            };
-
-            return View("Create", order);
-        }
-
-        [HttpPost]
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        [ActionName(nameof(Create))]
-        public async Task<IActionResult> Create(OrderViewModel order, int id)
-        {
-            var pw = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(id);
-            var listProducts = new List<OrderProductViewModel>();
-            foreach (var product in pw)
-            {
-                listProducts.Add(new OrderProductViewModel()
-                {
-                    inStock = product.Quantity,
-                    product = await this.productService.GetProductByIdAsync(product.ProductId),
-                    wantedQuantity = 0
-
-                });
-            }
-           order.SelectedProductsWithQuantities = listProducts;
-            order.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
-            if (!(await this.partnerService.GetAllPartners()).Any(o => o.Id == int.Parse(order.Partner)))
-            {
-                ModelState.AddModelError("Partner", "Partner is required!");
-            }
-            if (order.SelectedProductsWithQuantities.Count == 0)
-            {
-                ModelState.AddModelError("SelectedProductsWithQuantities", "At least one product is required!");
-            }
-            
-
-            if (ModelState.IsValid)
-            {
-                var newOrder = await this.orderService.AddAsync(
-                    order.TypeOrder,
-                    await this.partnerService.FindByIdAsync(int.Parse(order.Partner)),
-                    order.WantedQuantityByProduct
-                    );
-
-                return RedirectToAction(nameof(Details), new { id = newOrder.Id });
-            }
-            else
-            {
-                return View(order);
-            }
-        }
-
-        [Authorize]
-        public async Task<IActionResult> Details(int id)
-        {
-            var model = await this.orderService.GetOrderByIdAsync(id);
-            var viewModel = orderMapper.MapFrom(model);
-
-            var orderProductsIdNQuantities = await this.orderProductWarehouseService.GetProductsByOrderIdWhereWantedQuantityIsOverZeroAsync(id);
-            foreach (var opw in orderProductsIdNQuantities)
-            {
-                viewModel.ProductsQuantity.Add((await this.productService.GetProductByIdAsync(opw.ProductId)), opw.WantedQuantity);
-            }
-
-            return View(viewModel);
-            var order = await this.orderService.GetOrderByIdAsync(id);
-            var model = this.orderMapper.MapFrom(order);
-
-            model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
-            model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(int id)
-        {
-            Order orderToDelete = await this.orderService.DeleteOrderAsync(id);
-            OrderViewModel model = this.orderMapper.MapFrom(orderToDelete);
-
-            return View(model);
         }
 
 

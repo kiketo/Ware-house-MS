@@ -113,9 +113,10 @@ namespace WHMS.Services
         public async Task<Order> GetOrderByIdAsync(int orderId)
         {
             Order orderToShow =await this.context.Orders
+                .Where(o => o.Id == orderId)
                 .Include(o => o.OrderProductsWarehouses)
                 .Include(o => o.Partner)
-                .Where(o => o.Id == orderId)
+                .Include(o=>o.Creator)
                 .FirstOrDefaultAsync();
             if (orderToShow == null || orderToShow.IsDeleted)
             {

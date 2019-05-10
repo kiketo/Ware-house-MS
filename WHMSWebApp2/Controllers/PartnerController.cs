@@ -37,68 +37,6 @@ namespace WHMSWebApp2.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> SearchPartnerById([FromQuery]PartnerViewModel model)
-        {
-            if (model.Id == 0)
-            {
-                return View();
-            }
-            try
-            {
-                model.SearchResult = this.partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(model.Id));
-            }
-            catch (ArgumentException)
-            {
-                return View(model);
-            }
-
-            return View(model);
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> SearchPartnerByName([FromQuery]PartnerViewModel model)
-        {
-            if (string.IsNullOrWhiteSpace(model.Name))
-            {
-                return View();
-            }
-
-            try
-            {
-                model.SearchResult = this.partnerMapper.MapFrom(await this.partnerService.FindByNameAsync(model.Name));
-            }
-            catch (ArgumentException)
-            {
-                return View(model);
-            }
-
-            return View(model);
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> SearchPartnerByVAT([FromQuery]PartnerViewModel model)
-        {
-            if (string.IsNullOrWhiteSpace(model.VAT))
-            {
-                return View();
-            }
-
-            try
-            {
-                model.SearchResult = this.partnerMapper.MapFrom(await this.partnerService.FindByVATAsync(model.VAT));
-            }
-            catch (ArgumentException)
-            {
-                return View(model);
-            }
-
-            return View(model);
-        }
-
-        [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Create()
         {
 
@@ -251,6 +189,68 @@ namespace WHMSWebApp2.Controllers
         {
             Partner partnerToDelete = await this.partnerService.DeleteAsync(id);
             PartnerViewModel model = this.partnerMapper.MapFrom(partnerToDelete);
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> SearchPartnerById([FromQuery]PartnerViewModel model)
+        {
+            if (model.Id == 0)
+            {
+                return View();
+            }
+            try
+            {
+                model.SearchResult = this.partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(model.Id));
+            }
+            catch (ArgumentException)
+            {
+                return View(model);
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> SearchPartnerByName([FromQuery]PartnerViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Name))
+            {
+                return View();
+            }
+
+            try
+            {
+                model.SearchResult = this.partnerMapper.MapFrom(await this.partnerService.FindByNameAsync(model.Name));
+            }
+            catch (ArgumentException)
+            {
+                return View(model);
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> SearchPartnerByVAT([FromQuery]PartnerViewModel model)
+        {
+            if (string.IsNullOrWhiteSpace(model.VAT))
+            {
+                return View();
+            }
+
+            try
+            {
+                model.SearchResult = this.partnerMapper.MapFrom(await this.partnerService.FindByVATAsync(model.VAT));
+            }
+            catch (ArgumentException)
+            {
+                return View(model);
+            }
 
             return View(model);
         }
