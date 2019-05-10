@@ -191,7 +191,7 @@ namespace WHMSWebApp2.Controllers
 
                 });
             }
-           order.SelectedProductsWithQuantities = listProducts;
+           order.listProductsWithQuantities = listProducts;
             order.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
             if (!(await this.partnerService.GetAllPartners()).Any(o => o.Id == int.Parse(order.Partner)))
             {
@@ -224,6 +224,7 @@ namespace WHMSWebApp2.Controllers
             var viewModel = orderMapper.MapFrom(model);
 
             var orderProductsIdNQuantities = await this.orderProductWarehouseService.GetProductsByOrderIdWhereWantedQuantityIsOverZeroAsync(id);
+            viewModel.ProductsQuantity = new Dictionary<Product, int>();
             foreach (var opw in orderProductsIdNQuantities)
             {
                 viewModel.ProductsQuantity.Add((await this.productService.GetProductByIdAsync(opw.ProductId)), opw.WantedQuantity);

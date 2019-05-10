@@ -33,7 +33,6 @@ namespace WHMS.Services
             var orderProducts = await this.context.OrderProductWarehouses
                 .Where(o => o.OrderId == orderId)
                 .Where(w => w.WantedQuantity > 0)
-                .Include(wanted => wanted.WantedQuantity)
                 .ToListAsync();
             return orderProducts;
         }
