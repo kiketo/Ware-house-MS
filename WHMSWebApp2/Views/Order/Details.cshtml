@@ -7,7 +7,6 @@
 <h2>Overview</h2>
 
 <div>
-    <h4>Order</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -60,6 +59,28 @@
         </dd>
 
     </dl>
+</div>
+<div>
+    
+    <table id="table" class="table table-hover table-mc-light-blue" border="0" align="center">
+        <thead>
+            <tr>
+                <th>Products</th>
+                <th>OrderedQuantity</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var pair in Model.ProductsQuantity)
+            {
+                <tr>
+                    <td> @pair.Key.Name</td>
+                    <td>@pair.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

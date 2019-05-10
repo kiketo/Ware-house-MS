@@ -117,13 +117,18 @@ namespace WHMSWebApp2.Controllers
             {
                 ModelState.AddModelError("Name", "Name is already used");
             }
-            if (partner.AddressId == 0 && partner.City == null)
+            if (partner.AddressId == 0 && partner.City == null || 
+                partner.AddressId == 0 && partner.City == "Please choose a city")
             {
                 ModelState.AddModelError("City", "City is required");
             }
             if (partner.AddressId == 0 && partner.Address == null)
             {
                 ModelState.AddModelError("Address", "Address is required");
+            }
+            if (partner.AddressId == 0)
+            {
+                ModelState.Remove("AddressId");
             }
             partner.Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name").OrderBy(x => x.Text);
             partner.AddressesList = await this.addressService.GetAllAddressesAsync();
@@ -144,7 +149,7 @@ namespace WHMSWebApp2.Controllers
                 }
                 else
                 {
-                    address = await this.addressService.GetAddressByIdAsync(int.Parse(partner.City));
+                    address = await this.addressService.GetAddressByIdAsync(partner.AddressId);
                 }
 
                

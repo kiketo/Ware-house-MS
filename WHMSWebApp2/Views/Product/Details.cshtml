@@ -5,10 +5,9 @@
     ViewBag.Title = Model.Name;
 }
 
-<h1>@Model.Name</h1>
+<h2>@Model.Name</h2>
 
 <div>
-    <h4>@Model.Name</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -62,10 +61,10 @@
     </dl>
 </div>
 <div>
-    <a class="btn btn-info" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <a class="btn btn-info" asp-action="Edit" style="width:70.59px" asp-route-id="@Model.Id">Edit</a>
 
     <!-- Button to Open the Modal -->
-    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">
+    <button type="button" class="btn btn-danger" style="width:70.59px" data-toggle="modal" data-target="#myModal">
         Delete
     </button>
 
@@ -77,7 +76,7 @@
                 <!-- Modal Header -->
                 <div class="modal-header">
                     <h4 class="modal-title">Confirmation</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" style="width:70.59px" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
                 <!-- Modal body -->
@@ -87,7 +86,7 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <a type="button" class="btn btn-green" data-dismiss="modal" href="#">Cancel</a>
+                    <a type="button" style="width:70.59px" class="btn btn-green" data-dismiss="modal" href="#">Cancel</a>
                     <form asp-controller="Product" asp-action="Delete" asp-route-id="@Model.Id" method="post">
                         <button class="btn btn-danger" type="submit">Delete</button>
                     </form>

@@ -33,6 +33,8 @@ namespace WHMSData.Context
 
         public DbSet<Order> Orders { get; set; }
 
+        public DbSet<OrderProductWarehouse> OrderProductWarehouses { get; set; }
+
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
         //    if (!optionsBuilder.IsConfigured)
@@ -47,6 +49,9 @@ namespace WHMSData.Context
 
             modelBuilder.Entity<ProductWarehouse>()
                     .HasKey(p => new { p.ProductId, p.WarehouseId });
+
+            modelBuilder.Entity<OrderProductWarehouse>()
+                .HasKey(p => new { p.OrderId, p.ProductId, p.WarehouseId });
         }
 
     }

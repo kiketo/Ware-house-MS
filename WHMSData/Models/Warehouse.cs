@@ -20,5 +20,8 @@ namespace WHMSData.Models
 
         [JsonIgnore]
         public ICollection<ProductWarehouse> Products { get; set; }
+
+        [JsonIgnore]
+        public ICollection<OrderProductWarehouse> OrderProductWarehouses { get; set; }
     }
 }

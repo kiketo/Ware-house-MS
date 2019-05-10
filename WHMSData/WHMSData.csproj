@@ -9,6 +9,7 @@
     <Compile Remove="Migrations\20190425174119_Initial.cs" />
     <Compile Remove="Migrations\20190425175810_Initial.cs" />
     <Compile Remove="Migrations\20190426093005_AddedAplicationUser.cs" />
+    <Compile Remove="Migrations\20190510120742_opwmodel.cs" />
     <Compile Remove="Models\ProductOrderWarehouse.cs" />
     <Compile Remove="Models\Transfer.cs" />
   </ItemGroup>

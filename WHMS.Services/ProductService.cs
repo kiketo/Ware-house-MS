@@ -35,6 +35,9 @@ namespace WHMS.Services
             }
             decimal sellPrice = buyPrice*(100+(decimal)margin)/100;
             List<Warehouse> wareHouses = await this.context.Warehouses.ToListAsync();
+
+
+
             var newProduct = new Product()
             {
                 Name = name,
@@ -46,7 +49,8 @@ namespace WHMS.Services
                 MarginInPercent = margin,
                 SellPrice = sellPrice,
                 Warehouses = wareHouses.Select(w => new ProductWarehouse { Warehouse = w }).ToList(),
-                Description = description
+                Description = description,
+                
             };
 
             await this.context.Products.AddAsync(newProduct);

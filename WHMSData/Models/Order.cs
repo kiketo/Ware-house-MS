@@ -20,9 +20,9 @@ namespace WHMSData.Models
         [Required(ErrorMessage = "Order Partner is required!")]
         public Partner Partner { get; set; }
 
-        [JsonIgnore]
-        [Required(ErrorMessage = "Order Products is required!")]
-        public ICollection<ProductWarehouse> ProductsWarehouses { get; set; }
+        //[JsonIgnore]
+        //[Required(ErrorMessage = "Order Products is required!")]
+        //public ICollection<ProductWarehouse> ProductsWarehouses { get; set; }
 
         public string Comment { get; set; }
 
@@ -32,6 +32,10 @@ namespace WHMSData.Models
         public string CreatorId { get; set; }
 
         public ApplicationUser Creator { get; set; }
+
+        [JsonIgnore]
+        [Required(ErrorMessage = "Order Products is required!")]
+        public ICollection<OrderProductWarehouse> OrderProductsWarehouses { get; set; }
 
     }
 }

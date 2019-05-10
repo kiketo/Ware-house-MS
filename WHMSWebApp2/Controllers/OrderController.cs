@@ -24,6 +24,7 @@ namespace WHMSWebApp2.Controllers
         private readonly IProductWarehouseService productWarehouseService;
         private readonly IWarehouseService warehouseService;
         private readonly IViewModelMapper<Warehouse, WarehouseViewModel> warehouseModelMapper;
+        private readonly IOrderProductWarehouseService orderProductWarehouseService;
 
         public OrderController(
             IOrderService orderService,
@@ -31,7 +32,9 @@ namespace WHMSWebApp2.Controllers
             IPartnerService partnerService,
             IViewModelMapper<Order, OrderViewModel> orderMapper, IUnitService unitService,
             IProductWarehouseService productWarehouseService,
-            IWarehouseService warehouseService, IViewModelMapper<Warehouse, WarehouseViewModel> warehouseModelMapper)
+            IWarehouseService warehouseService,
+            IViewModelMapper<Warehouse, WarehouseViewModel> warehouseModelMapper,
+            IOrderProductWarehouseService orderProductWarehouseService)
         {
             this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
             this.productService = productService ?? throw new ArgumentNullException(nameof(productService));
@@ -41,6 +44,7 @@ namespace WHMSWebApp2.Controllers
             this.productWarehouseService = productWarehouseService ?? throw new ArgumentNullException(nameof(productWarehouseService));
             this.warehouseService = warehouseService ?? throw new ArgumentNullException(nameof(warehouseService));
             this.warehouseModelMapper = warehouseModelMapper ?? throw new ArgumentNullException(nameof(warehouseModelMapper));
+            this.orderProductWarehouseService = orderProductWarehouseService ?? throw new ArgumentNullException(nameof(orderProductWarehouseService));
         }
 
         [HttpGet]
@@ -87,11 +91,11 @@ namespace WHMSWebApp2.Controllers
 
             return View(model);
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> SearchOrdersByType([FromQuery]OrderViewModel model)
         {
-            if (model.Type!="Sell"&&model.Type!="Buy")
+            if (model.Type != "Sell" && model.Type != "Buy")
             {
                 return View(model);
             }
@@ -147,20 +151,24 @@ namespace WHMSWebApp2.Controllers
         [HttpGet]
         [ActionName(nameof(Create))]
         public async Task<IActionResult> Create(int id)
-
         {
-           
+            var listProducts = new List<OrderProductViewModel>();
             var pw = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(id);
-            var pwDic = new Dictionary<ProductWarehouse, int>();
             foreach (var product in pw)
             {
-                pwDic.Add(await this.productWarehouseService.FindPairProductWarehouse(id, product.ProductId), 0);
+                listProducts.Add(new OrderProductViewModel()
+                {
+                    inStock = product.Quantity,
+                    product = await this.productService.GetProductByIdAsync(product.ProductId),
+                    wantedQuantity = 0
+
+                });
             }
             var order = new OrderViewModel()
             {
+                listProductsWithQuantities = listProducts,
+                Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text)
                 
-                Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text),
-                WantedQuantityByProduct = pwDic
             };
 
             return View("Create", order);
@@ -172,23 +180,28 @@ namespace WHMSWebApp2.Controllers
         public async Task<IActionResult> Create(OrderViewModel order, int id)
         {
             var pw = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(id);
-            var pwDic = new Dictionary<ProductWarehouse, int>();
+            var listProducts = new List<OrderProductViewModel>();
             foreach (var product in pw)
             {
-                pwDic.Add(await this.productWarehouseService.FindPairProductWarehouse(id, product.ProductId), 0);
-            }
+                listProducts.Add(new OrderProductViewModel()
+                {
+                    inStock = product.Quantity,
+                    product = await this.productService.GetProductByIdAsync(product.ProductId),
+                    wantedQuantity = 0
 
-            order.WantedQuantityByProduct = pwDic; 
+                });
+            }
+           order.SelectedProductsWithQuantities = listProducts;
             order.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
-            ;
-            if (!(await this.partnerService.GetAllPartners()).Any(o=>o.Id == int.Parse(order.Partner)))
+            if (!(await this.partnerService.GetAllPartners()).Any(o => o.Id == int.Parse(order.Partner)))
             {
                 ModelState.AddModelError("Partner", "Partner is required!");
             }
-            if (order.WantedQuantityByProduct.Count == 0)
+            if (order.SelectedProductsWithQuantities.Count == 0)
             {
-                ModelState.AddModelError("WantedQuantityByProduct", "At least one product is required!");
+                ModelState.AddModelError("SelectedProductsWithQuantities", "At least one product is required!");
             }
+            
 
             if (ModelState.IsValid)
             {
@@ -209,6 +222,12 @@ namespace WHMSWebApp2.Controllers
         {
             var model = await this.orderService.GetOrderByIdAsync(id);
             var viewModel = orderMapper.MapFrom(model);
+
+            var orderProductsIdNQuantities = await this.orderProductWarehouseService.GetProductsByOrderIdWhereWantedQuantityIsOverZeroAsync(id);
+            foreach (var opw in orderProductsIdNQuantities)
+            {
+                viewModel.ProductsQuantity.Add((await this.productService.GetProductByIdAsync(opw.ProductId)), opw.WantedQuantity);
+            }
 
             return View(viewModel);
         }

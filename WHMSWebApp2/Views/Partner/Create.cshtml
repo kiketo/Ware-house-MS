@@ -35,17 +35,32 @@
 
                 @*<span asp-validation-for="AddressId" class="text-danger"></span>*@
             </div>
-
             <hr />
-            <div class="form-group">
-                <label asp-for="City" class="control-label">Add new address</label>
-                <select asp-for="City" class="form-control" asp-items="Model.Cities">
-                    <option>Please choose a city</option>
-                </select>
+            <p>
+                <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Add New Address</a>
 
-                <input asp-for="Address" placeholder="Enter New Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
+            </p>
+            <div class="collapse multi-collapse" id="multiCollapseExample1">
+                <div class="card card-body">
+
+                   
+                    <input asp-for="City" placeholder="Enter new city name" class="form-control" />
+
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label">or</label>
+                        <select asp-for="City" class="form-control" asp-items="Model.Cities">
+                            <option>Choose from existing cities</option>
+                        </select>
+
+                        <input asp-for="Address" placeholder="Enter New Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
+
+
+
+
             <hr />
 
 
@@ -56,9 +71,9 @@
             </div>
             <div class="form-group">
 
-                <input type="submit" value="Add Partner" class="btn btn-primary" />
+                <input type="submit" value="Create Partner" class="btn btn-primary" />
             </div>
-            
+
         </form>
     </div>
 </div>
