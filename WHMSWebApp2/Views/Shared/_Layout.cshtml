@@ -77,25 +77,27 @@
                             </ul>
                         </li>
 
+
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Create
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li >
-                                    <a class="dropdown-item" asp-controller="Order" asp-action="ChooseWarehouse">For Order</a>
-                                </li>
-                                <li >
-                                    <a class="dropdown-item" asp-controller="Partner" asp-action="Create">For Partner</a>
-                                </li>
-                                <li >
-                                    <a class="dropdown-item" asp-controller="Product" asp-action="Create">For Product</a>
-                                </li>
+                                <li><a class="dropdown-item" asp-controller="Order" asp-action="Create">Order</a></li>
+                                <li><a class="dropdown-item" asp-controller="Partner" asp-action="Create">Partner</a></li>
+                                <li><a class="dropdown-item" asp-controller="Product" asp-action="Create">Product</a></li>
                             </ul>
                         </li>
+
+
+
+                        @*<li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Add">Add</a>
+                        </li>*@
+
+                        @*<partial name="_LoginPartial" />*@
                     </ul>
-                    @*<partial name="_LoginPartial" />*@
-                    
                 </div>
             </div>
         </nav>
