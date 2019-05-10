@@ -1,18 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Models;
 using WHMSData.Utills;
+using WHMSWebApp2.Extensions;
 using WHMSWebApp2.Mappers;
 using WHMSWebApp2.Models;
-using WHMSWebApp2.Models.OrderViewModels;
-using WHMSWebApp2.Extensions;
-using Microsoft.AspNetCore.Authorization;
 
 namespace WHMSWebApp2.Controllers
 {
@@ -31,7 +29,8 @@ namespace WHMSWebApp2.Controllers
             IOrderService orderService,
             IProductService productService,
             IPartnerService partnerService,
-            IViewModelMapper<Order, OrderViewModel> orderMapper, IUnitService unitService,
+            IViewModelMapper<Order, OrderViewModel> orderMapper,
+            IUnitService unitService,
             IProductWarehouseService productWarehouseService,
             IWarehouseService warehouseService, IViewModelMapper<Warehouse, WarehouseViewModel> warehouseModelMapper)
         {
@@ -91,12 +90,12 @@ namespace WHMSWebApp2.Controllers
 
             return View(model);
         }
-        
+
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> SearchOrdersByType([FromQuery]OrderViewModel model)
         {
-            if (model.Type!="Sell"&&model.Type!="Buy")
+            if (model.Type != "Sell" && model.Type != "Buy")
             {
                 return View(model);
             }
@@ -157,7 +156,7 @@ namespace WHMSWebApp2.Controllers
         public async Task<IActionResult> Create(int id)
 
         {
-           
+
             var pw = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(id);
             var pwDic = new Dictionary<ProductWarehouse, int>();
             foreach (var product in pw)
@@ -187,10 +186,10 @@ namespace WHMSWebApp2.Controllers
                 pwDic.Add(await this.productWarehouseService.FindPairProductWarehouse(id, product.ProductId), 0);
             }
 
-            order.WantedQuantityByProduct = pwDic; 
+            order.WantedQuantityByProduct = pwDic;
             order.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
 
-            
+
 
             if (ModelState.IsValid)
             {
@@ -209,13 +208,15 @@ namespace WHMSWebApp2.Controllers
                 return View();
             }
         }
+
+        [Authorize]
         public async Task<IActionResult> Details(int id)
         {
             var order = await this.orderService.GetOrderByIdAsync(id);
-            var model = orderMapper.MapFrom(order);
+            var model = this.orderMapper.MapFrom(order);
 
-            model.CanUserEdit = model.CreatorId == this.User.GetId()|| this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
-            model.CanUserDelete= this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+            model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+            model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
 
             return View(model);
         }

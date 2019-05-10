@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using WHMSData.Context;
+using WHMSData.Models;
+using WHMSWebApp2.Utils;
 
 namespace WHMSWebApp2
 {
@@ -14,7 +14,9 @@ namespace WHMSWebApp2
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+            DataSeed.SeedDatabaseWithSuperAdminAsync(host).Wait();
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

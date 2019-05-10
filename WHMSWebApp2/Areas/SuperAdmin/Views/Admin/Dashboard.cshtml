@@ -1,0 +1,33 @@
+﻿@model UserViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Users Dashboard</h1>
+
+<table id="table_id" class="display">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>User name</th>
+            <th>E-mail</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.UsersList)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                @foreach (var role in user.Roles)
+                {
+                    <td>@role</td>
+                }
+            </tr>
+        }
+
+    </tbody>
+</table>
+

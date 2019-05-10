@@ -18,3 +18,9 @@ $('.dropdown-menu a.dropdown-toggle').on('click', function (e) {
 
     return false;
 });
+
+
+$(document)
+    .ready(function () {
+        $('#table_id').DataTable();
+    });

@@ -157,6 +157,7 @@ namespace WHMSWebApp2.Controllers
             }
         }
 
+        [Authorize]
         public async Task<IActionResult> Details(int id)
         {
             PartnerViewModel model = partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(id));

@@ -79,6 +79,7 @@ namespace WHMSWebApp2.Controllers
             }
         }
 
+        [Authorize]
         public async Task<IActionResult> Details(int id)
         {
             var product = await this.productService.GetProductByIdAsync(id);

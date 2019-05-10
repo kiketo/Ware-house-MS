@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\DataTableLib\**" />
+    <Content Remove="wwwroot\DataTableLib\**" />
+    <EmbeddedResource Remove="wwwroot\DataTableLib\**" />
+    <None Remove="wwwroot\DataTableLib\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Areas\SuperAdmin\Views\_Layout.cshtml" />
+    <Content Remove="Areas\SuperAdmin\Views\_ViewImports.cshtml" />
     <Content Remove="Views\Order\NoOrdersFound.cshtml" />
     <Content Remove="Views\Order\OrdersByType.cshtml" />
     <Content Remove="Views\Order\Search.cshtml" />
@@ -20,6 +29,7 @@
     <Content Remove="Views\Shared\_SearchOrder.cshtml" />
     <Content Remove="Views\Shared\_SearchPartner.cshtml" />
     <Content Remove="Views\Shared\_SearchProduct.cshtml" />
+    <Content Remove="wwwroot\js\datatables.js" />
   </ItemGroup>
 
 
