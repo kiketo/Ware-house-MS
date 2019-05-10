@@ -18,5 +18,7 @@ namespace WHMSData.Models
         public ICollection<Product> Products { get; set; }
 
         public ICollection<Order> Orders { get; set; }
+
+        public ICollection<Partner> Partners { get; set; }
     }
 }

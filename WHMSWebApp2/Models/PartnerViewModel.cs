@@ -27,6 +27,14 @@ namespace WHMSWebApp2.Models
         [MinLength(11,ErrorMessage="Please enter a valid VAT number (ex: BG123456789)")]
         public string VAT { get; set; }
 
+        public string CreatorId { get; set; }
+
+        public string Creator { get; set; }
+
+        public bool CanUserEdit { get; set; }
+
+        public bool CanUserDelete { get; set; }
+
         public PartnerViewModel SearchResult { get; set; }
 
         public IOrderedEnumerable<SelectListItem> Cities { get; set; }

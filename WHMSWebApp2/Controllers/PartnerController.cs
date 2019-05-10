@@ -8,6 +8,8 @@ using WHMS.Services.Contracts;
 using WHMSData.Models;
 using WHMSWebApp2.Mappers;
 using WHMSWebApp2.Models;
+using WHMSWebApp2.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WHMSWebApp2.Controllers
 {
@@ -34,6 +36,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> SearchPartnerById([FromQuery]PartnerViewModel model)
         {
             if (model.Id == 0)
@@ -53,6 +56,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> SearchPartnerByName([FromQuery]PartnerViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.Name))
@@ -73,6 +77,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> SearchPartnerByVAT([FromQuery]PartnerViewModel model)
         {
             if (string.IsNullOrWhiteSpace(model.VAT))
@@ -93,6 +98,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Create()
         {
 
@@ -107,6 +113,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PartnerViewModel partner)
         {
@@ -168,15 +175,23 @@ namespace WHMSWebApp2.Controllers
             }
         }
 
+        [Authorize]
         public async Task<IActionResult> Details(int id)
         {
             PartnerViewModel viewModel = partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(id));
            // viewModel.Orders = (await this.orderService.GetOrdersByPartnerAsync((await this.partnerService.FindByIdAsync(id)))).OrderBy(x=>x.ModifiedOn).ToList();
 
             return View(viewModel);
+            PartnerViewModel model = partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(id));
+
+            model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+            model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+
+            return View(model);
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             PartnerViewModel model = this.partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(id));
@@ -186,6 +201,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(PartnerViewModel model)
         {
@@ -229,6 +245,7 @@ namespace WHMSWebApp2.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {

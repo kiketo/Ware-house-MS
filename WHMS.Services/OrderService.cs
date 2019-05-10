@@ -157,5 +157,16 @@ namespace WHMS.Services
             }
             return ordersToShow;
         }
+
+        public async Task<Order> DeleteOrderAsync(int id)
+        {
+            Order orderToDelete = await this.GetOrderByIdAsync(id);
+            orderToDelete.IsDeleted = true;
+            orderToDelete.ModifiedOn = DateTime.Now;
+
+            await this.context.SaveChangesAsync();
+
+            return orderToDelete;
+        }
     }
 }

@@ -7,7 +7,7 @@ using System.Linq;
 using WHMSData.Models;
 using WHMSData.Utills;
 
-namespace WHMSWebApp2.Models.OrderViewModels
+namespace WHMSWebApp2.Models
 {
     public class OrderViewModel
     {
@@ -37,7 +37,11 @@ namespace WHMSWebApp2.Models.OrderViewModels
 
         public string CreatorId { get; set; }
 
-        public ApplicationUser Creator { get; set; }
+        public string Creator { get; set; }
+
+        public bool CanUserEdit { get; set; }
+
+        public bool CanUserDelete { get; set; }
 
         public int Quantity { get; set; }
 

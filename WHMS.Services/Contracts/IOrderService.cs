@@ -23,5 +23,7 @@ namespace WHMS.Services.Contracts
         Task<ICollection<Order>> GetOrdersByTypeAsync(OrderType type, DateTime fromDate, DateTime toDate);
 
         Task<ICollection<Order>> GetOrdersByPartnerAsync(Partner partner);
+
+        Task<Order> DeleteOrderAsync(int id);
     }
 }

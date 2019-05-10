@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WHMSData.Models;
-using WHMSWebApp2.Services;
-using WHMSData.Context;
-using Microsoft.AspNetCore.Http;
+using System.Linq;
 using System.Reflection;
+using WHMSData.Context;
+using WHMSData.Models;
 using WHMSData.Utills;
+using WHMSWebApp2.Services;
 
 namespace WHMSWebApp2
 {
@@ -60,8 +58,17 @@ namespace WHMSWebApp2
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.AreaViewLocationFormats.Clear();
+                options.AreaViewLocationFormats.Add("/Areas/SuperAdmin/Views");
+                options.AreaViewLocationFormats.Add("/Views/Shared");
+            });
+
             services.AddMvc()
                 .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
+
+            services.AddRouting(options => options.LowercaseUrls = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,7 +93,17 @@ namespace WHMSWebApp2
 
             app.UseAuthentication();
 
-            app.UseMvcWithDefaultRoute();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                  name: "areas",
+                  template: "{area:exists}/{controller=Admin}/{action=Dashboard}/{id?}");
+
+                routes.MapRoute(
+                   name: "default",
+                   template: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }

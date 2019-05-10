@@ -295,6 +295,8 @@ namespace WHMSWebApp2.Data.Migrations
 
                     b.Property<DateTime>("CreatedOn");
 
+                    b.Property<string>("CreatorId");
+
                     b.Property<bool>("IsDeleted");
 
                     b.Property<DateTime>("ModifiedOn");
@@ -309,6 +311,8 @@ namespace WHMSWebApp2.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
+
+                    b.HasIndex("CreatorId");
 
                     b.ToTable("Partners");
                 });
@@ -526,6 +530,10 @@ namespace WHMSWebApp2.Data.Migrations
                     b.HasOne("WHMSData.Models.Address", "Address")
                         .WithMany()
                         .HasForeignKey("AddressId");
+
+                    b.HasOne("WHMSData.Models.ApplicationUser", "Creator")
+                        .WithMany("Partners")
+                        .HasForeignKey("CreatorId");
                 });
 
             modelBuilder.Entity("WHMSData.Models.Product", b =>
