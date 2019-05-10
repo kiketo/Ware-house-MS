@@ -33,7 +33,6 @@ namespace WHMS.Services
                 ModifiedOn = DateTime.Now,
                 Products = products.Select(w => new ProductWarehouse { Product = w }).ToList(),
                 Address = address
-
             };
             await this.context.Warehouses.AddAsync(newWarehouse);
             await this.context.SaveChangesAsync();
@@ -80,6 +79,7 @@ namespace WHMS.Services
             }
             return warehouse;
         }
+
         public async Task<ICollection<Warehouse>> GetAllWarehousesAsync()
         {
             var whs = await this.context.Warehouses.ToListAsync();

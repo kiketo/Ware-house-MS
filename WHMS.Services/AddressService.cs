@@ -32,7 +32,7 @@ namespace WHMS.Services
                 }
                 else
                 {
-                    throw new ArgumentException($"Address `{addressToAdd}` in town `{town.Name}` already exist!");
+                    return newAddress;
                 }
             }
             else

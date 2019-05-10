@@ -19,10 +19,10 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Order> AddAsync(OrderType type, Partner partner, IDictionary<ProductWarehouse, int> pws, string comment = null)
+        public async Task<Order> AddAsync(OrderType type, Partner partner, IDictionary<ProductWarehouse, int> pws, ApplicationUser user, string comment = null)
         {
             decimal totalValue = 0;
-            
+
             if (type == OrderType.Buy)
             {
                 foreach (var pw in pws)
@@ -30,7 +30,6 @@ namespace WHMS.Services
                     totalValue = pw.Key.Product.BuyPrice * pw.Value;
                     pw.Key.Quantity = pw.Key.Quantity - pw.Value;
                 }
-                
             }
             else
             {
@@ -39,9 +38,7 @@ namespace WHMS.Services
                     totalValue = pw.Key.Product.SellPrice * pw.Value;
                     pw.Key.Quantity = pw.Key.Quantity + pw.Value;
                 }
-                
             }
-
 
             Order newOrder = new Order
             {
@@ -51,72 +48,80 @@ namespace WHMS.Services
                 Comment = comment,
                 ModifiedOn = DateTime.Now,
                 TotalValue = totalValue,
-                OrderProductsWarehouses = pws.Select(w => new OrderProductWarehouse { ProductId = w.Key.ProductId, WarehouseId = w.Key.WarehouseId, WantedQuantity = w.Value  }).ToList(),
-
-
+                OrderProductsWarehouses = pws.Select(pw => new OrderProductWarehouse { ProductId = pw.Key.ProductId, WarehouseId = pw.Key.WarehouseId, WantedQuantity = pw.Value }).ToList(),
+                Creator=user
             };
-            
+
             await this.context.Orders.AddAsync(newOrder);
             await this.context.SaveChangesAsync();
             return newOrder;
         }
 
-        public async Task<Order> EditTypeAsync(int orderId, OrderType type)
+        public async Task<Order> UpdateAsync(Order order)
         {
-            Order orderToEdit = await GetOrderByIdAsync(orderId);
-
-            orderToEdit.Type = type;
-            orderToEdit.ModifiedOn = DateTime.Now;
-
-            await this.context.SaveChangesAsync();
-            return orderToEdit;
+            this.context.Attach(order).State =
+                Microsoft.EntityFrameworkCore
+                .EntityState.Modified;
+            await context.SaveChangesAsync();
+            return order;
         }
 
-        public async Task<Order> EditPartnerAsync(int orderId, Partner newPartner)
-        {
-            Order orderToEdit = await GetOrderByIdAsync(orderId);
+        //public async Task<Order> EditTypeAsync(int orderId, OrderType type)
+        //{
+        //    Order orderToEdit = await GetOrderByIdAsync(orderId);
 
-            orderToEdit.Partner = newPartner;
-            orderToEdit.ModifiedOn = DateTime.Now;
+        //    orderToEdit.Type = type;
+        //    orderToEdit.ModifiedOn = DateTime.Now;
 
-            await this.context.SaveChangesAsync();
-            return orderToEdit;
-        }
+        //    await this.context.SaveChangesAsync();
+        //    return orderToEdit;
+        //}
 
-        public async Task<Order> AddProductToOrderAsync(int orderId, ProductWarehouse pw)
-        {
-            Order orderToEdit = await GetOrderByIdAsync(orderId);
+        //public async Task<Order> EditPartnerAsync(int orderId, Partner newPartner)
+        //{
+        //    Order orderToEdit = await GetOrderByIdAsync(orderId);
 
-            //decimal totalValue = orderToEdit.TotalValue;
+        //    orderToEdit.Partner = newPartner;
+        //    orderToEdit.ModifiedOn = DateTime.Now;
 
-            //totalValue +=pw.Product.SellPrice * pw.Quantity;
+        //    await this.context.SaveChangesAsync();
+        //    return orderToEdit;
+        //}
 
-            //orderToEdit.OrderProductsWarehouses.Add(pw);
-            //orderToEdit.TotalValue = totalValue;
-            //orderToEdit.ModifiedOn = DateTime.Now;
+        //public async Task<Order> AddProductToOrderAsync(int orderId, ProductWarehouse pw)
+        //{
+        //    Order orderToEdit = await GetOrderByIdAsync(orderId);
 
-            //await this.context.SaveChangesAsync();
-            return orderToEdit;
-        }
+        //    //decimal totalValue = orderToEdit.TotalValue;
 
-        public async Task<Order> EditCommentAsync(int orderId, string comment)
-        {
-            Order orderToEdit = await GetOrderByIdAsync(orderId);
+        //    //totalValue +=pw.Product.SellPrice * pw.Quantity;
 
-            orderToEdit.Comment = comment;
-            orderToEdit.ModifiedOn = DateTime.Now;
+        //    //orderToEdit.OrderProductsWarehouses.Add(pw);
+        //    //orderToEdit.TotalValue = totalValue;
+        //    //orderToEdit.ModifiedOn = DateTime.Now;
 
-            await this.context.SaveChangesAsync();
-            return orderToEdit;
-        }
+        //    //await this.context.SaveChangesAsync();
+        //    return orderToEdit;
+        //}
+
+        //public async Task<Order> EditCommentAsync(int orderId, string comment)
+        //{
+        //    Order orderToEdit = await GetOrderByIdAsync(orderId);
+
+        //    orderToEdit.Comment = comment;
+        //    orderToEdit.ModifiedOn = DateTime.Now;
+
+        //    await this.context.SaveChangesAsync();
+        //    return orderToEdit;
+        //}
 
         public async Task<Order> GetOrderByIdAsync(int orderId)
         {
-            Order orderToShow =await this.context.Orders
+            Order orderToShow = await this.context.Orders
                 .Where(o => o.Id == orderId)
                 .Include(o => o.OrderProductsWarehouses)
                 .Include(o => o.Partner)
-                .Include(o=>o.Creator)
+                .Include(o => o.Creator)
                 .FirstOrDefaultAsync();
             if (orderToShow == null || orderToShow.IsDeleted)
             {
@@ -145,7 +150,7 @@ namespace WHMS.Services
 
         public async Task<ICollection<Order>> GetOrdersByPartnerAsync(Partner partner)
         {
-            List<Order> ordersToShow =await this.context.Orders
+            List<Order> ordersToShow = await this.context.Orders
                 .Where(o => o.Partner == partner)
                 .Where(o => o.IsDeleted == false)
                 .Include(p => p.Partner)

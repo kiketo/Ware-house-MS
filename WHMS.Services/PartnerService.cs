@@ -18,7 +18,7 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Partner> AddAsync(string partnerName, Address address = null, string vat = null)
+        public async Task<Partner> AddAsync(string partnerName, ApplicationUser user, Address address = null, string vat = null)
         {
             Partner newPartner = await this.context.Partners.FirstOrDefaultAsync(t => t.Name == partnerName);
 
@@ -32,6 +32,7 @@ namespace WHMS.Services
                     newPartner.ModifiedOn = DateTime.Now;
                     newPartner.PastOrders = new List<Order>();
                     newPartner.IsDeleted = false;
+                    newPartner.Creator = user;
                 }
                 else
                 {
@@ -47,7 +48,8 @@ namespace WHMS.Services
                     VAT = vat,
                     CreatedOn = DateTime.Now,
                     ModifiedOn = DateTime.Now,
-                    PastOrders = new List<Order>()
+                    PastOrders = new List<Order>(),
+                    Creator = user
                 };
                 this.context.Partners.Add(newPartner);
             }
@@ -85,6 +87,9 @@ namespace WHMS.Services
         {
             var partner = await this.context.Partners
                 .Include(p => p.PastOrders)
+                .Include(p => p.Address)
+                    .ThenInclude(a => a.Town)
+                .Include(p => p.Creator)
                 .FirstOrDefaultAsync(p => p.Name == partnerName);
             if (partner == null || partner.IsDeleted)
             {
@@ -97,9 +102,10 @@ namespace WHMS.Services
         public async Task<Partner> FindByIdAsync(int Id)
         {
             var partner = await this.context.Partners
+                .Include(p => p.Creator)
                 .Include(p => p.PastOrders)
                 .Include(a => a.Address)
-                .ThenInclude(t => t.Town)
+                    .ThenInclude(t => t.Town)
                 .FirstOrDefaultAsync(p => p.Id == Id);
             if (partner == null || partner.IsDeleted)
             {
@@ -112,7 +118,10 @@ namespace WHMS.Services
         public async Task<Partner> FindByVATAsync(string VAT)
         {
             var partner = await this.context.Partners
+                .Include(p => p.Creator)
                 .Include(p => p.PastOrders)
+                .Include(a => a.Address)
+                    .ThenInclude(t => t.Town)
                 .FirstOrDefaultAsync(p => p.VAT == VAT);
             if (partner == null || partner.IsDeleted)
             {
@@ -121,6 +130,7 @@ namespace WHMS.Services
 
             return partner;
         }
+
         public async Task<IEnumerable<Partner>> GetAllPartners()
         {
             var partners = await this.context.Partners.Where(p => p.IsDeleted != true).ToListAsync();

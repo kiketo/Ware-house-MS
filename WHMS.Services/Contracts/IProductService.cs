@@ -7,17 +7,17 @@ namespace WHMS.Services.Contracts
 {
     public interface IProductService //TODO to delete the unneeded
     {
-        Task<Product> CreateProductAsync(string name, Unit unit, Category category, decimal buyPrice, double margin, string description);
+        Task<Product> CreateProductAsync(string name, Unit unit, Category category, decimal buyPrice, double margin, string description, ApplicationUser user);
 
-        Task<Product> SetMarginAsync(int productId, double newMargin);
+        //Task<Product> SetMarginAsync(int productId, double newMargin);
 
-        Task<Product> SetBuyPriceAsync(int productId, decimal price);
+        //Task<Product> SetBuyPriceAsync(int productId, decimal price);
 
-        Task<Product> ModifyProductNameAsync(string name, string newName);
+        //Task<Product> ModifyProductNameAsync(string name, string newName);
 
-        Task<Product> ModifyUnitAsync(Product product, Unit unit);
+        //Task<Product> ModifyUnitAsync(Product product, Unit unit);
 
-        Task<Product> ModifyCategoryAsync(Product product, Category category);
+        //Task<Product> ModifyCategoryAsync(Product product, Category category);
 
         Task<Product> GetProductByIdAsync(int productId);
 

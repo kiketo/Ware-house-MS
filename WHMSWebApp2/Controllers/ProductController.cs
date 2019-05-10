@@ -10,19 +10,22 @@ using WHMSWebApp2.Mappers;
 using WHMSWebApp2.Models;
 using WHMSWebApp2.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace WHMSWebApp2.Controllers
 {
     public class ProductController : Controller
     {
+        private readonly UserManager<ApplicationUser> userManager;
         private IProductService productService;
         private IUnitService unitService;
         private ICategoryService categoryService;
         private IProductWarehouseService productWarehouseService;
         private IViewModelMapper<Product, ProductViewModel> productMapper;
 
-        public ProductController(IProductService productService, IUnitService unitService, ICategoryService categoryService, IProductWarehouseService productWarehouseService, IViewModelMapper<Product, ProductViewModel> productMapper)
+        public ProductController(UserManager<ApplicationUser> userManager, IProductService productService, IUnitService unitService, ICategoryService categoryService, IProductWarehouseService productWarehouseService, IViewModelMapper<Product, ProductViewModel> productMapper)
         {
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.productService = productService ?? throw new ArgumentNullException(nameof(productService));
             this.unitService = unitService ?? throw new ArgumentNullException(nameof(unitService));
             this.categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
@@ -61,13 +64,15 @@ namespace WHMSWebApp2.Controllers
 
             if (ModelState.IsValid)
             {
+                ApplicationUser user = await this.userManager.GetUserAsync(User);
                 var newProduct =await this.productService.CreateProductAsync(
                     product.Name,
                     await unitService.GetUnitByIDAsync(int.Parse(product.Unit)),
                     await categoryService.FindByIDAsync(int.Parse(product.Category)),
                     product.BuyPrice,
                     product.MarginInPercent,
-                    product.Description
+                    product.Description,
+                    user
                     );
                 var viewModel = productMapper.MapFrom(newProduct);
 
@@ -101,9 +106,6 @@ namespace WHMSWebApp2.Controllers
 
             return View(model);
         }
-
-
-
 
         [HttpGet]
         [Authorize]

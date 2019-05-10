@@ -15,8 +15,8 @@ namespace WHMSWebApp2.Mappers
             Id = entity.Id,
             Name = entity.Name,
             VAT = entity.VAT,
-            City = entity.Address?.Town.Name,
-            Address = entity.Address?.Text,
+            City = entity.Address.Town.Name,
+            Address = entity.Address.Text,
             Creator=entity.Creator.UserName
         };
     }

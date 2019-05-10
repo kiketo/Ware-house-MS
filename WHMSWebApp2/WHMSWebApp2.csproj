@@ -29,6 +29,7 @@
     <Content Remove="Views\Shared\_SearchOrder.cshtml" />
     <Content Remove="Views\Shared\_SearchPartner.cshtml" />
     <Content Remove="Views\Shared\_SearchProduct.cshtml" />
+    <Content Remove="wwwroot\favicon.ico" />
     <Content Remove="wwwroot\js\datatables.js" />
   </ItemGroup>
 

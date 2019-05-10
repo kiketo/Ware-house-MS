@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -16,6 +17,7 @@ namespace WHMSWebApp2.Controllers
 {
     public class OrderController : Controller
     {
+        private readonly UserManager<ApplicationUser> userManager;
         private readonly IOrderService orderService;
         private readonly IProductService productService;
         private readonly IPartnerService partnerService;
@@ -26,17 +28,9 @@ namespace WHMSWebApp2.Controllers
         private readonly IViewModelMapper<Warehouse, WarehouseViewModel> warehouseModelMapper;
         private readonly IOrderProductWarehouseService orderProductWarehouseService;
 
-        public OrderController(
-            IOrderService orderService,
-            IProductService productService,
-            IPartnerService partnerService,
-            IViewModelMapper<Order, OrderViewModel> orderMapper,
-            IUnitService unitService,
-            IProductWarehouseService productWarehouseService,
-            IWarehouseService warehouseService,
-            IViewModelMapper<Warehouse, WarehouseViewModel> warehouseModelMapper,
-            IOrderProductWarehouseService orderProductWarehouseService)
+        public OrderController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOrderService orderService, IProductService productService, IPartnerService partnerService, IViewModelMapper<Order, OrderViewModel> orderMapper, IUnitService unitService, IProductWarehouseService productWarehouseService, IWarehouseService warehouseService, IViewModelMapper<Warehouse, WarehouseViewModel> warehouseModelMapper, IOrderProductWarehouseService orderProductWarehouseService)
         {
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
             this.productService = productService ?? throw new ArgumentNullException(nameof(productService));
             this.partnerService = partnerService ?? throw new ArgumentNullException(nameof(partnerService));
@@ -48,7 +42,6 @@ namespace WHMSWebApp2.Controllers
             this.orderProductWarehouseService = orderProductWarehouseService ?? throw new ArgumentNullException(nameof(orderProductWarehouseService));
         }
 
-        
         [HttpGet]
         [Authorize]
         [ActionName(nameof(ChooseWarehouse))]
@@ -137,10 +130,12 @@ namespace WHMSWebApp2.Controllers
             
             if (ModelState.IsValid)
             {
+                ApplicationUser user = await this.userManager.GetUserAsync(User);
+
                 var newOrder = await this.orderService.AddAsync(
                     model.TypeOrder,
                     await this.partnerService.FindByIdAsync(int.Parse(model.Partner)),
-                    model.WantedQuantityByProduct
+                    model.WantedQuantityByProduct,user,model.Comment
                     );
 
                 return RedirectToAction(nameof(Details), new { id = newOrder.Id });
@@ -190,13 +185,18 @@ namespace WHMSWebApp2.Controllers
 
             if (ModelState.IsValid)
             {
-                var newOrder = await this.orderService.AddAsync(
-                    model.TypeOrder,
-                    await this.partnerService.FindByIdAsync(int.Parse(model.Partner)),
-                    model.WantedQuantityByProduct
-                    );
+                var updatedOrder = await this.orderService.GetOrderByIdAsync(model.Id);
 
-                return RedirectToAction(nameof(Details), new { id = newOrder.Id });
+                updatedOrder.Comment = model.Comment;
+                updatedOrder.ModifiedOn = DateTime.Now;
+                //updatedOrder.OrderProductsWarehouses=model.???
+                updatedOrder.Partner = await this.partnerService.FindByNameAsync(model.Partner);
+                updatedOrder.TotalValue = model.TotalValue;
+                updatedOrder.Type = model.TypeOrder;
+
+                await this.orderService.UpdateAsync(updatedOrder);
+
+                return RedirectToAction(nameof(Details), new { id = updatedOrder.Id });
             }
             else
             {
@@ -308,150 +308,5 @@ namespace WHMSWebApp2.Controllers
                 return View(model);
             }
         }
-
-
-        //// GET: Orders
-        //public async Task<IActionResult> Index()
-        //{
-        //    var applicationDbContext = context.Orders.Include(o => o.Creator).Include(o => o.Partner);
-        //    return View(await applicationDbContext.ToListAsync());
-        //}
-
-        //// GET: Orders/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var order = await context.Orders
-        //        .Include(o => o.Creator)
-        //        .Include(o => o.Partner)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(order);
-        //}
-
-        //// GET: Orders/Create
-        //public IActionResult Create()
-        //{
-        //    ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id");
-        //    ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name");
-        //    return View();
-        //}
-
-        //// POST: Orders/Create
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Type,PartnerId,Comment,TotalValue,CreatorId,Id,CreatedOn,ModifiedOn,IsDeleted")] Order order)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        context.Add(order);
-        //        await context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
-        //    ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
-        //    return View(order);
-        //}
-
-        //// GET: Orders/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var order = await context.Orders.FindAsync(id);
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
-        //    ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
-        //    return View(order);
-        //}
-
-        //// POST: Orders/Edit/5
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("Type,PartnerId,Comment,TotalValue,CreatorId,Id,CreatedOn,ModifiedOn,IsDeleted")] Order order)
-        //{
-        //    if (id != order.Id)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            context.Update(order);
-        //            await context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!OrderExists(order.Id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["CreatorId"] = new SelectList(context.Users, "Id", "Id", order.CreatorId);
-        //    ViewData["PartnerId"] = new SelectList(context.Partners, "Id", "Name", order.PartnerId);
-        //    return View(order);
-        //}
-
-        //// GET: Orders/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var order = await context.Orders
-        //        .Include(o => o.Creator)
-        //        .Include(o => o.Partner)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (order == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(order);
-        //}
-
-        //// POST: Orders/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var order = await context.Orders.FindAsync(id);
-        //    context.Orders.Remove(order);
-        //    await context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        //private bool OrderExists(int id)
-        //{
-        //    return context.Orders.Any(e => e.Id == id);
-        //}
     }
 }

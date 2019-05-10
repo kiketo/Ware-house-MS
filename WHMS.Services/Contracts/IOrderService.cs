@@ -8,15 +8,17 @@ namespace WHMS.Services.Contracts
 {
     public interface IOrderService
     {
-        Task<Order> AddAsync(OrderType type, Partner partner, IDictionary<ProductWarehouse, int> pws, string comment = null);
+        Task<Order> AddAsync(OrderType type, Partner partner, IDictionary<ProductWarehouse, int> pws, ApplicationUser user, string comment = null);
 
-        Task<Order> EditTypeAsync(int orderId, OrderType type);
+        Task<Order> UpdateAsync(Order order);
 
-        Task<Order> EditPartnerAsync(int orderId, Partner newPartner);
+        //Task<Order> EditTypeAsync(int orderId, OrderType type);
 
-        Task<Order> AddProductToOrderAsync(int orderId, ProductWarehouse pw);
+        //Task<Order> EditPartnerAsync(int orderId, Partner newPartner);
 
-        Task<Order> EditCommentAsync(int orderId, string comment);
+        //Task<Order> AddProductToOrderAsync(int orderId, ProductWarehouse pw);
+
+        //Task<Order> EditCommentAsync(int orderId, string comment);
 
         Task<Order> GetOrderByIdAsync(int orderId);
 

@@ -10,24 +10,22 @@ using WHMSWebApp2.Mappers;
 using WHMSWebApp2.Models;
 using WHMSWebApp2.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace WHMSWebApp2.Controllers
 {
     public class PartnerController : Controller
     {
+        private readonly UserManager<ApplicationUser> userManager;
         private readonly IPartnerService partnerService;
         private IAddressService addressService;
         private readonly ITownService townService;
         private readonly IViewModelMapper<Partner, PartnerViewModel> partnerMapper;
         private readonly IOrderService orderService;
 
-        public PartnerController(IPartnerService partnerService, 
-            IAddressService addressService, 
-            ITownService townService, 
-            IViewModelMapper<Partner, PartnerViewModel> partnerMapper,
-            IOrderService orderService
-            )
+        public PartnerController(UserManager<ApplicationUser> userManager, IPartnerService partnerService, IAddressService addressService, ITownService townService, IViewModelMapper<Partner, PartnerViewModel> partnerMapper, IOrderService orderService)
         {
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.partnerService = partnerService ?? throw new ArgumentNullException(nameof(partnerService));
             this.addressService = addressService ?? throw new ArgumentNullException(nameof(addressService));
             this.townService = townService ?? throw new ArgumentNullException(nameof(townService));
@@ -53,77 +51,70 @@ namespace WHMSWebApp2.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PartnerViewModel partner)
+        public async Task<IActionResult> Create(PartnerViewModel model)
         {
             ModelState.Remove("Id");
             ModelState.Remove("Address");
             ModelState.Remove("City");
-            if ((await this.partnerService.GetAllPartners()).Any(p => p.Name == partner.Name))
+            if ((await this.partnerService.GetAllPartners()).Any(p => p.Name == model.Name))
             {
                 ModelState.AddModelError("Name", "Name is already used");
             }
-            if (partner.AddressId == 0 && partner.City == null || 
-                partner.AddressId == 0 && partner.City == "Please choose a city")
+            if (model.AddressId == 0 && model.City == null || 
+                model.AddressId == 0 && model.City == "Please choose a city")
             {
                 ModelState.AddModelError("City", "City is required");
             }
-            if (partner.AddressId == 0 && partner.Address == null)
+            if (model.AddressId == 0 && model.Address == null)
             {
                 ModelState.AddModelError("Address", "Address is required");
             }
-            if (partner.AddressId == 0)
+            if (model.AddressId == 0)
             {
                 ModelState.Remove("AddressId");
             }
-            partner.Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name").OrderBy(x => x.Text);
-            partner.AddressesList = await this.addressService.GetAllAddressesAsync();
+            model.Cities = new SelectList(await this.townService.GetAllTownsAsync(), "Id", "Name").OrderBy(x => x.Text);
+            model.AddressesList = await this.addressService.GetAllAddressesAsync();
 
             if (ModelState.IsValid)
             {
                 Town town;
                 Address address;
-                if (partner.AddressId == 0)
+                if (model.AddressId == 0)
                 {
-                    town = await this.townService.GetTownByIdAsync(int.Parse(partner.City));
+                    town = await this.townService.GetTownAsync(model.City);
 
                     if (town == null || town.IsDeleted)
                     {
-                        town = await this.townService.AddAsync(partner.City);
+                        town = await this.townService.AddAsync(model.City);
                     }
-                    address = await this.addressService.AddAsync(town, partner.Address);
+
+                    address = await this.addressService.AddAsync(town, model.Address);
                 }
                 else
                 {
-                    address = await this.addressService.GetAddressByIdAsync(partner.AddressId);
+                    address = await this.addressService.GetAddressByIdAsync(model.AddressId);
                 }
 
-               
-
-                var newPartner = await this.partnerService.AddAsync(
-                partner.Name,
-                    address,
-                    partner.VAT
-                    );
+                ApplicationUser user = await this.userManager.GetUserAsync(User);
+                var newPartner = await this.partnerService
+                    .AddAsync(model.Name, user,address, model.VAT);
 
                 return RedirectToAction(nameof(Details), new { id = newPartner.Id });
             }
             else
             {
-                return View(partner);
+                return View(model);
             }
         }
 
         [Authorize]
         public async Task<IActionResult> Details(int id)
         {
-            PartnerViewModel viewModel = partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(id));
-           // viewModel.Orders = (await this.orderService.GetOrdersByPartnerAsync((await this.partnerService.FindByIdAsync(id)))).OrderBy(x=>x.ModifiedOn).ToList();
-
-            return View(viewModel);
             PartnerViewModel model = partnerMapper.MapFrom(await this.partnerService.FindByIdAsync(id));
-
             model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
             model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+           // viewModel.Orders = (await this.orderService.GetOrdersByPartnerAsync((await this.partnerService.FindByIdAsync(id)))).OrderBy(x=>x.ModifiedOn).ToList();
 
             return View(model);
         }
@@ -197,6 +188,8 @@ namespace WHMSWebApp2.Controllers
         [Authorize]
         public async Task<IActionResult> SearchPartnerById([FromQuery]PartnerViewModel model)
         {
+            model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+            model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
             if (model.Id == 0)
             {
                 return View();
@@ -217,6 +210,8 @@ namespace WHMSWebApp2.Controllers
         [Authorize]
         public async Task<IActionResult> SearchPartnerByName([FromQuery]PartnerViewModel model)
         {
+            model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+            model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
             if (string.IsNullOrWhiteSpace(model.Name))
             {
                 return View();
@@ -238,6 +233,8 @@ namespace WHMSWebApp2.Controllers
         [Authorize]
         public async Task<IActionResult> SearchPartnerByVAT([FromQuery]PartnerViewModel model)
         {
+            model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
+            model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
             if (string.IsNullOrWhiteSpace(model.VAT))
             {
                 return View();

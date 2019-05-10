@@ -6,7 +6,7 @@ namespace WHMS.Services.Contracts
 {
     public interface IPartnerService
     {
-        Task<Partner> AddAsync(string partnerName, Address address=null, string vat = null);
+        Task<Partner> AddAsync(string partnerName, ApplicationUser user, Address address = null, string vat = null);
 
         Task<Partner> UpdateAsync(Partner partner);
 

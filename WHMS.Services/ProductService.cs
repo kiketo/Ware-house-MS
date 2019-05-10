@@ -19,7 +19,7 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Product> CreateProductAsync(string name, Unit unit, Category category, decimal buyPrice, double margin, string description)
+        public async Task<Product> CreateProductAsync(string name, Unit unit, Category category, decimal buyPrice, double margin, string description, ApplicationUser user)
         {
             if (this.context.Products.Any(t => t.Name == name))
             {
@@ -36,8 +36,6 @@ namespace WHMS.Services
             decimal sellPrice = buyPrice*(100+(decimal)margin)/100;
             List<Warehouse> wareHouses = await this.context.Warehouses.ToListAsync();
 
-
-
             var newProduct = new Product()
             {
                 Name = name,
@@ -50,7 +48,7 @@ namespace WHMS.Services
                 SellPrice = sellPrice,
                 Warehouses = wareHouses.Select(w => new ProductWarehouse { Warehouse = w }).ToList(),
                 Description = description,
-                
+                Creator=user
             };
 
             await this.context.Products.AddAsync(newProduct);
@@ -68,73 +66,73 @@ namespace WHMS.Services
             return product;
         }
 
-        public async Task<Product> SetMarginAsync(int productId, double newMargin)
-        {
-            var product = await this.context.Products.FirstOrDefaultAsync(i => i.Id == productId);
-            if (product == null || product.IsDeleted)
-            {
-                throw new ArgumentException($"Product does not exist!");
-            }
-            if (newMargin < 0)
-            {
-                throw new ArgumentException($"The price margin cannot be negative number");
-            }
-            product.MarginInPercent = newMargin;
-            product.ModifiedOn = DateTime.Now;
-            await this.context.SaveChangesAsync();
+        //public async Task<Product> SetMarginAsync(int productId, double newMargin)
+        //{
+        //    var product = await this.context.Products.FirstOrDefaultAsync(i => i.Id == productId);
+        //    if (product == null || product.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Product does not exist!");
+        //    }
+        //    if (newMargin < 0)
+        //    {
+        //        throw new ArgumentException($"The price margin cannot be negative number");
+        //    }
+        //    product.MarginInPercent = newMargin;
+        //    product.ModifiedOn = DateTime.Now;
+        //    await this.context.SaveChangesAsync();
 
-            return product;
-        }
+        //    return product;
+        //}
 
-        public async Task<Product> SetBuyPriceAsync(int productId, decimal price)
-        {
-            var product = await this.context.Products.FirstOrDefaultAsync(i => i.Id == productId);
-            if (product == null || product.IsDeleted)
-            {
-                throw new ArgumentException($"Product does not exist!");
-            }
-            if (price < 0)
-            {
-                throw new ArgumentException($"Price cannot be negative number");
-            }
-            product.ModifiedOn = DateTime.Now;
-            product.BuyPrice = price;
-            await this.context.SaveChangesAsync();
+        //public async Task<Product> SetBuyPriceAsync(int productId, decimal price)
+        //{
+        //    var product = await this.context.Products.FirstOrDefaultAsync(i => i.Id == productId);
+        //    if (product == null || product.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Product does not exist!");
+        //    }
+        //    if (price < 0)
+        //    {
+        //        throw new ArgumentException($"Price cannot be negative number");
+        //    }
+        //    product.ModifiedOn = DateTime.Now;
+        //    product.BuyPrice = price;
+        //    await this.context.SaveChangesAsync();
 
-            return product;
-        }
+        //    return product;
+        //}
 
-        public async Task<Product> ModifyProductNameAsync(string name, string newName)
-        {
-            var productToMod = await this.context.Products.FirstOrDefaultAsync(t => t.Name == name);
-            if (productToMod == null || productToMod.IsDeleted)
-            {
-                throw new ArgumentException($"Product {name} does not exists");
-            }
-            productToMod.Name = newName;
-            productToMod.ModifiedOn = DateTime.Now;
+        //public async Task<Product> ModifyProductNameAsync(string name, string newName)
+        //{
+        //    var productToMod = await this.context.Products.FirstOrDefaultAsync(t => t.Name == name);
+        //    if (productToMod == null || productToMod.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Product {name} does not exists");
+        //    }
+        //    productToMod.Name = newName;
+        //    productToMod.ModifiedOn = DateTime.Now;
 
-            await this.context.SaveChangesAsync();
-            return productToMod;
-        }
+        //    await this.context.SaveChangesAsync();
+        //    return productToMod;
+        //}
 
-        public async Task<Product> ModifyUnitAsync(Product product, Unit unit)
-        {
-            product.ModifiedOn = DateTime.Now;
-            product.Unit = unit;
+        //public async Task<Product> ModifyUnitAsync(Product product, Unit unit)
+        //{
+        //    product.ModifiedOn = DateTime.Now;
+        //    product.Unit = unit;
 
-            await this.context.SaveChangesAsync();
-            return product;
-        }
+        //    await this.context.SaveChangesAsync();
+        //    return product;
+        //}
 
-        public async Task<Product> ModifyCategoryAsync(Product product, Category category)
-        {
-            product.ModifiedOn = DateTime.Now;
-            product.Category = category;
+        //public async Task<Product> ModifyCategoryAsync(Product product, Category category)
+        //{
+        //    product.ModifiedOn = DateTime.Now;
+        //    product.Category = category;
 
-            await this.context.SaveChangesAsync();
-            return product;
-        }
+        //    await this.context.SaveChangesAsync();
+        //    return product;
+        //}
 
         public async Task<Product> GetProductByIdAsync(int productId)
         {

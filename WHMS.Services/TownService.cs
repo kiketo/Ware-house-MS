@@ -102,13 +102,14 @@ namespace WHMS.Services
                 .Include(a => a.Addresses)
                 .FirstOrDefaultAsync(t => t.Name == townToGetName);
 
-            if (townToGet == null || townToGet.IsDeleted)
-            {
-                throw new ArgumentException($"Town `{townToGetName}` doesn't exist!");
-            }
+            //if (townToGet == null || townToGet.IsDeleted)
+            //{
+            //    throw new ArgumentException($"Town `{townToGetName}` doesn't exist!");
+            //}
 
             return townToGet;
         }
+
         public async Task<IEnumerable<Town>> GetAllTownsAsync()
         {
             var allTowns = await this.context.Towns
@@ -118,6 +119,7 @@ namespace WHMS.Services
             
             return allTowns;
         }
+
         public async Task<Town> GetTownByIdAsync(int id)
         {
             Town townToGet = await this.context.Towns
