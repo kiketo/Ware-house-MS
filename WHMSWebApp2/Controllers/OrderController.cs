@@ -79,7 +79,6 @@ namespace WHMSWebApp2.Controllers
         {
             var OrderProductModels = new List<OrderProductViewModel>();
             var pwList = await this.productWarehouseService.GetAllProductsInWarehouseAsync(id);
-
             foreach (var pw in pwList)
             {
                 OrderProductModels.Add(new OrderProductViewModel()
