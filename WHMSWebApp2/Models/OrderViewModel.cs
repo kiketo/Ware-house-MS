@@ -78,5 +78,8 @@ namespace WHMSWebApp2.Models
 
         public List<OrderProductViewModel> SelectedProductsWithQuantities { get; set; }
 
+        public MultiSelectList ProductWQQuantities { get; set; }
+
+
     }
 }

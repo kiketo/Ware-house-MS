@@ -47,6 +47,18 @@ namespace WHMSWebApp2.Models
         public IOrderedEnumerable<SelectListItem> Categories { get; set; }
 
         public IOrderedEnumerable<SelectListItem> Units { get; set; }
-        
+
+        public List<Category> ListCategories { get; set; }
+
+        public List<Unit> LisUnits { get; set; }
+
+        public string NewCategory { get; set; }
+
+        public string NewUnit { get; set; }
+
+        public int CategoryId { get; set; }
+
+        public int UnitId { get; set; }
+
     }
 }

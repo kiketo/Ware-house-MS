@@ -35,14 +35,16 @@ namespace WHMSWebApp2.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task< IActionResult> Create()
+        public async Task<IActionResult> Create()
         {
             ProductViewModel product = new ProductViewModel()
             {
-                Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
-                .OrderBy(x => x.Text),
-                Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "UnitName")
-                .OrderBy(x => x.Text)
+                ListCategories = (await this.categoryService.GetAllCategoriesAsync()).ToList(),
+                LisUnits = ((await this.unitService.GetAllUnitsAsync()).ToList())
+                //Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
+                //.OrderBy(x => x.Text),
+                //Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "UnitName")
+                //.OrderBy(x => x.Text)
             };
             return View(product);
         }
@@ -54,21 +56,49 @@ namespace WHMSWebApp2.Controllers
         {
             var allProducts = await this.productService.GetAllProductsAsync();
 
+            product.ListCategories = (await this.categoryService.GetAllCategoriesAsync()).ToList();
+            product.LisUnits = ((await this.unitService.GetAllUnitsAsync()).ToList());
             if (allProducts.Any(p => p.Name == product.Name))
             {
                 ModelState.AddModelError("Name", "The name must be unique.");
             }
-
-            product.Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "Name").OrderBy(x => x.Text);
-            product.Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name").OrderBy(x => x.Text);
-
+            ModelState.Remove("Unit");
+            ModelState.Remove("UnitId");
+            ModelState.Remove("CategoryId");
+            if (product.UnitId == 0 && product.NewUnit == null)
+            {
+                ModelState.AddModelError("UnitId", "Unit is Required");
+            }
             if (ModelState.IsValid)
             {
+                Unit unit;
+                Category category = null;
                 ApplicationUser user = await this.userManager.GetUserAsync(User);
-                var newProduct =await this.productService.CreateProductAsync(
+                if (product.UnitId != 0 && (await this.unitService.GetAllUnitsAsync()).Any(u=>u.Id == product.UnitId))
+                {
+                    unit = await this.unitService.GetUnitByIDAsync(product.UnitId);
+                }
+                else
+                {
+                    unit = await this.unitService.CreateUnitAsync(product.NewUnit);
+                }
+                if (product.CategoryId != 0 && (await this.categoryService.GetAllCategoriesAsync()).Any(u => u.Id == product.CategoryId))
+                {
+                    category = await this.categoryService.FindByIDAsync(product.CategoryId);
+                }
+                else
+                {
+                    if (product.NewUnit != null)
+                    {
+                        category = await this.categoryService.CreateCategoryAsync(product.NewUnit);
+                    }
+                   
+                }
+                
+                var newProduct = await this.productService.CreateProductAsync(
                     product.Name,
-                    await unitService.GetUnitByIDAsync(int.Parse(product.Unit)),
-                    await categoryService.FindByIDAsync(int.Parse(product.Category)),
+                    unit,
+                    category,
                     product.BuyPrice,
                     product.MarginInPercent,
                     product.Description,
@@ -87,12 +117,10 @@ namespace WHMSWebApp2.Controllers
         [Authorize]
         public async Task<IActionResult> Details(int id)
         {
-            var product = await this.productService.GetProductByIdAsync(id);
-            var model = productMapper.MapFrom(product);
+            ProductViewModel model = this.productMapper.MapFrom(await this.productService.GetProductByIdAsync(id));
 
             model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
             model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
-
             return View(model);
         }
 
@@ -116,7 +144,7 @@ namespace WHMSWebApp2.Controllers
                                 .OrderBy(x => x.Text);
             model.Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "UnitName")
                                .OrderBy(x => x.Text);
-            
+
             return View(model);
         }
 

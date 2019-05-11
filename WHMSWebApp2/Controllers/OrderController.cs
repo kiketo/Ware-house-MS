@@ -78,7 +78,7 @@ namespace WHMSWebApp2.Controllers
         public async Task<IActionResult> Create(int id)
         {
             var OrderProductModels = new List<OrderProductViewModel>();
-            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(id);
+            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseAsync(id);
             foreach (var pw in pwList)
             {
                 OrderProductModels.Add(new OrderProductViewModel()
@@ -86,12 +86,13 @@ namespace WHMSWebApp2.Controllers
                     inStock = pw.Quantity,
                     product = await this.productService.GetProductByIdAsync(pw.ProductId),
                     wantedQuantity = 0
-
                 });
             }
+            
+            MultiSelectList listproductQuantities = new MultiSelectList(pwList.ToList().OrderBy(i => i.Product.Name), "TeamId", "Name");
             var model = new OrderViewModel()
             {
-                listProductsWithQuantities = OrderProductModels,
+                ProductWQQuantities = listproductQuantities,
                 Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text)
                 
             };
@@ -105,7 +106,7 @@ namespace WHMSWebApp2.Controllers
         [ActionName(nameof(Create))]
         public async Task<IActionResult> Create(OrderViewModel model, int id)
         {
-            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(id);
+            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseAsync(id);
             var listProducts = new List<OrderProductViewModel>();
             foreach (var pw in pwList)
             {
@@ -117,7 +118,22 @@ namespace WHMSWebApp2.Controllers
 
                 });
             }
-           model.SelectedProductsWithQuantities = listProducts;
+          //  var selectedProducts = model.ProductWQQuantities.Where(t => t. .Contains(player)).ToList();
+            List<SelectListItem> items = new List<SelectListItem>();
+            foreach (var pqq in listProducts)
+            {
+                var item = new SelectListItem
+                {
+                    Value = pqq.product.Id.ToString(),
+                    Text = pqq.product.Name,
+                    Selected = true
+                };
+
+                items.Add(item);
+            }
+        //    var selectedProducts = items.Where(t => t. .Contains(player)).ToList();
+
+         //   model.SelectedProductsWithQuantities =new MultiSelectList(listProducts, ;
             model.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
             if (!(await this.partnerService.GetAllPartners()).Any(o => o.Id == int.Parse(model.Partner)))
             {
@@ -127,7 +143,7 @@ namespace WHMSWebApp2.Controllers
             {
                 ModelState.AddModelError("SelectedProductsWithQuantities", "At least one product is required!");
             }
-            
+
             if (ModelState.IsValid)
             {
                 ApplicationUser user = await this.userManager.GetUserAsync(User);
@@ -161,7 +177,7 @@ namespace WHMSWebApp2.Controllers
         public async Task<IActionResult> Edit(OrderViewModel model)
         {
 
-            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(model.WarehouseId);
+            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseAsync(model.WarehouseId);
             var listProducts = new List<OrderProductViewModel>();
             foreach (var pw in pwList)
             {

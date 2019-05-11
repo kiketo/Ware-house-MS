@@ -78,12 +78,12 @@ namespace WHMS.Services
             return pairPW.Quantity;
         }
 
-        public Task<List<ProductWarehouse>> GetAllProductsInWarehouseWithQuantityOverZeroAsync(int warehouseId)
+        public Task<List<ProductWarehouse>> GetAllProductsInWarehouseAsync(int warehouseId)
         {
             Task<List<ProductWarehouse>> task = this.context.ProductWarehouse
                                                     .Include(pw => pw.Product)
                                                     .Include(pw => pw.Warehouse)
-                                                    .Where(w => w.WarehouseId == warehouseId && w.Quantity != 0)
+                                                    .Where(w => w.WarehouseId == warehouseId)
                                                     .ToListAsync();
             return task;
         }

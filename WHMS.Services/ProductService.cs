@@ -140,6 +140,7 @@ namespace WHMS.Services
                 .Where(i => i.Id == productId && !i.IsDeleted)
                 .Include(p=>p.Category)
                 .Include(p=>p.Unit)
+                .Include(p=>p.Creator)
                 .FirstOrDefaultAsync();
             if (product == null || product.IsDeleted)
             {
