@@ -8,12 +8,12 @@ namespace WHMS.Services.Contracts
     {
         Task<Warehouse> CreateWarehouseAsync(string name, Address address);
 
-        Task<Warehouse> ModifyWarehouseNameAsync(string currentName, string newName);
+        //Task<Warehouse> ModifyWarehouseNameAsync(string currentName, string newName);
 
-        Task<Warehouse> DeleteWarehouseAsync(string name);
+        //Task<Warehouse> DeleteWarehouseAsync(string name);
 
         Task<Warehouse> GetByNameAsync(string name);
 
-        Task<ICollection<Warehouse>> GetAllWarehousesAsync();
+        Task<List<Warehouse>> GetAllWarehousesAsync();
     }
 }

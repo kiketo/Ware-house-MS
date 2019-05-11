@@ -49,7 +49,7 @@ namespace WHMS.Services
                 ModifiedOn = DateTime.Now,
                 TotalValue = totalValue,
                 OrderProductsWarehouses = pws.Select(pw => new OrderProductWarehouse { ProductId = pw.Key.ProductId, WarehouseId = pw.Key.WarehouseId, WantedQuantity = pw.Value }).ToList(),
-                Creator=user
+                Creator = user
             };
 
             await this.context.Orders.AddAsync(newOrder);
@@ -64,6 +64,66 @@ namespace WHMS.Services
                 .EntityState.Modified;
             await context.SaveChangesAsync();
             return order;
+        }
+
+        public async Task<Order> GetOrderByIdAsync(int orderId)
+        {
+            Order orderToShow = await this.context.Orders
+                .Where(o => o.Id == orderId && !o.IsDeleted)
+                .Include(o => o.OrderProductsWarehouses)
+                .Include(o => o.Partner)
+                .Include(o => o.Creator)
+                .FirstOrDefaultAsync();
+            if (orderToShow == null || orderToShow.IsDeleted)
+            {
+                throw new ArgumentException($"Order with ID: {orderId} doesn't exist!");
+            }
+            return orderToShow;
+        }
+
+        public async Task<ICollection<Order>> GetOrdersByTypeAsync(OrderType type, DateTime fromDate, DateTime toDate)
+        {
+            List<Order> ordersToShow = await this.context.Orders
+                .Where(o => o.Type == type && !o.IsDeleted)
+                .Where(o => o.CreatedOn >= fromDate)
+                .Where(o => o.CreatedOn <= toDate)
+                .Include(p => p.Partner)
+                .Include(p => p.OrderProductsWarehouses)
+                .Include(o => o.Creator)
+                .ToListAsync();
+
+            if (ordersToShow.Count == 0)
+            {
+                throw new ArgumentException($"Order with Type: {type} from date {fromDate} to date {toDate} doesn't exist!");
+            }
+            return ordersToShow;
+        }
+
+        public async Task<ICollection<Order>> GetOrdersByPartnerAsync(Partner partner)
+        {
+            List<Order> ordersToShow = await this.context.Orders
+                .Where(o => o.Partner == partner && !o.IsDeleted)
+                .Include(p => p.Partner)
+                .Include(p => p.OrderProductsWarehouses)
+                .Include(o => o.Creator)
+                .ToListAsync();
+
+            if (ordersToShow.Count == 0)
+            {
+                throw new ArgumentException($"Orders of Partner: {partner} doesn't exist!");
+            }
+            return ordersToShow;
+        }
+
+        public async Task<Order> DeleteOrderAsync(int id)
+        {
+            Order orderToDelete = await this.GetOrderByIdAsync(id);
+            orderToDelete.IsDeleted = true;
+            orderToDelete.ModifiedOn = DateTime.Now;
+
+            await this.context.SaveChangesAsync();
+
+            return orderToDelete;
         }
 
         //public async Task<Order> EditTypeAsync(int orderId, OrderType type)
@@ -115,64 +175,5 @@ namespace WHMS.Services
         //    return orderToEdit;
         //}
 
-        public async Task<Order> GetOrderByIdAsync(int orderId)
-        {
-            Order orderToShow = await this.context.Orders
-                .Where(o => o.Id == orderId)
-                .Include(o => o.OrderProductsWarehouses)
-                .Include(o => o.Partner)
-                .Include(o => o.Creator)
-                .FirstOrDefaultAsync();
-            if (orderToShow == null || orderToShow.IsDeleted)
-            {
-                throw new ArgumentException($"Order with ID: {orderId} doesn't exist!");
-            }
-            return orderToShow;
-        }
-
-        public async Task<ICollection<Order>> GetOrdersByTypeAsync(OrderType type, DateTime fromDate, DateTime toDate)
-        {
-            List<Order> ordersToShow = await this.context.Orders
-                .Where(o => o.Type == type)
-                .Where(o => o.IsDeleted == false)
-                .Where(o => o.CreatedOn >= fromDate)
-                .Where(o => o.CreatedOn <= toDate)
-                .Include(p => p.Partner)
-                .Include(p => p.OrderProductsWarehouses)
-                .ToListAsync();
-
-            if (ordersToShow.Count == 0)
-            {
-                throw new ArgumentException($"Order with Type: {type} from date {fromDate} to date {toDate} doesn't exist!");
-            }
-            return ordersToShow;
-        }
-
-        public async Task<ICollection<Order>> GetOrdersByPartnerAsync(Partner partner)
-        {
-            List<Order> ordersToShow = await this.context.Orders
-                .Where(o => o.Partner == partner)
-                .Where(o => o.IsDeleted == false)
-                .Include(p => p.Partner)
-                .Include(p => p.OrderProductsWarehouses)
-                .ToListAsync();
-
-            if (ordersToShow.Count == 0)
-            {
-                throw new ArgumentException($"Orders of Partner: {partner} doesn't exist!");
-            }
-            return ordersToShow;
-        }
-
-        public async Task<Order> DeleteOrderAsync(int id)
-        {
-            Order orderToDelete = await this.GetOrderByIdAsync(id);
-            orderToDelete.IsDeleted = true;
-            orderToDelete.ModifiedOn = DateTime.Now;
-
-            await this.context.SaveChangesAsync();
-
-            return orderToDelete;
-        }
     }
 }

@@ -8,11 +8,11 @@ namespace WHMS.Services.Contracts
     {
         Task<Address> AddAsync(Town town, string addressToAdd);
 
-        Task<Address> EditTextAsync(Town town, string oldAddress, string newAddress);
+        //Task<Address> EditTextAsync(Town town, string oldAddress, string newAddress);
 
-        Task<Address> EditTownAsync(Town oldTown, string address, Town newTown);
+        //Task<Address> EditTownAsync(Town oldTown, string address, Town newTown);
 
-        Task<Address> DeleteAsync(Town town, string addressToDelete);
+        //Task<Address> DeleteAsync(Town town, string addressToDelete);
 
         Task<Address> GetAddressAsync(Town town, int addressId);
 

@@ -20,7 +20,10 @@ namespace WHMSWebApp2.Mappers
             Category = entity.Category?.Name,
             Description = entity.Description,
             Unit = entity.Unit?.UnitName,
-            Creator=entity.Creator.UserName
+            UnitId=entity.Unit?.Id,
+            Creator=entity.Creator.UserName,
+            CreatedOn = entity.CreatedOn,
+            ModifiedOn = entity.ModifiedOn
         };
     }
 }

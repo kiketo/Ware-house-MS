@@ -10,13 +10,13 @@ namespace WHMS.Services.Contracts
     {
         Task<Town> AddAsync(string townToAddName);
 
-        Task<Town> EditAsync(string oldTownName, string newTownName);
+        //Task<Town> EditAsync(string oldTownName, string newTownName);
 
-        Task<Town> DeleteAsync(string townToDeleteName);
+        //Task<Town> DeleteAsync(string townToDeleteName);
 
         Task<Town> GetTownAsync(string townToGetName);
 
-        Task<IEnumerable<Town>> GetAllTownsAsync();
+        Task<List<Town>> GetAllTownsAsync();
 
         Task<Town> GetTownByIdAsync(int id);
     }

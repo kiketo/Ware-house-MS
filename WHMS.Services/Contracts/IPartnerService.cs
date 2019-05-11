@@ -12,12 +12,12 @@ namespace WHMS.Services.Contracts
 
         Task<Partner> DeleteAsync(int id);
 
-        Task<Partner> FindByNameAsync(string partnerName);
+        Task<Partner> GetByNameAsync(string partnerName);
 
-        Task<Partner> FindByIdAsync(int Id);
+        Task<Partner> GetByIdAsync(int Id);
 
-        Task<Partner> FindByVATAsync(string VAT);
+        Task<Partner> GetByVATAsync(string VAT);
 
-        Task<IEnumerable<Partner>> GetAllPartners();
+        Task<List<Partner>> GetAllPartners();
     }
 }

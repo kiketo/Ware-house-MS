@@ -21,12 +21,13 @@ namespace WHMS.Services
 
         public async Task<Unit> CreateUnitAsync(string name)
         {
-            if (await this.context.Units.AnyAsync(t => t.UnitName == name))
+            var newUnit = await this.context.Units.FirstOrDefaultAsync(t => t.UnitName == name);
+            if (newUnit!=null)
             {
-                throw new ArgumentException($"Unit {name} already exists");
+                return newUnit;
             }
 
-            var newUnit = new Unit()
+            newUnit = new Unit()
             {
                 UnitName = name,
                 CreatedOn = DateTime.Now,
@@ -39,42 +40,17 @@ namespace WHMS.Services
             return newUnit;
         }
 
-        public async Task<Unit> ModifyUnitNameAsync(string name)
+        public  Task<List<Unit>> GetAllUnitsAsync()
         {
-            var unitToMod = await this.context.Units.Where(t => t.UnitName == name).FirstOrDefaultAsync();
-            if (unitToMod == null || unitToMod.IsDeleted)
-            {
-                throw new ArgumentException($"Unit {name} does not exists");
-            }
-            unitToMod.UnitName = name;
-            unitToMod.ModifiedOn = DateTime.Now;
-
-            this.context.SaveChanges();
-            return unitToMod;
-        }
-
-        public async Task<List<Unit>> GetAllUnitsAsync()
-        {
-            return await this.context.Units.Where(u => u.IsDeleted != true).ToListAsync();
-        }
-
-        public async Task<Unit> DeleteUnitNameAsync(int unitId)
-        {
-            var unitToDel = await this.context.Units.FirstOrDefaultAsync(t => t.Id == unitId);
-            if (unitToDel == null || unitToDel.IsDeleted)
-            {
-                throw new ArgumentException($"Such unit does not exists");
-            }
-            unitToDel.IsDeleted = true;
-            unitToDel.ModifiedOn = DateTime.Now;
-
-            await this.context.SaveChangesAsync();
-            return unitToDel;
+            return this.context.Units.Where(u => u.IsDeleted == false).ToListAsync();
         }
 
         public async Task<Unit> GetUnitAsync(string name)
         {
-            var unit = await this.context.Units.Where(u => u.UnitName == name).FirstOrDefaultAsync();
+            var unit = await this.context.Units
+                .Where(u => u.UnitName == name)
+                .FirstOrDefaultAsync();
+
             if (unit == null || unit.IsDeleted)
             {
                 throw new ArgumentException($"Unit with name {name} does not exist");
@@ -82,14 +58,39 @@ namespace WHMS.Services
             return unit;
         }
 
-        public async Task<Unit> GetUnitByIDAsync(int id)
+        public Task<Unit> GetUnitByIDAsync(int? id)
         {
-            var unit = await this.context.Units.Where(u => u.Id == id).FirstOrDefaultAsync();
-            if (unit == null || unit.IsDeleted)
-            {
-                throw new ArgumentException($"Unit does not exist");
-            }
+            var unit = this.context.Units.Where(u => u.Id == id).FirstOrDefaultAsync();
+           
             return unit;
         }
+
+        //public async Task<Unit> DeleteUnitNameAsync(int unitId)
+        //{
+        //    var unitToDel = await this.context.Units.FirstOrDefaultAsync(t => t.Id == unitId);
+        //    if (unitToDel == null || unitToDel.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Such unit does not exists");
+        //    }
+        //    unitToDel.IsDeleted = true;
+        //    unitToDel.ModifiedOn = DateTime.Now;
+
+        //    await this.context.SaveChangesAsync();
+        //    return unitToDel;
+        //}
+
+        //public async Task<Unit> ModifyUnitNameAsync(string name)
+        //{
+        //    var unitToMod = await this.context.Units.Where(t => t.UnitName == name).FirstOrDefaultAsync();
+        //    if (unitToMod == null || unitToMod.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Unit {name} does not exists");
+        //    }
+        //    unitToMod.UnitName = name;
+        //    unitToMod.ModifiedOn = DateTime.Now;
+
+        //    this.context.SaveChanges();
+        //    return unitToMod;
+        //}
     }
 }

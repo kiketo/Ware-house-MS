@@ -150,7 +150,7 @@ namespace WHMSWebApp2.Controllers
 
                 var newOrder = await this.orderService.AddAsync(
                     model.TypeOrder,
-                    await this.partnerService.FindByIdAsync(int.Parse(model.Partner)),
+                    await this.partnerService.GetByIdAsync(int.Parse(model.Partner)),
                     model.WantedQuantityByProduct,user,model.Comment
                     );
 
@@ -206,7 +206,7 @@ namespace WHMSWebApp2.Controllers
                 updatedOrder.Comment = model.Comment;
                 updatedOrder.ModifiedOn = DateTime.Now;
                 //updatedOrder.OrderProductsWarehouses=model.???
-                updatedOrder.Partner = await this.partnerService.FindByNameAsync(model.Partner);
+                updatedOrder.Partner = await this.partnerService.GetByNameAsync(model.Partner);
                 updatedOrder.TotalValue = model.TotalValue;
                 updatedOrder.Type = model.TypeOrder;
 
@@ -283,7 +283,7 @@ namespace WHMSWebApp2.Controllers
 
             try
             {
-                var partner = await this.partnerService.FindByNameAsync(model.Partner);
+                var partner = await this.partnerService.GetByNameAsync(model.Partner);
                 model.SearchResults = (await this.orderService.GetOrdersByPartnerAsync(partner))
                     .Select(this.orderMapper.MapFrom)
                     .ToList();

@@ -36,9 +36,9 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Creator)
         </dt>
-        @*<dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Creator.Id)
-        </dd>*@
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Creator)
+        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CreatedOn)
         </dt>
@@ -51,12 +51,7 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ModifiedOn)
         </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedOn)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedOn)
-        </dd>
+      
 
     </dl>
 </div>
@@ -114,7 +109,7 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <a type="button" class="btn btn-green" data-dismiss="modal" href="#">Cancel</a>
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
                         <form asp-controller="Partner" asp-action="Delete" asp-route-id="@Model.Id" method="post">
                             <button class="btn btn-danger" type="submit">Delete</button>
                         </form>
