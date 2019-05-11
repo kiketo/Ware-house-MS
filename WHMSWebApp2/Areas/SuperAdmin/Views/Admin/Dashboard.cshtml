@@ -21,9 +21,35 @@
                 <td>@user.Id</td>
                 <td>@user.UserName</td>
                 <td>@user.Email</td>
-                @foreach (var role in user.Roles)
+                @if (user.UserName == "SuperAdmin")
                 {
-                    <td>@role</td>
+                    foreach (var role in user.Roles)
+                    {
+                        <td>@role</td>
+                    }
+                }
+                else
+                {
+                    foreach (var role in user.Roles)
+                    {
+                        <td>
+                            @if (role == "User")
+                            {
+                                <button class="btn btn-success">User</button>
+
+                                <form asp-area="SuperAdmin" asp-controller="Admin" asp-action="ChangeUserRole" asp-route-id="@user.Id" method="post">
+                                    <button class="btn btn-outline-success" type="submit">Admin</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-area="SuperAdmin" asp-controller="Admin" asp-action="ChangeUserRole" asp-route-id="@user.Id" method="post">
+                                    <button class="btn btn-outline-success">User</button>
+                                </form>
+                                <button class="btn btn-success" type="submit">Admin</button>
+                            }
+                        </td>
+                    }
                 }
             </tr>
         }

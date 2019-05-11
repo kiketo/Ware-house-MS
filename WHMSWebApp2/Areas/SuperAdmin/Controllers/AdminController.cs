@@ -53,5 +53,32 @@ namespace WHMSWebApp2.Areas.SuperAdmin.Controllers
 
             return View(model);
         }
+        [Area("SuperAdmin")]
+        [Route("superadmin/ChangeUserRole")]
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<IActionResult> ChangeUserRole(string id)
+        {
+            var users = await this.applicationUserService.GetAllUsersAsync();
+            UserViewModel model = new UserViewModel();
+
+            try
+            {
+                var updateUser = await this.applicationUserService.ChangeUserRoleAsync(id);
+                model.UsersList = (users)
+                    .Select(this.userMapper.MapFrom)
+                    .ToList();
+                foreach (var user in model.UsersList)
+                {
+                    user.Roles = new List<string>();
+                    user.Roles = await userManager.GetRolesAsync(user.ApplicationUser);
+                }
+            }
+            catch (ArgumentException)
+            {
+                return View(model);
+            }
+
+            return View("Dashboard", model);
+        }
     }
 }

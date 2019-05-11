@@ -10,6 +10,6 @@ namespace WHMS.Services.Contracts
     {
         Task<List<ApplicationUser>> GetAllUsersAsync();
 
-
+        Task<ApplicationUser> ChangeUserRoleAsync(string userId);
     }
 }

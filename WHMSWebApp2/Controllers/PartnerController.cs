@@ -37,8 +37,6 @@ namespace WHMSWebApp2.Controllers
         [Authorize]
         public async Task<IActionResult> Create()
         {
-
-
             PartnerViewModel model = new PartnerViewModel()
             {
                 AddressesList = await this.addressService.GetAllAddressesAsync(),

@@ -18,10 +18,7 @@ namespace WHMSWebApp2.Areas.SuperAdmin.Models
 
         public ICollection<string> Roles { get; set; }
 
-        //public ICollection<string> RolesList { get; set; }
-
         public IReadOnlyCollection<UserViewModel> UsersList { get; set; }
-
     }
 }
 
