@@ -39,10 +39,12 @@ namespace WHMSWebApp2.Controllers
         {
             ProductViewModel product = new ProductViewModel()
             {
-                Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
-                .OrderBy(x => x.Text),
-                Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "UnitName")
-                .OrderBy(x => x.Text)
+                ListCategories = (await this.categoryService.GetAllCategoriesAsync()).ToList(),
+                LisUnits = ((await this.unitService.GetAllUnitsAsync()).ToList())
+                //Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
+                //.OrderBy(x => x.Text),
+                //Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "UnitName")
+                //.OrderBy(x => x.Text)
             };
             return View(product);
         }
@@ -54,22 +56,43 @@ namespace WHMSWebApp2.Controllers
         {
             var allProducts = await this.productService.GetAllProductsAsync();
 
+            product.ListCategories = (await this.categoryService.GetAllCategoriesAsync()).ToList();
+            product.LisUnits = ((await this.unitService.GetAllUnitsAsync()).ToList());
             if (allProducts.Any(p => p.Name == product.Name))
             {
                 ModelState.AddModelError("Name", "The name must be unique.");
             }
-
-            product.Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "Name").OrderBy(x => x.Text);
-            product.Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name").OrderBy(x => x.Text);
-
+            ModelState.Remove("Unit");
+            ModelState.Remove("UnitId");
+            ModelState.Remove("CategoryId");
+            if (product.UnitId == 0 && product.NewUnit == null)
+            {
+                ModelState.AddModelError("UnitId", "Unit is Required");
+            }
             if (ModelState.IsValid)
             {
-                ApplicationUser user = await this.userManager.GetUserAsync(User);
-                var unit = await unitService.GetUnitByIDAsync(int.Parse(product.Unit));
+                Unit unit;
                 Category category = null;
-                if ((await this.categoryService.GetAllCategoriesAsync()).Any(c=>c.Id == int.Parse(product.Category)))
+                ApplicationUser user = await this.userManager.GetUserAsync(User);
+                if (product.UnitId != 0 && (await this.unitService.GetAllUnitsAsync()).Any(u=>u.Id == product.UnitId))
                 {
-                    category = await this.categoryService.FindByIDAsync(int.Parse(product.Category));
+                    unit = await this.unitService.GetUnitByIDAsync(product.UnitId);
+                }
+                else
+                {
+                    unit = await this.unitService.CreateUnitAsync(product.NewUnit);
+                }
+                if (product.CategoryId != 0 && (await this.categoryService.GetAllCategoriesAsync()).Any(u => u.Id == product.CategoryId))
+                {
+                    category = await this.categoryService.FindByIDAsync(product.CategoryId);
+                }
+                else
+                {
+                    if (product.NewUnit != null)
+                    {
+                        category = await this.categoryService.CreateCategoryAsync(product.NewUnit);
+                    }
+                   
                 }
                 
                 var newProduct = await this.productService.CreateProductAsync(

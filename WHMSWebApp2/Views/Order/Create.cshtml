@@ -26,38 +26,37 @@
                 </select>
 
             </div>
+            <label asp-for="listProductsWithQuantities" class="control-label">Choose Products</label>
             <div class=" form-group" method="POST" action="Order/Create">
-                <table id="table" class="table table-hover table-mc-light-blue" border="0" align="center">
-                    <thead>
-                        <tr>
+                <input id="myInput" placeholder="Search products.." class="form-control" />
+                <table id="table" class="table table-hover table-mc-light-blue" border="0" align="center" style="align-content:center;text-align:right">
+                    <thead style="background-color:darkslategray">
+                        <tr style="align-content:center;position:relative;">
                             <th>#</th>
-                            <th>Products</th>
-                            <th>InStock</th>
-                            <th>OrderedQuantity</th>
+                            <th>Available products </th>
+                            <th>In Stock</th>
+                            <th style="width: 35%">Ordered<br />quantity</th>
 
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="myTable">
 
-                        @foreach (var pair in Model.listProductsWithQuantities)
-                        {
-                            <tr>
+                        @*@foreach (var pair in Model.listProductsWithQuantities)
+                            {
+                                <tr>
 
-                                <td><input type="checkbox" data-bind="checkedValue: @pair.product.Id, checked: isActive" /></td>
-                                <td> @pair.product.Name</td>
-                                <td>@pair.inStock</td>
-                                <td><input type="number" name="@pair.wantedQuantity" placeholder="0"></td>
+                                    <td><input type="checkbox" id="ckbox" data-bind="checkedValue: pair.id, checked: isActive" /></td>
+                                    <td> @pair.product.Name</td>
+                                    <td>@pair.inStock</td>
+                                    <td><input type="number" name="pair.wantedQuantity" placeholder="0" style="width: 35%;background-color:floralwhite"></td>
 
 
-                            </tr>
-                        }
+                                </tr>
+                            }*@
 
                     </tbody>
                 </table>
-
-                <span asp-validation-for="WantedQuantityByProduct" class="text-danger"></span>
             </div>
-
 
             @*<button onclick="myFunction()">Try it</button>*@
 
@@ -77,61 +76,15 @@
     </div>
 </div>
 
-<h2>Filterable Table</h2>
-<p>Type something in the input field to search the table for first names, last names or emails:</p>
-<input id="myInput" type="text" placeholder="Search..">
-<br><br>
-
-<table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%}>
-
-
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}>
-    <thead>
-        <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Email</th>
-        </tr>
-    </thead>
-    <tbody id="myTable">
-        <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>john@example.com</td>
-        </tr>
-        <tr>
-            <td>Mary</td>
-            <td>Moe</td>
-            <td>mary@mail.com</td>
-        </tr>
-        <tr>
-            <td>July</td>
-            <td>Dooley</td>
-            <td>july@greatstuff.com</td>
-        </tr>
-        <tr>
-            <td>Anja</td>
-            <td>Ravendale</td>
-            <td>a_r@test.com</td>
-        </tr>
-    </tbody>
-</>
-
-
 
 <div>
     <a href='javascript:history.go(-1)'>Go Back</a>
+</div>
+
+
+<div class="input_fields_wrap">
+    <button class="add_field_button">Add More Fields</button>
+    <div><input type="text" name="mytext[]"></div>
 </div>
 
 @section Scripts {
@@ -152,6 +105,26 @@ tr:nth-child(even) {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var max_fields = 10; //maximum input boxes allowed
+            var wrapper = $(".input_fields_wrap"); //Fields wrapper
+            var add_button = $(".add_field_button"); //Add button ID
+
+            var x = 1; //initlal text box count
+            $(add_button).click(function (e) { //on add input button click
+                e.preventDefault();
+                if (x < max_fields) { //max input box allowed
+                    x++; //text box increment
+                    $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
+                }
+            });
+
+            $(wrapper).on("click", ".remove_field", function (e) { //user click on remove text
+                e.preventDefault(); $(this).parent('div').remove(); x--;
+            })
         });
     </script>
 }

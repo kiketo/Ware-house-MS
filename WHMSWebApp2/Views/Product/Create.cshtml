@@ -25,18 +25,52 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
-                <select asp-for="Category" class="form-control" asp-items="Model.Categories">
-                    <option>Please choose category</option>
+                <label asp-for="CategoryId" class="control-label">Category</label>
+
+                <select asp-for="CategoryId" placeholder="Enter New Category" class="form-control">
+                    <option>Choose from existing categories</option>
+                    @foreach (var category in Model.ListCategories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+
                 </select>
-                <span asp-validation-for="Category" class="text-danger"></span>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                <p>
+                    <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapse1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Add New Category</a>
+
+                </p>
+                <div class="collapse multi-collapse" id="multiCollapse1">
+                    <div class="card card-body">
+
+                        <input asp-for="@Model.NewCategory" placeholder="Enter new category name" class="form-control" />
+                        <span asp-validation-for="@Model.NewCategory" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label asp-for="Unit" class="control-label"></label>
-                <select asp-for="Unit" class="form-control" asp-items="Model.Units">
-                    <option>Please choose unit</option>
+                <label asp-for="UnitId" class="control-label">Unit</label>
+
+                <select asp-for="UnitId" placeholder="Enter New Unit" class="form-control">
+                    <option>Choose from existing units</option>
+                    @foreach (var unit in Model.LisUnits)
+                    {
+                        <option value="@unit.Id">@unit.UnitName</option>
+                    }
+
                 </select>
-                <span asp-validation-for="Unit" class="text-danger"></span>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                <p>
+                    <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample2" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Add New Unit</a>
+
+                </p>
+                <div class="collapse multi-collapse" id="multiCollapseExample2">
+                    <div class="card card-body">
+
+                        <input asp-for="@Model.NewUnit" placeholder="Enter new unit name" class="form-control" />
+                        <span asp-validation-for="@Model.NewUnit" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="BuyPrice" class="control-label"></label>
