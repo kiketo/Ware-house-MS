@@ -43,10 +43,10 @@
                         {
                             <tr>
 
-                                <td><input type="checkbox" data-bind="checkedValue: pair.id, checked: isActive" /></td>
+                                <td><input type="checkbox" data-bind="checkedValue: @pair.product.Id, checked: isActive" /></td>
                                 <td> @pair.product.Name</td>
                                 <td>@pair.inStock</td>
-                                <td><input type="number" name="pair.wantedQuantity" placeholder="0"></td>
+                                <td><input type="number" name="@pair.wantedQuantity" placeholder="0"></td>
 
 
                             </tr>

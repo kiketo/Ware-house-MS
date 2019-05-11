@@ -35,7 +35,7 @@ namespace WHMSWebApp2.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task< IActionResult> Create()
+        public async Task<IActionResult> Create()
         {
             ProductViewModel product = new ProductViewModel()
             {
@@ -65,10 +65,17 @@ namespace WHMSWebApp2.Controllers
             if (ModelState.IsValid)
             {
                 ApplicationUser user = await this.userManager.GetUserAsync(User);
-                var newProduct =await this.productService.CreateProductAsync(
+                var unit = await unitService.GetUnitByIDAsync(int.Parse(product.Unit));
+                Category category = null;
+                if ((await this.categoryService.GetAllCategoriesAsync()).Any(c=>c.Id == int.Parse(product.Category)))
+                {
+                    category = await this.categoryService.FindByIDAsync(int.Parse(product.Category));
+                }
+                
+                var newProduct = await this.productService.CreateProductAsync(
                     product.Name,
-                    await unitService.GetUnitByIDAsync(int.Parse(product.Unit)),
-                    await categoryService.FindByIDAsync(int.Parse(product.Category)),
+                    unit,
+                    category,
                     product.BuyPrice,
                     product.MarginInPercent,
                     product.Description,
@@ -87,12 +94,10 @@ namespace WHMSWebApp2.Controllers
         [Authorize]
         public async Task<IActionResult> Details(int id)
         {
-            var product = await this.productService.GetProductByIdAsync(id);
-            var model = productMapper.MapFrom(product);
+            ProductViewModel model = this.productMapper.MapFrom(await this.productService.GetProductByIdAsync(id));
 
             model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
             model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
-
             return View(model);
         }
 
@@ -116,7 +121,7 @@ namespace WHMSWebApp2.Controllers
                                 .OrderBy(x => x.Text);
             model.Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "UnitName")
                                .OrderBy(x => x.Text);
-            
+
             return View(model);
         }
 
