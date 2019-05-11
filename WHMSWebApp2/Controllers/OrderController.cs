@@ -75,10 +75,10 @@ namespace WHMSWebApp2.Controllers
         [HttpGet]
         [Authorize]
         [ActionName(nameof(Create))]
-        public async Task<IActionResult> Create(int warehouseId)
+        public async Task<IActionResult> Create(int id)
         {
             var OrderProductModels = new List<OrderProductViewModel>();
-            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(warehouseId);
+            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseWithQuantityOverZeroAsync(id);
             foreach (var pw in pwList)
             {
                 OrderProductModels.Add(new OrderProductViewModel()

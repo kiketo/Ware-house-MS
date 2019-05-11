@@ -12,6 +12,7 @@
             <th>User name</th>
             <th>E-mail</th>
             <th>Role</th>
+            <th> </th>
         </tr>
     </thead>
     <tbody>
@@ -26,29 +27,36 @@
                     foreach (var role in user.Roles)
                     {
                         <td>@role</td>
+                        <td></td>
                     }
                 }
                 else
                 {
                     foreach (var role in user.Roles)
                     {
-                        <td>
-                            @if (role == "User")
-                            {
-                                <button class="btn btn-success">User</button>
 
+                        @if (role == "User")
+                        {
+                            <td><button class="btn btn-success">User</button></td>
+
+                            <td>
                                 <form asp-area="SuperAdmin" asp-controller="Admin" asp-action="ChangeUserRole" asp-route-id="@user.Id" method="post">
                                     <button class="btn btn-outline-success" type="submit">Admin</button>
                                 </form>
-                            }
-                            else
-                            {
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
                                 <form asp-area="SuperAdmin" asp-controller="Admin" asp-action="ChangeUserRole" asp-route-id="@user.Id" method="post">
                                     <button class="btn btn-outline-success">User</button>
                                 </form>
+                            </td>
+                            <td>
                                 <button class="btn btn-success" type="submit">Admin</button>
-                            }
-                        </td>
+                            </td>
+                        }
+
                     }
                 }
             </tr>
