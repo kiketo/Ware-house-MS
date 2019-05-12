@@ -1,0 +1,100 @@
+﻿@model OrderViewModel
+
+@{
+    ViewData["Title"] = "ChooseProduct";
+}
+
+<h2>Choose product to add</h2>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ChooseProduct">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h4>Ordered Products</h4>
+            <div class="form-group">
+                <select asp-for="ProductId" class="form-control">
+                    <option>Choose product</option>
+                    @foreach (var product in Model.ProductsQuantity)
+                    {
+                        <option value="@product.Key.Id">@product.Key.Name, @product.Value </option>
+                    }
+
+                </select>
+
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div>
+                <hr />
+                <div class="row">
+                    <div class="row-sm-6" style="padding-right:2em; padding-left:2em">
+                        <h6 style="font-weight:700">Enter quantity:</h6>
+                    </div>
+                    <div class="row-sm-10">
+                        <input asp-for="WantedQuantity" type="number" placeholder="0" class="form-control" style="width: 35%;background-color:floralwhite" />
+                        <span asp-validation-for="WantedQuantity" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <h4>Ordered Products</h4>
+            <div class=" form-group" method="POST" action="Order/ChooseProduct">
+                <input id="myInput" placeholder="Search products.." class="form-control" />
+                <table id="table" class="table table-hover table-mc-light-blue" border="0" align="center" style="align-content:center;text-align:right">
+                    <thead style="background-color:darkslategray">
+                        <tr style="align-content:center;position:relative;">
+                            <th>Available products </th>
+                            <th>In Stock</th>
+                            <th>Ordered qty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myTable">
+
+                        @foreach (var opw in Model.listProductsWithQuantities)
+                        {
+                            <tr>
+                                <td>@opw.Product.Name.</td>
+                                <td>@opw.InStock</td>
+                                <td>@opw.WantedQuantity</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+            <a class="btn btn-info" style="width:130.59px" asp-action="Details" asp-route-id="@Model.Id">Complete Order</a>
+            <input class="btn btn-primary" style="width:90.59px" type="submit" value="Create" />
+            <a class="btn btn-secondary" style="width:90.59px" href='javascript:history.go(-1)'>Go Back</a>
+</div>
+    </form>
+</div>
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function myFunction() {
+            var btn = document.createElement("BUTTON");
+            document.body.appendChild(btn);
+        }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#myInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+}
+
+

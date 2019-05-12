@@ -37,5 +37,7 @@ namespace WHMSData.Models
         [Required(ErrorMessage = "Order Products is required!")]
         public ICollection<OrderProductWarehouse> OrderProductsWarehouses { get; set; }
 
+        public bool Invoiced { get; set; }
+
     }
 }

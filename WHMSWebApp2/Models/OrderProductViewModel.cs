@@ -8,9 +8,9 @@ namespace WHMSWebApp2.Models
 {
     public class OrderProductViewModel
     {
-        public int id { get; set; }
-        public int wantedQuantity { get; set; }
-        public int inStock { get; set; }
-        public Product product { get; set; }
+        public int InStock { get; set; }
+        public Product Product { get; set; }
+        public int ProductId { get; set; }
+        public int WantedQuantity { get; set; }
     }
 }

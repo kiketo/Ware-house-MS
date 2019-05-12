@@ -57,6 +57,11 @@ namespace WHMS.Services
             var whs = this.context.Warehouses.ToListAsync();
             return whs;
         }
+        public async Task<Warehouse> GetByIdAsync(int id)
+        {
+            var wh = await this.context.Warehouses.FirstOrDefaultAsync(w=>w.Id == id);
+            return wh;
+        }
 
         //public async Task<Warehouse> ModifyWarehouseNameAsync(string currentName,string newName)
         //{

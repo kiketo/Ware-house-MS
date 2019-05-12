@@ -19,15 +19,6 @@ namespace WHMS.Services
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<ICollection<OrderProductWarehouse>> GetProductsByOrderIdNWarehouseIdAsync(int orderId, int warehouseId)
-        {
-            var opw = await this.context.OrderProductWarehouses
-                .Where(o => o.OrderId == orderId)
-                .Where(w => w.WarehouseId == warehouseId)
-                .ToListAsync();
-            return opw;
-        }
-
         public async Task<ICollection<OrderProductWarehouse>> GetProductsByOrderIdWhereWantedQuantityIsOverZeroAsync(int orderId)
         {
             var orderProducts = await this.context.OrderProductWarehouses
@@ -36,6 +27,22 @@ namespace WHMS.Services
                 .Include(wanted => wanted.WantedQuantity)
                 .ToListAsync();
             return orderProducts;
+        }
+
+        public async Task<OrderProductWarehouse> UpdateWantedQuantity(OrderProductWarehouse opw)
+        {
+            this.context.Attach(opw).State = EntityState.Modified;
+            await this.context.SaveChangesAsync();
+            return opw;
+        }
+        public async Task<OrderProductWarehouse> GetOPW(int productId, int warehouseId, int orderId)
+        {
+            var opw = await this.context.OrderProductWarehouses
+                .Where(p => p.ProductId == productId)
+                .Where(w => w.WarehouseId == warehouseId)
+                .Where(o => o.OrderId == orderId)
+                .FirstOrDefaultAsync();
+            return opw;
         }
 
     }

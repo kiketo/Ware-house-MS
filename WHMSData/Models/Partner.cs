@@ -25,6 +25,8 @@ namespace WHMSData.Models
 
         public ApplicationUser Creator { get; set; }
 
+        public string CreatorId { get; set; }
+
         public override string ToString()
         {
             return this.Name;

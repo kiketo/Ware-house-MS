@@ -1,69 +1,144 @@
-﻿@model WHMSData.Models.Order
+﻿
+
+@model OrderViewModel
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h2>Edit</h2>
 
-<h4>Order</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                <select asp-for="Type" class="form-control"></select>
-                <span asp-validation-for="Type" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PartnerId" class="control-label"></label>
-                <select asp-for="PartnerId" class="form-control" asp-items="ViewBag.PartnerId"></select>
-                <span asp-validation-for="PartnerId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Comment" class="control-label"></label>
-                <input asp-for="Comment" class="form-control" />
-                <span asp-validation-for="Comment" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TotalValue" class="control-label"></label>
-                <input asp-for="TotalValue" class="form-control" />
-                <span asp-validation-for="TotalValue" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatorId" class="control-label"></label>
-                <select asp-for="CreatorId" class="form-control" asp-items="ViewBag.CreatorId"></select>
-                <span asp-validation-for="CreatorId" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedOn" class="control-label"></label>
-                <input asp-for="ModifiedOn" class="form-control" />
-                <span asp-validation-for="ModifiedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Partner)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Partner)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalValue)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalValue)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Creator)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Creator)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreatedOn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ModifiedOn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ModifiedOn)
+        </dd>
+    </dl>
+</div>
+
+<div class="md-form mb-4 pink-textarea active-pink-textarea">
+
+    <label asp-for="Comment" class="control-label"></label>
+<textarea id="form18" name="Comment" class="md-textarea form-control" rows="3" cols="60" placeholder="@Model.Comment"></textarea>
+    <span asp-validation-for="Comment" class="text-danger"></span>
+
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    <table id="table" class="table table-hover table-mc-light-blue" border="0" align="center">
+        <thead>
+            <tr>
+                <th>Products</th>
+                <th>OrderedQuantity</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var pair in Model.SelectedProductsWithQuantities)
+            {
+                <tr>
+                    <td> @pair.Product.Name</td>
+                    <td>@pair.WantedQuantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="form-group">
+
+    <input type="submit" value="Save changes" class="btn btn-success" />
+</div>
+<div>
+
+    @if (Model.CanUserEdit && User.IsInRole("Admin"))
+    {
+        <a class="btn btn-info" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+
+    }
+    <a class="btn btn-secondary" href='javascript:history.go(-1)'>Go Back</a>
+</div>
+@*@model OrderViewModel
+
+    @{
+        ViewData["Title"] = "Edit";
+    }
+
+    <h1>Edit</h1>
+
+    <h4>Order</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Type" class="control-label"></label>
+                    <select asp-for="Type" class="form-control"></select>
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PartnerId" class="control-label"></label>
+                    <select asp-for="PartnerId" class="form-control" asp-items="ViewBag.PartnerId"></select>
+                    <span asp-validation-for="PartnerId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Comment" class="control-label"></label>
+                    <input asp-for="Comment" class="form-control" />
+                    <span asp-validation-for="Comment" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TotalValue" class="control-label"></label>
+                    <input asp-for="TotalValue" class="form-control" />
+                    <span asp-validation-for="TotalValue" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@
