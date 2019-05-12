@@ -113,7 +113,10 @@ namespace WHMSWebApp2.Controllers
         [Authorize]
         public async Task<IActionResult> Details(int id)
         {
-            PartnerViewModel model = partnerMapper.MapFrom(await this.partnerService.GetByIdAsync(id));
+            var partner = await this.partnerService.GetByIdAsync(id);
+
+            var model = partnerMapper.MapFrom(partner);
+           
             model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
             model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
             // viewModel.Orders = (await this.orderService.GetOrdersByPartnerAsync((await this.partnerService.FindByIdAsync(id)))).OrderBy(x=>x.ModifiedOn).ToList();

@@ -24,7 +24,8 @@ namespace WHMSWebApp2.Mappers
             CreatorId=entity.CreatorId,
             Creator=entity.Creator.UserName,
             CreatedOn = entity.CreatedOn,
-            ModifiedOn = entity.ModifiedOn
+            ModifiedOn = entity.ModifiedOn,
+            CreatorId = entity.CreatorId
         };
     }
 }
