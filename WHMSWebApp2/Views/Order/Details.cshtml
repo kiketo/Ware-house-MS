@@ -107,7 +107,7 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <a type="button" class="btn btn-green" data-dismiss="modal" href="#">Cancel</a>
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
                         <form asp-controller="Partner" asp-action="Delete" asp-route-id="@Model.Id" method="post">
                             <button class="btn btn-danger" type="submit">Delete</button>
                         </form>

@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
@@ -35,7 +33,7 @@ namespace WHMS.Services
                 }
                 else
                 {
-                    throw new ArgumentException($"Town `{townToAddName}` already exist!");
+                    return townToAdd;
                 }
             }
             else
@@ -48,7 +46,7 @@ namespace WHMS.Services
                     IsDeleted = false,
                     Name = townToAddName
                 };
-               await this.context.Towns.AddAsync(townToAdd);
+                await this.context.Towns.AddAsync(townToAdd);
             }
 
             await this.context.SaveChangesAsync();
@@ -56,49 +54,9 @@ namespace WHMS.Services
             return townToAdd;
         }
 
-        public async Task<Town> EditAsync(string oldTownName, string newTownName)
+        public Task<Town> GetTownAsync(string townToGetName)
         {
-            Town townToEdit = await this.context.Towns
-                .FirstOrDefaultAsync(t => t.Name == oldTownName);
-
-            if (townToEdit == null || townToEdit.IsDeleted)
-            {
-                throw new ArgumentException($"Town `{oldTownName}` doesn't exist!");
-            }
-
-            townToEdit.Name = newTownName;
-            townToEdit.ModifiedOn = DateTime.Now;
-
-            await this.context.SaveChangesAsync();
-
-            return townToEdit;
-        }
-
-        public async Task<Town> DeleteAsync(string townToDeleteName)
-        {
-            Town townToDelete = await this.context.Towns
-                .FirstOrDefaultAsync(t => t.Name == townToDeleteName);
-
-            if (townToDelete == null || townToDelete.IsDeleted)
-            {
-                throw new ArgumentException($"Town `{townToDeleteName}` doesn't exist!");
-            }
-
-            townToDelete.ModifiedOn = DateTime.Now;
-            townToDelete.IsDeleted = true;
-            foreach (var address in townToDelete.Addresses)
-            {
-                address.IsDeleted = true;
-                address.ModifiedOn = DateTime.Now;
-            }
-
-            await this.context.SaveChangesAsync();
-            return townToDelete;
-        }
-
-        public async Task<Town> GetTownAsync(string townToGetName)
-        {
-            Town townToGet = await this.context.Towns
+            var townToGet = this.context.Towns
                 .Include(a => a.Addresses)
                 .FirstOrDefaultAsync(t => t.Name == townToGetName);
 
@@ -110,13 +68,12 @@ namespace WHMS.Services
             return townToGet;
         }
 
-        public async Task<IEnumerable<Town>> GetAllTownsAsync()
+        public Task<List<Town>> GetAllTownsAsync()
         {
-            var allTowns = await this.context.Towns
+            var allTowns = this.context.Towns
                 .Include(a => a.Addresses)
                 .ToListAsync();
 
-            
             return allTowns;
         }
 
@@ -133,5 +90,45 @@ namespace WHMS.Services
 
             return townToGet;
         }
+
+        //public async Task<Town> EditAsync(string oldTownName, string newTownName)
+        //{
+        //    Town townToEdit = await this.context.Towns
+        //        .FirstOrDefaultAsync(t => t.Name == oldTownName);
+
+        //    if (townToEdit == null || townToEdit.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Town `{oldTownName}` doesn't exist!");
+        //    }
+
+        //    townToEdit.Name = newTownName;
+        //    townToEdit.ModifiedOn = DateTime.Now;
+
+        //    await this.context.SaveChangesAsync();
+
+        //    return townToEdit;
+        //}
+
+        //public async Task<Town> DeleteAsync(string townToDeleteName)
+        //{
+        //    Town townToDelete = await this.context.Towns
+        //        .FirstOrDefaultAsync(t => t.Name == townToDeleteName);
+
+        //    if (townToDelete == null || townToDelete.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Town `{townToDeleteName}` doesn't exist!");
+        //    }
+
+        //    townToDelete.ModifiedOn = DateTime.Now;
+        //    townToDelete.IsDeleted = true;
+        //    foreach (var address in townToDelete.Addresses)
+        //    {
+        //        address.IsDeleted = true;
+        //        address.ModifiedOn = DateTime.Now;
+        //    }
+
+        //    await this.context.SaveChangesAsync();
+        //    return townToDelete;
+        //}
     }
 }

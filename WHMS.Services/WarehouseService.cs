@@ -21,12 +21,13 @@ namespace WHMS.Services
 
         public async Task<Warehouse> CreateWarehouseAsync(string name, Address address)
         {
-            if (await this.context.Warehouses.AnyAsync(t => t.Name == name))
+            var newWarehouse = (await this.context.Warehouses.FirstOrDefaultAsync(t => t.Name == name));
+            if (newWarehouse!=null)
             {
-                throw new ArgumentException($"Warehouse {name} already exists");
+                return newWarehouse;
             }
             List<Product> products = await this.context.Products.ToListAsync();
-            var newWarehouse = new Warehouse()
+            newWarehouse = new Warehouse()
             {
                 Name = name,
                 CreatedOn = DateTime.Now,
@@ -40,35 +41,6 @@ namespace WHMS.Services
             return newWarehouse;
         }
 
-        public async Task<Warehouse> ModifyWarehouseNameAsync(string currentName,string newName)
-        {
-            var warehousetToMod = await this.context.Warehouses.FirstOrDefaultAsync(t => t.Name == currentName);
-            if (warehousetToMod == null || warehousetToMod.IsDeleted)
-            {
-                throw new ArgumentException($"Warehouse {currentName} does not exists");
-            }
-            warehousetToMod.Name = newName;
-            warehousetToMod.ModifiedOn = DateTime.Now;
-
-            await this.context.SaveChangesAsync();
-            return warehousetToMod;
-        }
-
-        public async Task<Warehouse> DeleteWarehouseAsync(string name)
-        {
-            var warehouseToDelete = await this.context.Warehouses
-                .FirstOrDefaultAsync(u => u.Name == name);
-
-            if (warehouseToDelete == null || warehouseToDelete.IsDeleted)
-            {
-                throw new ArgumentException($"Warehouse {name} does not exists");
-            }
-            warehouseToDelete.ModifiedOn = DateTime.Now;
-            warehouseToDelete.IsDeleted = true;
-            await this.context.SaveChangesAsync();
-            return warehouseToDelete;
-        }
-
         public async Task<Warehouse> GetByNameAsync(string name)
         {
             var warehouse = await this.context.Warehouses
@@ -80,9 +52,9 @@ namespace WHMS.Services
             return warehouse;
         }
 
-        public async Task<ICollection<Warehouse>> GetAllWarehousesAsync()
+        public Task<List<Warehouse>> GetAllWarehousesAsync()
         {
-            var whs = await this.context.Warehouses.ToListAsync();
+            var whs = this.context.Warehouses.ToListAsync();
             return whs;
         }
         public async Task<Warehouse> GetByIdAsync(int id)
@@ -91,5 +63,33 @@ namespace WHMS.Services
             return wh;
         }
 
+        //public async Task<Warehouse> ModifyWarehouseNameAsync(string currentName,string newName)
+        //{
+        //    var warehousetToMod = await this.context.Warehouses.FirstOrDefaultAsync(t => t.Name == currentName);
+        //    if (warehousetToMod == null || warehousetToMod.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Warehouse {currentName} does not exists");
+        //    }
+        //    warehousetToMod.Name = newName;
+        //    warehousetToMod.ModifiedOn = DateTime.Now;
+
+        //    await this.context.SaveChangesAsync();
+        //    return warehousetToMod;
+        //}
+
+        //public async Task<Warehouse> DeleteWarehouseAsync(string name)
+        //{
+        //    var warehouseToDelete = await this.context.Warehouses
+        //        .FirstOrDefaultAsync(u => u.Name == name);
+
+        //    if (warehouseToDelete == null || warehouseToDelete.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Warehouse {name} does not exists");
+        //    }
+        //    warehouseToDelete.ModifiedOn = DateTime.Now;
+        //    warehouseToDelete.IsDeleted = true;
+        //    await this.context.SaveChangesAsync();
+        //    return warehouseToDelete;
+        //}
     }
 }

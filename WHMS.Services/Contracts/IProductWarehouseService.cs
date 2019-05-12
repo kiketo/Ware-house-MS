@@ -14,7 +14,7 @@ namespace WHMS.Services.Contracts
 
         Task<ProductWarehouse> SubstractQuantityAsync(int productId, int warehouseId, int quantity);
 
-        Task<ProductWarehouse> FindPairProductWarehouse(int warehouseId, int productId);
+        Task<ProductWarehouse> GetPairProductWarehouse(int warehouseId, int productId);
 
         Task<ProductWarehouse> UpdateAsync(ProductWarehouse pw);
 

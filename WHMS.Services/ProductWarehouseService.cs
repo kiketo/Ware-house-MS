@@ -68,8 +68,7 @@ namespace WHMS.Services
             var pairPW = await this.context.ProductWarehouse
                 .Where(p => p.ProductId == productId)
                 .Where(w => w.WarehouseId == warehouseId)
-                .ToAsyncEnumerable()
-                .FirstOrDefault(); 
+                .FirstOrDefaultAsync();
 
             if (pairPW == null)
             {
@@ -87,10 +86,10 @@ namespace WHMS.Services
                                                     .ToListAsync();
             return task;
         }
-        public async Task<ProductWarehouse> FindPairProductWarehouse(int warehouseId, int productId)
-        {
 
-            var pair = await this.context.ProductWarehouse.Where(p => p.ProductId == productId).FirstOrDefaultAsync(w => w.WarehouseId == warehouseId);
+        public  Task<ProductWarehouse> GetPairProductWarehouse(int warehouseId, int productId)
+        {
+            var pair =  this.context.ProductWarehouse.Where(p => p.ProductId == productId).FirstOrDefaultAsync(w => w.WarehouseId == warehouseId);
 
             return pair;
         }

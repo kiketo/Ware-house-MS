@@ -2,11 +2,7 @@
 
 <div class="font-weight-bold">
     <a class="btn btn-info" style="width:70.59px" asp-controller="Product" asp-action="Details" asp-route-id="@Model.Id">Details</a>
-    @if (Model.CanUserEdit)
-    {
-        <a class="btn btn-info" style="width:70.59px" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-
-    }
+   
 </div>
 <div>ID: @Model.Id | Name: @Model.Name | Category: @Model.Category | Unit: @Model.Unit</div>
 <hr />

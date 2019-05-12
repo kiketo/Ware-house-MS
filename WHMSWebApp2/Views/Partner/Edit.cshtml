@@ -6,7 +6,6 @@
 <h2>Edit Partner</h2>
 
 <div asp-validation-summary="All">
-    <span>Please correct the following errors</span>
 </div>
 <hr />
 <div class="row">
@@ -15,32 +14,59 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" placeholder="Enter Partner Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
-                <input asp-for="Address" class="form-control" />
-                <span asp-validation-for="Address" class="text-danger"></span>
+                <label asp-for="AddressId" placeholder="Enter New Address" class="control-label">Address</label><br />
+
+                <select asp-for="AddressId" placeholder="Enter New Address" class="form-control">
+                    <option>Choose from existing addresses</option>
+                    @foreach (var address in Model.AddressesList)
+                    {
+                        <option value="@address.Id">@address.Town.Name, @address.Text </option>
+                    }
+
+                </select>
             </div>
-            <div class="form-group">
-                <label asp-for="City" class="control-label"></label>
-                <select asp-for="City" class="form-control" asp-items="Model.Cities"></select>
-                <span asp-validation-for="City" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VAT" class="control-label"></label>
-                <input asp-for="VAT" class="form-control" />
-                <span asp-validation-for="VAT" class="text-danger"></span>
+            <hr />
+            <p>
+                <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Add New Address</a>
+
+            </p>
+            <div class="collapse multi-collapse" id="multiCollapseExample1">
+                <div class="card card-body">
+
+                    <input asp-for="City" placeholder="Enter new city name" class="form-control" />
+
+                    <div class="form-group">
+                        <label asp-for="City" class="control-label">or</label>
+                        <select asp-for="City" class="form-control" asp-items="Model.Cities">
+                            <option>Choose from existing cities</option>
+                        </select>
+
+                        <input asp-for="Address" placeholder="Enter New Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
 
+            <hr />
+
             <div class="form-group">
-                <input type="submit" value="Edit" class="btn btn-default" />
+                <label asp-for="VAT" class="control-label"></label>
+                <input asp-for="VAT" placeholder="Enter VAT Number, e.g.BG123456789" class="form-control" />
+                <span asp-validation-for="VAT" class="text-danger"></span>
             </div>
+            <div class="form-group">
+
+                <input type="submit" value="Save changes" class="btn btn-success" />
+            </div>
+
         </form>
     </div>
 </div>
 
 <div>
-    <a href='javascript:history.go(-1)'>Back to List</a>
+    <a class="btn btn-secondary" href='javascript:history.go(-1)'>Go Back</a>
 </div>

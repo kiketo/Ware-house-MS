@@ -38,6 +38,10 @@ namespace WHMSWebApp2.Models
 
         public string Creator { get; set; }
 
+        public DateTime CreatedOn { get; set; }
+
+        public DateTime ModifiedOn { get; set; }
+
         public bool CanUserEdit { get; set; }
 
         public bool CanUserDelete { get; set; }
@@ -58,7 +62,7 @@ namespace WHMSWebApp2.Models
 
         public int CategoryId { get; set; }
 
-        public int UnitId { get; set; }
+        public int? UnitId { get; set; }
 
     }
 }

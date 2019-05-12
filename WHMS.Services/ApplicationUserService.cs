@@ -15,6 +15,7 @@ namespace WHMS.Services
     public class ApplicationUserService: IApplicationUserService
     {
         private readonly ApplicationDbContext context;
+
         private readonly UserManager<ApplicationUser> userManager;
 
         public ApplicationUserService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)

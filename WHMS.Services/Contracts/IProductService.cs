@@ -5,9 +5,26 @@ using WHMSData.Models;
 
 namespace WHMS.Services.Contracts
 {
-    public interface IProductService //TODO to delete the unneeded
+    public interface IProductService 
     {
         Task<Product> CreateProductAsync(string name, Unit unit, Category category, decimal buyPrice, double margin, string description, ApplicationUser user);
+
+        Task<Product> GetProductByIdAsync(int productId);
+
+        Task<ICollection<Product>> GetProductsByNameAsync(string name);
+
+        Task<ICollection<Product>> GetProductsByCategoryAsync(Category category);
+
+
+        Task<List<Product>> GetAllProductsAsync();
+
+        Task<Product> DeleteProductAsync(int id);
+
+        Task<Product> UpdateAsync(Product product);
+
+        //Task<Product> UndeleteProductAsync(string name);
+
+        //Task<Product> GetProductByNameInclDeletedAsync(string name);
 
         //Task<Product> SetMarginAsync(int productId, double newMargin);
 
@@ -18,21 +35,5 @@ namespace WHMS.Services.Contracts
         //Task<Product> ModifyUnitAsync(Product product, Unit unit);
 
         //Task<Product> ModifyCategoryAsync(Product product, Category category);
-
-        Task<Product> GetProductByIdAsync(int productId);
-
-        Task<ICollection<Product>> GetProductsByNameAsync(string name);
-
-        Task<ICollection<Product>> GetProductsByCategoryAsync(Category category);
-
-        Task<Product> GetProductByNameInclDeletedAsync(string name);
-
-        Task<List<Product>> GetAllProductsAsync();
-
-        Task<Product> UndeleteProductAsync(string name);
-
-        Task<Product> DeleteProductAsync(int id);
-
-        Task<Product> UpdateAsync(Product product);
     }
 }

@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "SearchProductsByCategory";
 }
-@*<partial name="_SearchProduct" />*@
 
 <h3>Search for Product by Category</h3>
 
@@ -11,7 +10,6 @@
     <form class="col-lg-6" asp-controller="Product" asp-action="SearchProductByCategory" method="get">
         <div class="row">
             <div class="col-sm-9">
-                @*<input asp-for="@Model.Category" placeholder="Search..." class="form-control" />*@
                 <select asp-for="Category" class="form-control" asp-items="ViewBag.Category"></select>
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
@@ -26,7 +24,6 @@
     <div class="col-lg-6">
         @if (Model != null)
         {
-
             if (string.IsNullOrWhiteSpace(Model.Category)||Model.SearchResults.Count==0)
             {
                 <p class="alert alert-info">There are no products in category: @Model.Category</p>
@@ -36,9 +33,7 @@
                 foreach (var product in Model.SearchResults)
                 {
                     <partial name="_ProductPartial" model="product" />
-
                 }
-
             }
         }
     </div>

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace WHMS.Services
 {
@@ -20,7 +20,8 @@ namespace WHMS.Services
 
         public async Task<Address> AddAsync(Town town, string addressToAdd)
         {
-            Address newAddress = town.Addresses.FirstOrDefault(a => a.Text == addressToAdd);
+            Address newAddress = town.Addresses
+                .FirstOrDefault(a => a.Text == addressToAdd);
 
             if (newAddress != null)
             {
@@ -54,76 +55,79 @@ namespace WHMS.Services
             return newAddress;
         }
 
-        public async Task<Address> EditTextAsync(Town town, string oldAddress, string newAddress)
+        public Task<Address> GetAddressAsync(Town town, int addressId)
         {
-            Address address = town.Addresses.FirstOrDefault(a => a.Text == oldAddress);
-
-            if (address == null || address.IsDeleted)
-            {
-                throw new ArgumentException($"Address `{oldAddress}` in town `{town.Name}` doesn't exist!");
-            }
-
-            address.Text = newAddress;
-            address.ModifiedOn = DateTime.Now;
-
-            await this.context.SaveChangesAsync();
+            var address = this.context.Addresses
+                .FirstOrDefaultAsync(a => a.Id == addressId && a.Town == town);
 
             return address;
         }
 
-        public async Task<Address> EditTownAsync(Town oldTown, string address, Town newTown)
+        public Task<List<Address>> GetAllAddressesAsync()
         {
-            Address addressToEdit = oldTown.Addresses.FirstOrDefault(a => a.Text == address);
-
-            if (addressToEdit == null || addressToEdit.IsDeleted)
-            {
-                throw new ArgumentException($"Address `{addressToEdit}` in town `{oldTown.Name}` doesn't exist!");
-            }
-
-            addressToEdit.Town = newTown;
-            addressToEdit.ModifiedOn = DateTime.Now;
-
-            await this.context.SaveChangesAsync();
-
-            return addressToEdit;
-        }
-
-        public async Task<Address> DeleteAsync(Town town, string addressToDelete)
-        {
-            Address address = town.Addresses.FirstOrDefault(a => a.Text == addressToDelete);
-
-            if (address == null || address.IsDeleted)
-            {
-                throw new ArgumentException($"Address `{addressToDelete}` in town `{town.Name}` doesn't exist!");
-            }
-
-            address.IsDeleted = true;
-            address.ModifiedOn = DateTime.Now;
-
-           await this.context.SaveChangesAsync();
-
-            return address;
-        }
-
-        public async Task<Address> GetAddressAsync(Town town, int addressId)
-        {
-            Address address = await this.context.Addresses.FirstOrDefaultAsync(a => a.Id == addressId && a.Town == town);
-
-            return address;
-        }
-        public async Task<List<Address>> GetAllAddressesAsync()
-        {
-            var addresses = await this.context.Addresses
-                .Include(a=>a.Town)
+            var addresses = this.context.Addresses
+                .Include(a => a.Town)
                 .ToListAsync();
 
-           
             return addresses;
         }
-        public async Task<Address> GetAddressByIdAsync(int addressId)
+
+        public Task<Address> GetAddressByIdAsync(int addressId)
         {
-            var address = await this.context.Addresses.FirstOrDefaultAsync(i => i.Id == addressId);
+            var address = this.context.Addresses.FirstOrDefaultAsync(i => i.Id == addressId);
             return address;
         }
+
+        //public async Task<Address> EditTextAsync(Town town, string oldAddress, string newAddress)
+        //{
+        //    Address address = town.Addresses.FirstOrDefault(a => a.Text == oldAddress);
+
+        //    if (address == null || address.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Address `{oldAddress}` in town `{town.Name}` doesn't exist!");
+        //    }
+
+        //    address.Text = newAddress;
+        //    address.ModifiedOn = DateTime.Now;
+
+        //    await this.context.SaveChangesAsync();
+
+        //    return address;
+        //}
+
+        //public async Task<Address> EditTownAsync(Town oldTown, string address, Town newTown)
+        //{
+        //    Address addressToEdit = oldTown.Addresses.FirstOrDefault(a => a.Text == address);
+
+        //    if (addressToEdit == null || addressToEdit.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Address `{addressToEdit}` in town `{oldTown.Name}` doesn't exist!");
+        //    }
+
+        //    addressToEdit.Town = newTown;
+        //    addressToEdit.ModifiedOn = DateTime.Now;
+
+        //    await this.context.SaveChangesAsync();
+
+        //    return addressToEdit;
+        //}
+
+        ////public async Task<Address> DeleteAsync(Town town, string addressToDelete)
+        //{
+        //    Address address = town.Addresses.FirstOrDefault(a => a.Text == addressToDelete);
+
+        //    if (address == null || address.IsDeleted)
+        //    {
+        //        throw new ArgumentException($"Address `{addressToDelete}` in town `{town.Name}` doesn't exist!");
+        //    }
+
+        //    address.IsDeleted = true;
+        //    address.ModifiedOn = DateTime.Now;
+
+        //   await this.context.SaveChangesAsync();
+
+        //    return address;
+        //}
+
     }
 }

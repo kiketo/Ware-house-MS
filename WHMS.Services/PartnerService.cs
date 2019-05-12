@@ -36,7 +36,7 @@ namespace WHMS.Services
                 }
                 else
                 {
-                    throw new ArgumentException($"Partner with name `{partnerName}` already exist!");
+                    return newPartner;
                 }
             }
             else
@@ -83,15 +83,17 @@ namespace WHMS.Services
             return partnerToDelete;
         }
 
-        public async Task<Partner> FindByNameAsync(string partnerName)
+        public async Task<Partner> GetByNameAsync(string partnerName)
         {
             var partner = await this.context.Partners
+                .Where(p => p.Name == partnerName && !p.IsDeleted)
                 .Include(p => p.PastOrders)
                 .Include(p => p.Address)
                     .ThenInclude(a => a.Town)
                 .Include(p => p.Creator)
-                .FirstOrDefaultAsync(p => p.Name == partnerName);
-            if (partner == null || partner.IsDeleted)
+                .FirstOrDefaultAsync();
+
+            if (partner == null)
             {
                 throw new ArgumentException($"Partner with name `{partnerName}` doesn't exist!");
             }
@@ -99,14 +101,16 @@ namespace WHMS.Services
             return partner;
         }
 
-        public async Task<Partner> FindByIdAsync(int Id)
+        public async Task<Partner> GetByIdAsync(int Id)
         {
             var partner = await this.context.Partners
+                .Where(p => p.Id == Id)
                 .Include(p => p.Creator)
                 .Include(p => p.PastOrders)
                 .Include(a => a.Address)
                     .ThenInclude(t => t.Town)
-                .FirstOrDefaultAsync(p => p.Id == Id);
+                .FirstOrDefaultAsync();
+
             if (partner == null || partner.IsDeleted)
             {
                 throw new ArgumentException($"Partner with ID `{Id}` doesn't exist!");
@@ -115,14 +119,16 @@ namespace WHMS.Services
             return partner;
         }
 
-        public async Task<Partner> FindByVATAsync(string VAT)
+        public async Task<Partner> GetByVATAsync(string VAT)
         {
             var partner = await this.context.Partners
+                .Where(p => p.VAT == VAT)
                 .Include(p => p.Creator)
                 .Include(p => p.PastOrders)
                 .Include(a => a.Address)
                     .ThenInclude(t => t.Town)
-                .FirstOrDefaultAsync(p => p.VAT == VAT);
+                .FirstOrDefaultAsync();
+
             if (partner == null || partner.IsDeleted)
             {
                 throw new ArgumentException($"Partner with VAT `{VAT}` doesn't exist!");
@@ -131,12 +137,11 @@ namespace WHMS.Services
             return partner;
         }
 
-        public async Task<IEnumerable<Partner>> GetAllPartners()
+        public Task<List<Partner>> GetAllPartners()
         {
-            var partners = await this.context.Partners.Where(p => p.IsDeleted != true).ToListAsync();
-
-
-
+            var partners = this.context.Partners
+                .Where(p => p.IsDeleted == false)
+                .ToListAsync();
 
             return partners;
         }

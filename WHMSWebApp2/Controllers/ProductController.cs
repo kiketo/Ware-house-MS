@@ -52,56 +52,47 @@ namespace WHMSWebApp2.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductViewModel product)
+        public async Task<IActionResult> Create(ProductViewModel model)
         {
             var allProducts = await this.productService.GetAllProductsAsync();
 
-            product.ListCategories = (await this.categoryService.GetAllCategoriesAsync()).ToList();
-            product.LisUnits = ((await this.unitService.GetAllUnitsAsync()).ToList());
-            if (allProducts.Any(p => p.Name == product.Name))
+            model.ListCategories = (await this.categoryService.GetAllCategoriesAsync()).ToList();
+            model.LisUnits = ((await this.unitService.GetAllUnitsAsync()).ToList());
+            if (allProducts.Any(p => p.Name == model.Name))
             {
                 ModelState.AddModelError("Name", "The name must be unique.");
             }
             ModelState.Remove("Unit");
             ModelState.Remove("UnitId");
             ModelState.Remove("CategoryId");
-            if (product.UnitId == 0 && product.NewUnit == null)
+            if (model.UnitId == 0 && model.NewUnit == null)
             {
                 ModelState.AddModelError("UnitId", "Unit is Required");
             }
             if (ModelState.IsValid)
             {
-                Unit unit;
-                Category category = null;
+                Unit unit= await this.unitService.GetUnitByIDAsync(model.UnitId);
+                Category category = await this.categoryService.GetCategoryByNameAsync(model.Category);
                 ApplicationUser user = await this.userManager.GetUserAsync(User);
-                if (product.UnitId != 0 && (await this.unitService.GetAllUnitsAsync()).Any(u=>u.Id == product.UnitId))
+                if (model.UnitId == null || unit==null)
                 {
-                    unit = await this.unitService.GetUnitByIDAsync(product.UnitId);
+                    unit = await this.unitService.CreateUnitAsync(model.NewUnit);
                 }
-                else
+                if (model.CategoryId == 0 || category==null)
                 {
-                    unit = await this.unitService.CreateUnitAsync(product.NewUnit);
-                }
-                if (product.CategoryId != 0 && (await this.categoryService.GetAllCategoriesAsync()).Any(u => u.Id == product.CategoryId))
-                {
-                    category = await this.categoryService.FindByIDAsync(product.CategoryId);
-                }
-                else
-                {
-                    if (product.NewUnit != null)
+                    if (model.NewCategory != null)
                     {
-                        category = await this.categoryService.CreateCategoryAsync(product.NewUnit);
+                        category = await this.categoryService.CreateCategoryAsync(model.NewCategory);
                     }
-                   
                 }
                 
                 var newProduct = await this.productService.CreateProductAsync(
-                    product.Name,
+                    model.Name,
                     unit,
                     category,
-                    product.BuyPrice,
-                    product.MarginInPercent,
-                    product.Description,
+                    model.BuyPrice,
+                    model.MarginInPercent,
+                    model.Description,
                     user
                     );
                 var viewModel = productMapper.MapFrom(newProduct);
@@ -110,7 +101,7 @@ namespace WHMSWebApp2.Controllers
             }
             else
             {
-                return View(product);
+                return View(model);
             }
         }
 
@@ -169,7 +160,7 @@ namespace WHMSWebApp2.Controllers
             {
                 Product updatedProduct = await this.productService.GetProductByIdAsync(model.Id);
                 updatedProduct.BuyPrice = model.BuyPrice;
-                updatedProduct.Category = await this.categoryService.FindByIDAsync(int.Parse(model.Category));
+                updatedProduct.Category = await this.categoryService.GetCategoryByIdAsync(int.Parse(model.Category));
                 updatedProduct.Description = model.Description;
                 updatedProduct.MarginInPercent = model.MarginInPercent;
                 updatedProduct.ModifiedOn = DateTime.Now;

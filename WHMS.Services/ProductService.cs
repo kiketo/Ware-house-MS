@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WHMS.Services.Contracts;
 using WHMSData.Context;
 using WHMSData.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace WHMS.Services
 {
@@ -21,22 +20,23 @@ namespace WHMS.Services
 
         public async Task<Product> CreateProductAsync(string name, Unit unit, Category category, decimal buyPrice, double margin, string description, ApplicationUser user)
         {
-            if (this.context.Products.Any(t => t.Name == name))
+            var newProduct = await this.context.Products.FirstOrDefaultAsync(t => t.Name == name);
+            if (newProduct != null)
             {
-                throw new ArgumentException($"Product {name} already exists");
+                return newProduct;
             }
-            if (buyPrice <0)
+            if (buyPrice < 0)
             {
                 throw new ArgumentException($"Price cannot be negative number");
             }
-            if (margin<0)
+            if (margin < 0)
             {
                 throw new ArgumentException($"The price margin cannot be negative number");
             }
-            decimal sellPrice = buyPrice*(100+(decimal)margin)/100;
+            decimal sellPrice = buyPrice * (100 + (decimal)margin) / 100;
             List<Warehouse> wareHouses = await this.context.Warehouses.ToListAsync();
 
-            var newProduct = new Product()
+            newProduct = new Product()
             {
                 Name = name,
                 Unit = unit,
@@ -48,7 +48,7 @@ namespace WHMS.Services
                 SellPrice = sellPrice,
                 Warehouses = wareHouses.Select(w => new ProductWarehouse { Warehouse = w }).ToList(),
                 Description = description,
-                Creator=user
+                Creator = user
             };
 
             await this.context.Products.AddAsync(newProduct);
@@ -64,6 +64,85 @@ namespace WHMS.Services
                 .EntityState.Modified;
             await this.context.SaveChangesAsync();
             return product;
+        }
+
+        public async Task<Product> GetProductByIdAsync(int productId)
+        {
+            var product = await this.context.Products
+                .Where(i => i.Id == productId && !i.IsDeleted)
+               .Include(p => p.Category)
+                .Include(p => p.Creator)
+                .Include(p => p.OrderProductWarehouses)
+                .Include(p => p.Unit)
+                .Include(p => p.Warehouses)
+                .FirstOrDefaultAsync();
+
+            if (product == null)
+            {
+                throw new ArgumentException($"Product does not exist!");
+            }
+            return product;
+        }
+
+        public async Task<ICollection<Product>> GetProductsByNameAsync(string name)
+        {
+            var product = await this.context.Products
+                .Where(p => p.Name.Contains(name))
+                .Where(p => p.IsDeleted == false)
+                .Include(p => p.Category)
+                .Include(p => p.Creator)
+                .Include(p => p.OrderProductWarehouses)
+                .Include(p => p.Unit)
+                .Include(p => p.Warehouses)
+                .ToListAsync();
+
+            if (product.Count == 0)
+            {
+                throw new ArgumentException($"Product `{name}` doesn't exist!");
+            }
+            return product;
+        }
+
+        public async Task<ICollection<Product>> GetProductsByCategoryAsync(Category category)
+        {
+            if (category == null || category.IsDeleted)
+            {
+                throw new ArgumentException("Category does not exists");
+            }
+            var productsByCategory = await this.context.Products
+                .Where(p => p.Category == category && !p.IsDeleted)
+                .Include(p => p.Category)
+                .Include(p => p.Creator)
+                .Include(p => p.OrderProductWarehouses)
+                .Include(p => p.Unit)
+                .Include(p => p.Warehouses)
+                .ToListAsync();
+
+            return productsByCategory;
+        }
+
+        public  Task<List<Product>> GetAllProductsAsync()
+        {
+            var task =  this.context.Products
+                .Where(p=>p.IsDeleted==false)
+                .ToListAsync();
+
+            return task;
+        }
+
+        public async Task<Product> DeleteProductAsync(int id)
+        {
+            var productToDelete = await this.context.Products
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (productToDelete == null || productToDelete.IsDeleted)
+            {
+                throw new ArgumentException($"Product with ID: `{id}` doesn't exist!");
+            }
+            productToDelete.ModifiedOn = DateTime.Now;
+            productToDelete.IsDeleted = true;
+            await this.context.SaveChangesAsync();
+            return productToDelete;
         }
 
         //public async Task<Product> SetMarginAsync(int productId, double newMargin)
@@ -134,86 +213,24 @@ namespace WHMS.Services
         //    return product;
         //}
 
-        public async Task<Product> GetProductByIdAsync(int productId)
-        {
-            var product = await this.context.Products
-                .Where(i => i.Id == productId && !i.IsDeleted)
-                .Include(p=>p.Category)
-                .Include(p=>p.Unit)
-                .Include(p=>p.Creator)
-                .FirstOrDefaultAsync();
-            if (product == null || product.IsDeleted)
-            {
-                throw new ArgumentException($"Product does not exist!");
-            }
-            return product;
-        }
+        //public  Task<Product> GetProductByNameInclDeletedAsync(string name)
+        //{
+        //    var product =  this.context.Products
+        //        .FirstOrDefaultAsync(u => u.Name == name);
 
-        public async Task<ICollection<Product>> GetProductsByNameAsync(string name)
-        {
-            var product = await this.context.Products
-                .Include(p => p.Category)
-                .Where(p => p.Name.Contains(name))
-                .Where(p => p.IsDeleted == false)
-                .ToListAsync();
-            if (product.Count == 0)
-            {
-                throw new ArgumentException($"Product `{name}` doesn't exist!");
-            }
-            return product;
-        }
+        //    return product;
+        //}
 
-        public async Task<ICollection<Product>> GetProductsByCategoryAsync(Category category)
-        {
-            if (category == null || category.IsDeleted)
-            {
-                throw new ArgumentException("Category does not exists");
-            }
-            var productsByCategory = await this.context.Products
-                .Where(p => p.Category == category && !p.IsDeleted)
-                .ToListAsync();
-            return productsByCategory;
-        }
+        //public async Task<Product> UndeleteProductAsync(string name)
+        //{
+        //    var product = await GetProductByNameInclDeletedAsync(name);
 
-        public async Task<Product> GetProductByNameInclDeletedAsync(string name)
-        {
-            var product = await this.context.Products
-                .FirstOrDefaultAsync(u => u.Name == name);
+        //    product.IsDeleted = false;
+        //    product.ModifiedOn = DateTime.Now;
 
-            return product;
-        }
+        //    await this.context.SaveChangesAsync();
 
-        public async Task<List<Product>> GetAllProductsAsync()
-        {
-            var task= await this.context.Products.ToListAsync();
-
-            return task;
-        }
-
-        public async Task<Product> UndeleteProductAsync(string name)
-        {
-            var product = await GetProductByNameInclDeletedAsync(name);
-
-            product.IsDeleted = false;
-            product.ModifiedOn = DateTime.Now;
-
-            await this.context.SaveChangesAsync();
-            return product;
-        }
-
-        public async Task<Product> DeleteProductAsync(int id)
-        {
-            var productToDelete = await this.context.Products
-                .FirstOrDefaultAsync(u => u.Id == id);
-
-            if (productToDelete == null || productToDelete.IsDeleted)
-            {
-                throw new ArgumentException($"Product with ID: `{id}` doesn't exist!");
-            }
-            productToDelete.ModifiedOn = DateTime.Now;
-            productToDelete.IsDeleted = true;
-            await this.context.SaveChangesAsync();
-            return productToDelete;
-        }
+        //    return product;
+        //}
     }
 }
