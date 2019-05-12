@@ -212,7 +212,6 @@ namespace WHMSWebApp2.Controllers
                 });
             }
 
-
             return View(model);
         }
 
@@ -250,7 +249,7 @@ namespace WHMSWebApp2.Controllers
             var wantedquantity = model.WantedQuantity;
             var selectedProduct = model.ProductId;
             ModelState.Remove("Type");
-            if (model.TypeOrder == OrderType.Buy
+            if (model.TypeOrder == OrderType.Sell
                 && model.WantedQuantity > await this.productWarehouseService.GetQuantityAsync(model.ProductId, model.WarehouseId))
             {
                 ModelState.AddModelError("WantedQuantity", "There are not enough items in stock");

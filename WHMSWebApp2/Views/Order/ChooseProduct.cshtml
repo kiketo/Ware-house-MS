@@ -12,7 +12,7 @@
     <div class="col-md-4">
         <form asp-action="ChooseProduct">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <h4>Ordered Products</h4>
+            <h4>Available Products</h4>
             <div class="form-group">
                 <select asp-for="ProductId" class="form-control">
                     <option>Choose product</option>
@@ -37,7 +37,8 @@
                     </div>
                 </div>
             </div>
-
+            <input class="btn btn-primary" style="width:90.59px" type="submit" value="Add" />
+        </form>
             <h4>Ordered Products</h4>
             <div class=" form-group" method="POST" action="Order/ChooseProduct">
                 <input id="myInput" placeholder="Search products.." class="form-control" />
@@ -45,7 +46,7 @@
                     <thead style="background-color:darkslategray">
                         <tr style="align-content:center;position:relative;">
                             <th>Available products </th>
-                            <th>In Stock</th>
+                            <th>Updated Stock</th>
                             <th>Ordered qty</th>
                         </tr>
                     </thead>
@@ -65,10 +66,10 @@
             </div>
 
             <a class="btn btn-info" style="width:130.59px" asp-action="Details" asp-route-id="@Model.Id">Complete Order</a>
-            <input class="btn btn-primary" style="width:90.59px" type="submit" value="Create" />
+            
             <a class="btn btn-secondary" style="width:90.59px" href='javascript:history.go(-1)'>Go Back</a>
 </div>
-    </form>
+    
 </div>
 
 
