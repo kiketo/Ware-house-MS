@@ -78,7 +78,19 @@ namespace WHMSWebApp2.Models
 
         public List<OrderProductViewModel> SelectedProductsWithQuantities { get; set; }
 
+        public List<OrderProductViewModel> List2ProductsWithQuantities { get; set; }
+
         public MultiSelectList ProductWQQuantities { get; set; }
+
+        public ICollection<OrderProductWarehouse> ProductsQuantitiesOPW { get; set; }
+
+        public int WantedQuantity { get; set; }
+
+        public KeyValuePair<Product, int> SelectedProduct { get; set; }
+
+        public int ProductId { get; set; }
+
+
 
 
     }

@@ -8,8 +8,10 @@ namespace WHMS.Services.Contracts
 {
     public interface IOrderProductWarehouseService
     {
-        Task<ICollection<OrderProductWarehouse>> GetProductsByOrderIdNWarehouseIdAsync(int orderId, int warehouseId);
-
         Task<ICollection<OrderProductWarehouse>> GetProductsByOrderIdWhereWantedQuantityIsOverZeroAsync(int orderId);
+
+        Task<OrderProductWarehouse> UpdateWantedQuantity(OrderProductWarehouse opw);
+
+        Task<OrderProductWarehouse> GetOPW(int productId, int warehouseId, int orderId);
     }
 }

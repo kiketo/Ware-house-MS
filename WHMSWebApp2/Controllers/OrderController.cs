@@ -44,117 +44,53 @@ namespace WHMSWebApp2.Controllers
 
         [HttpGet]
         [Authorize]
-        [ActionName(nameof(ChooseWarehouse))]
-        public async Task<IActionResult> ChooseWarehouse() //choose a warehouse
+        public async Task<IActionResult> Create()
         {
             var order = new OrderViewModel()
             {
-                Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text)
+                Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text),
+                Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text),
+
             };
 
-            return View("ChooseWarehouse", order);
+            return View("Create", order);
 
         }
 
         [HttpPost]
         [Authorize]
-        [ActionName(nameof(ChooseWarehouse))]
-        public async Task<IActionResult> ChooseWarehouse(OrderViewModel model) //choose a warehouse
+        public async Task<IActionResult> Create(OrderViewModel model)
         {
-
-            if (model.Warehouse == null)
-            {
-                ModelState.AddModelError("Warehouse", "Choose Warehouse");
-                model.Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text);
-                return View("ChooseWarehouse", model);
-            }
-
-            return RedirectToAction(nameof(Create), new { id = int.Parse(model.Warehouse) });
-        }
-
-        [HttpGet]
-        [Authorize]
-        [ActionName(nameof(Create))]
-        public async Task<IActionResult> Create(int id)
-        {
-            var OrderProductModels = new List<OrderProductViewModel>();
-            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseAsync(id);
-            foreach (var pw in pwList)
-            {
-                OrderProductModels.Add(new OrderProductViewModel()
-                {
-                    inStock = pw.Quantity,
-                    product = await this.productService.GetProductByIdAsync(pw.ProductId),
-                    wantedQuantity = 0
-                });
-            }
-            
-            MultiSelectList listproductQuantities = new MultiSelectList(pwList.ToList().OrderBy(i => i.Product.Name), "TeamId", "Name");
-            var model = new OrderViewModel()
-            {
-                ProductWQQuantities = listproductQuantities,
-                Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text)
-                
-            };
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        [ActionName(nameof(Create))]
-        public async Task<IActionResult> Create(OrderViewModel model, int id)
-        {
-            var pwList = await this.productWarehouseService.GetAllProductsInWarehouseAsync(id);
-            var listProducts = new List<OrderProductViewModel>();
-            foreach (var pw in pwList)
-            {
-                listProducts.Add(new OrderProductViewModel()
-                {
-                    inStock = pw.Quantity,
-                    product = await this.productService.GetProductByIdAsync(pw.ProductId),
-                    wantedQuantity = 0
-
-                });
-            }
-          //  var selectedProducts = model.ProductWQQuantities.Where(t => t. .Contains(player)).ToList();
-            List<SelectListItem> items = new List<SelectListItem>();
-            foreach (var pqq in listProducts)
-            {
-                var item = new SelectListItem
-                {
-                    Value = pqq.product.Id.ToString(),
-                    Text = pqq.product.Name,
-                    Selected = true
-                };
-
-                items.Add(item);
-            }
-        //    var selectedProducts = items.Where(t => t. .Contains(player)).ToList();
-
-         //   model.SelectedProductsWithQuantities =new MultiSelectList(listProducts, ;
+            model.Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text);
             model.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
             if (!(await this.partnerService.GetAllPartners()).Any(o => o.Id == int.Parse(model.Partner)))
             {
                 ModelState.AddModelError("Partner", "Partner is required!");
             }
-            if (model.SelectedProductsWithQuantities.Count == 0)
+            if (!(await this.warehouseService.GetAllWarehousesAsync()).Any(o => o.Id == int.Parse(model.Warehouse)))
             {
-                ModelState.AddModelError("SelectedProductsWithQuantities", "At least one product is required!");
+                ModelState.AddModelError("Warehouse", "Warehouse is required!");
             }
 
             if (ModelState.IsValid)
             {
+                var pwList = await this.productWarehouseService.GetAllProductsInWarehouseAsync(int.Parse(model.Warehouse));
+                var productsQuantityStock = new Dictionary<ProductWarehouse, int>();
+                foreach (var pw in pwList)
+                {
+                    productsQuantityStock.Add(pw, 0);
+                }
                 ApplicationUser user = await this.userManager.GetUserAsync(User);
-
+                var partner = await this.partnerService.FindByIdAsync(int.Parse(model.Partner));
                 var newOrder = await this.orderService.AddAsync(
                     model.TypeOrder,
-                    await this.partnerService.FindByIdAsync(int.Parse(model.Partner)),
-                    model.WantedQuantityByProduct,user,model.Comment
+                    partner,
+                    model.WantedQuantityByProduct = productsQuantityStock,
+                    user,
+                    model.Comment
                     );
 
-                return RedirectToAction(nameof(Details), new { id = newOrder.Id });
+                return RedirectToAction(nameof(ChooseProduct), new { id = newOrder.Id });
             }
             else
             {
@@ -164,10 +100,106 @@ namespace WHMSWebApp2.Controllers
 
         [HttpGet]
         [Authorize]
+        [ActionName(nameof(ChooseProduct))]
+        public async Task<IActionResult> ChooseProduct(int id)
+        {
+            var order = await this.orderService.GetOrderByIdAsync(id);
+            var model = orderMapper.MapFrom(order);
+           
+            var listProductStock = new Dictionary<Product, int>();
+            foreach (var p in model.ProductsQuantitiesOPW.Where(q => q.WantedQuantity == 0))
+            {
+                listProductStock.Add(
+                    await this.productService.GetProductByIdAsync(p.ProductId),
+                    await this.productWarehouseService.GetQuantityAsync(p.ProductId, p.WarehouseId));
+            }
+            model.ProductsQuantity = listProductStock;
+            model.listProductsWithQuantities = new List<OrderProductViewModel>();
+            foreach (var item in model.ProductsQuantitiesOPW.Where(w => w.WantedQuantity > 0))
+            {
+                model.listProductsWithQuantities.Add(new OrderProductViewModel()
+                {
+                    Product = await this.productService.GetProductByIdAsync(item.ProductId),
+                    InStock = await this.productWarehouseService.GetQuantityAsync(item.ProductId, item.WarehouseId),
+                   WantedQuantity = item.WantedQuantity
+                });
+            }
+
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        [ActionName(nameof(ChooseProduct))]
+        public async Task<IActionResult> ChooseProduct(OrderViewModel model, int id)
+        {
+            var order = await this.orderService.GetOrderByIdAsync(id);
+            model.WarehouseId = order.OrderProductsWarehouses.Select(w=>w.WarehouseId).First();
+            var listProductStock = new List<OrderProductViewModel>();
+            foreach (var p in order.OrderProductsWarehouses.Where(q => q.WantedQuantity == 0))
+            {
+                listProductStock.Add(new OrderProductViewModel()
+                {
+                    ProductId = p.ProductId,
+                    Product = await this.productService.GetProductByIdAsync(p.ProductId),
+                    InStock = await this.productWarehouseService.GetQuantityAsync(p.ProductId, p.WarehouseId)
+                });
+            }
+            model.List2ProductsWithQuantities = listProductStock;
+            model.listProductsWithQuantities = new List<OrderProductViewModel>();
+            foreach (var item in order.OrderProductsWarehouses.Where(w => w.WantedQuantity > 0))
+            {
+                model.listProductsWithQuantities.Add(new OrderProductViewModel()
+                {
+                    Product = await this.productService.GetProductByIdAsync(item.ProductId),
+                    InStock = await this.productWarehouseService.GetQuantityAsync(item.ProductId, item.WarehouseId),
+                    WantedQuantity = item.WantedQuantity
+                });
+            }
+
+            var wantedquantity = model.WantedQuantity;
+            var selectedProduct = model.ProductId;
+            ModelState.Remove("Type");
+            if (ModelState.IsValid)
+            {
+                var opw =
+                    await this.orderProductWarehouseService.GetOPW(
+                        selectedProduct,
+                        model.WarehouseId,
+                        model.Id);
+                opw.WantedQuantity = wantedquantity;
+                await this.orderProductWarehouseService.UpdateWantedQuantity(opw);
+                if (model.TypeOrder == OrderType.Buy)
+                {
+                    order.TotalValue += wantedquantity * (await this.productService.GetProductByIdAsync(opw.ProductId)).BuyPrice;
+                    await this.orderService.UpdateAsync(order);
+                    await this.productWarehouseService.SubstractQuantityAsync(opw.ProductId, opw.WarehouseId, opw.WantedQuantity);
+                }
+                else
+                {
+                    order.TotalValue += wantedquantity * (await this.productService.GetProductByIdAsync(opw.ProductId)).SellPrice;
+                    await this.orderService.UpdateAsync(order);
+                    await this.productWarehouseService.AddQuantityAsync(opw.ProductId, opw.WarehouseId, opw.WantedQuantity);
+                }
+                
+
+                return RedirectToAction("ChooseProduct", id);
+            }
+            else
+            {
+                return RedirectToAction("Details", id);
+            }
+        }
+
+
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             OrderViewModel model = this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(id));
-            
+
             return View(model);
         }
 
@@ -183,9 +215,9 @@ namespace WHMSWebApp2.Controllers
             {
                 listProducts.Add(new OrderProductViewModel()
                 {
-                    inStock = pw.Quantity+model.WantedQuantityByProduct[pw],
-                    product = await this.productService.GetProductByIdAsync(pw.ProductId),
-                    wantedQuantity = model.WantedQuantityByProduct[pw]
+                    InStock = pw.Quantity + model.WantedQuantityByProduct[pw],
+                    Product = await this.productService.GetProductByIdAsync(pw.ProductId),
+                    WantedQuantity = model.WantedQuantityByProduct[pw]
                 });
             }
             model.SelectedProductsWithQuantities = listProducts;
@@ -226,11 +258,34 @@ namespace WHMSWebApp2.Controllers
             var order = await this.orderService.GetOrderByIdAsync(id);
             var model = orderMapper.MapFrom(order);
 
-            var orderProductsIdNQuantities = await this.orderProductWarehouseService.GetProductsByOrderIdWhereWantedQuantityIsOverZeroAsync(id);
-            foreach (var opw in orderProductsIdNQuantities)
-            {
-                model.ProductsQuantity.Add((await this.productService.GetProductByIdAsync(opw.ProductId)), opw.WantedQuantity);
-            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //var orderProductsIdNQuantities = await this.orderProductWarehouseService.GetProductsByOrderIdWhereWantedQuantityIsOverZeroAsync(id);
+            //foreach (var opw in orderProductsIdNQuantities)
+            //{
+            //    model.ProductsQuantity.Add((await this.productService.GetProductByIdAsync(opw.ProductId)), opw.WantedQuantity);
+            //}
 
             model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
             model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");

@@ -26,39 +26,6 @@
                 </select>
 
             </div>
-            <label asp-for="listProductsWithQuantities" class="control-label">Choose Products</label>
-            <div class=" form-group" method="POST" action="Order/Create">
-                <input id="myInput" placeholder="Search products.." class="form-control" />
-                <table id="table" class="table table-hover table-mc-light-blue" border="0" align="center" style="align-content:center;text-align:right">
-                    <thead style="background-color:darkslategray">
-                        <tr style="align-content:center;position:relative;">
-                            <th>#</th>
-                            <th>Available products </th>
-                            <th>In Stock</th>
-                            <th style="width: 35%">Ordered<br />quantity</th>
-
-                        </tr>
-                    </thead>
-                    <tbody id="myTable">
-
-                        @*@foreach (var pair in Model.listProductsWithQuantities)
-                            {
-                                <tr>
-
-                                    <td><input type="checkbox" id="ckbox" data-bind="checkedValue: pair.id, checked: isActive" /></td>
-                                    <td> @pair.product.Name</td>
-                                    <td>@pair.inStock</td>
-                                    <td><input type="number" name="pair.wantedQuantity" placeholder="0" style="width: 35%;background-color:floralwhite"></td>
-
-
-                                </tr>
-                            }*@
-
-                    </tbody>
-                </table>
-            </div>
-
-            @*<button onclick="myFunction()">Try it</button>*@
 
             <div class="md-form mb-4 pink-textarea active-pink-textarea">
 
@@ -66,6 +33,16 @@
                 <textarea id="form18" name="Comment" class="md-textarea form-control" rows="3" cols="60" placeholder="Add notes">Add notes</textarea>
                 <span asp-validation-for="Comment" class="text-danger"></span>
 
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+
+                    <div class="form-group">
+                        <label asp-for="Warehouse" class="control-label"></label>
+                        <select asp-for="Warehouse" class="form-control" asp-items="Model.Warehouses"></select>
+                        <span asp-validation-for="Warehouse" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">
@@ -107,26 +84,7 @@
             });
         });
     </script>
-    <script>
-        $(document).ready(function () {
-            var max_fields = 10; //maximum input boxes allowed
-            var wrapper = $(".input_fields_wrap"); //Fields wrapper
-            var add_button = $(".add_field_button"); //Add button ID
 
-            var x = 1; //initlal text box count
-            $(add_button).click(function (e) { //on add input button click
-                e.preventDefault();
-                if (x < max_fields) { //max input box allowed
-                    x++; //text box increment
-                    $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
-                }
-            });
-
-            $(wrapper).on("click", ".remove_field", function (e) { //user click on remove text
-                e.preventDefault(); $(this).parent('div').remove(); x--;
-            })
-        });
-    </script>
 }
 
 
