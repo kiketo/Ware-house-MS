@@ -21,7 +21,8 @@ namespace WHMSWebApp2.Mappers
             TotalValue = entity.TotalValue,
             Type = entity.Type.ToString(),
             TypeOrder = entity.Type,
-            ProductsQuantitiesOPW = entity.OrderProductsWarehouses
+            ProductsQuantitiesOPW = entity.OrderProductsWarehouses,
+            Invoiced = entity.Invoiced
             
 
         };

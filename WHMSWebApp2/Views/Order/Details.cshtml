@@ -55,7 +55,7 @@
 </div>
 <div>
     
-    @*<table id="table" class="table table-hover table-mc-light-blue" border="0" align="center">
+    <table id="table" class="table table-hover table-mc-light-blue" border="0" align="center">
         <thead>
             <tr>
                 <th>Products</th>
@@ -65,19 +65,19 @@
         </thead>
         <tbody>
 
-            @foreach (var pair in Model.ProductsQuantity)
+            @foreach (var pair in Model.SelectedProductsWithQuantities)
             {
                 <tr>
-                    <td> @pair.Key.Name</td>
-                    <td>@pair.Value</td>
+                    <td> @pair.Product.Name</td>
+                    <td>@pair.WantedQuantity</td>
                 </tr>
             }
         </tbody>
-    </table>*@
+    </table>
 </div>
 <div>
     
-    @if (Model.CanUserEdit)
+    @if (Model.CanUserEdit )
     {
         <a class="btn btn-info" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
 

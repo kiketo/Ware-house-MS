@@ -14,7 +14,7 @@ namespace WHMS.Services.Contracts
 
         Task<Warehouse> GetByNameAsync(string name);
 
-        Task<ICollection<Warehouse>> GetAllWarehousesAsync();
+       // Task<ICollection<Warehouse>> GetAllWarehousesAsync();
 
         Task<Warehouse> GetByIdAsync(int id);
         Task<List<Warehouse>> GetAllWarehousesAsync();

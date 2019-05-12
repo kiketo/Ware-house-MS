@@ -45,6 +45,8 @@ namespace WHMSWebApp2.Models
 
         public int Quantity { get; set; }
 
+        [MinLength(4)]
+        [MaxLength(20)]
         public string Warehouse { get; set; }
 
         public IReadOnlyCollection<OrderViewModel> SearchResults { get; set; } = new List<OrderViewModel>();
@@ -90,8 +92,22 @@ namespace WHMSWebApp2.Models
 
         public int ProductId { get; set; }
 
+        public bool RedirectDetails { get; set; }
 
+        public bool Invoiced { get; set; }
 
+        public List<Town> ListTowns { get; set; }
 
+        public int TownId { get; set; }
+
+        public List<Address> ListAddresses { get; set; }
+
+        public int AddressId { get; set; }
+
+        public List<Warehouse> ListWarehouses { get; set; }
+
+        public string Town { get; set; }
+
+        public string AddressLine { get; set; }
     }
 }

@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <h4>Ordered Products</h4>
             <div class="form-group">
-                <select asp-for="ProductId"  class="form-control">
+                <select asp-for="ProductId" class="form-control">
                     <option>Choose product</option>
                     @foreach (var product in Model.ProductsQuantity)
                     {
@@ -33,14 +33,11 @@
                     </div>
                     <div class="row-sm-10">
                         <input asp-for="WantedQuantity" type="number" placeholder="0" class="form-control" style="width: 35%;background-color:floralwhite" />
+                        <span asp-validation-for="WantedQuantity" class="text-danger"></span>
                     </div>
                 </div>
             </div>
 
-            <div class="form-group">
-
-                <input type="submit" value="Add Product" class="btn btn-primary" />
-            </div>
             <h4>Ordered Products</h4>
             <div class=" form-group" method="POST" action="Order/ChooseProduct">
                 <input id="myInput" placeholder="Search products.." class="form-control" />
@@ -67,17 +64,13 @@
                 </table>
             </div>
 
-
-            <input type="submit" value="Details" name="Finish Order" class="btn btn-primary" />
-    </div>
+            <a class="btn btn-info" style="width:130.59px" asp-action="Details" asp-route-id="@Model.Id">Complete Order</a>
+            <input class="btn btn-primary" style="width:90.59px" type="submit" value="Create" />
+            <a class="btn btn-secondary" style="width:90.59px" href='javascript:history.go(-1)'>Go Back</a>
+</div>
     </form>
 </div>
-</div>
 
-
-<div>
-    <a href='javascript:history.go(-1)'>Go Back</a>
-</div>
 
 
 
@@ -101,26 +94,7 @@
             });
         });
     </script>
-    <script>
-        $(document).ready(function () {
-            var max_fields = 10; //maximum input boxes allowed
-            var wrapper = $(".input_fields_wrap"); //Fields wrapper
-            var add_button = $(".add_field_button"); //Add button ID
 
-            var x = 1; //initlal text box count
-            $(add_button).click(function (e) { //on add input button click
-                e.preventDefault();
-                if (x < max_fields) { //max input box allowed
-                    x++; //text box increment
-                    $(wrapper).append('<div><input type="text" name="mytext[]"/><a href="#" class="remove_field">Remove</a></div>'); //add input box
-                }
-            });
-
-            $(wrapper).on("click", ".remove_field", function (e) { //user click on remove text
-                e.preventDefault(); $(this).parent('div').remove(); x--;
-            })
-        });
-    </script>
 }
 
 

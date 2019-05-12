@@ -27,8 +27,23 @@ namespace WHMSWebApp2.Controllers
         private readonly IWarehouseService warehouseService;
         private readonly IViewModelMapper<Warehouse, WarehouseViewModel> warehouseModelMapper;
         private readonly IOrderProductWarehouseService orderProductWarehouseService;
+        private readonly ITownService townService;
+        private readonly IAddressService addressService;
 
-        public OrderController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IOrderService orderService, IProductService productService, IPartnerService partnerService, IViewModelMapper<Order, OrderViewModel> orderMapper, IUnitService unitService, IProductWarehouseService productWarehouseService, IWarehouseService warehouseService, IViewModelMapper<Warehouse, WarehouseViewModel> warehouseModelMapper, IOrderProductWarehouseService orderProductWarehouseService)
+        public OrderController(
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IOrderService orderService,
+            IProductService productService,
+            IPartnerService partnerService,
+            IViewModelMapper<Order, OrderViewModel> orderMapper,
+            IUnitService unitService, IProductWarehouseService productWarehouseService,
+            IWarehouseService warehouseService, IViewModelMapper<Warehouse,
+                WarehouseViewModel> warehouseModelMapper,
+            IOrderProductWarehouseService orderProductWarehouseService,
+            ITownService townService,
+            IAddressService addressService
+            )
         {
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
@@ -40,6 +55,8 @@ namespace WHMSWebApp2.Controllers
             this.warehouseService = warehouseService ?? throw new ArgumentNullException(nameof(warehouseService));
             this.warehouseModelMapper = warehouseModelMapper ?? throw new ArgumentNullException(nameof(warehouseModelMapper));
             this.orderProductWarehouseService = orderProductWarehouseService ?? throw new ArgumentNullException(nameof(orderProductWarehouseService));
+            this.townService = townService ?? throw new ArgumentNullException(nameof(townService));
+            this.addressService = addressService ?? throw new ArgumentNullException(nameof(addressService));
         }
 
         [HttpGet]
@@ -48,9 +65,10 @@ namespace WHMSWebApp2.Controllers
         {
             var order = new OrderViewModel()
             {
-                Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text),
+                ListWarehouses = await this.warehouseService.GetAllWarehousesAsync(),
                 Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text),
-
+                ListTowns = await this.townService.GetAllTownsAsync(),
+                ListAddresses = await this.addressService.GetAllAddressesAsync()
             };
 
             return View("Create", order);
@@ -61,16 +79,55 @@ namespace WHMSWebApp2.Controllers
         [Authorize]
         public async Task<IActionResult> Create(OrderViewModel model)
         {
-            model.Warehouses = new SelectList(await this.warehouseService.GetAllWarehousesAsync(), "Id", "Name").OrderBy(x => x.Text);
+            model.ListWarehouses = await this.warehouseService.GetAllWarehousesAsync();
             model.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
-            if (!(await this.partnerService.GetAllPartners()).Any(o => o.Id == int.Parse(model.Partner)))
+            model.ListTowns = await this.townService.GetAllTownsAsync();
+            model.ListAddresses = await this.addressService.GetAllAddressesAsync();
+            
+            int warehouseId = model.WarehouseId;
+
+            if (warehouseId == 0 && model.Warehouse == null)
+            {
+                ModelState.AddModelError("WarehouseId", "Warehouse is required!");
+                ModelState.AddModelError("Warehouse", "Warehouse is required!");
+            }
+
+            if (warehouseId == 0 && User.IsInRole("User"))
+            {
+                ModelState.AddModelError("WarehouseId", "Warehouse is required!");
+            }
+            if (warehouseId != 0 && User.IsInRole("Admin") || model.Warehouse != null && User.IsInRole("Admin")|| warehouseId != 0 && User.IsInRole("SuperAdmin") || model.Warehouse != null && User.IsInRole("SuperAdmin"))
+            {
+                if (model.AddressId == 0 && model.AddressLine == null)
+                {
+                    ModelState.AddModelError("AddressId", "Address is required!");
+
+                }
+                else if (model.AddressId == 0 && model.TownId == 0 ||
+                    model.AddressId == 0 && model.Town == null)
+                {
+                    ModelState.AddModelError("TownId", "Town is required!");
+
+                }
+            }
+           
+
+            int partnerId;
+            int.TryParse(model.Partner, out partnerId);
+            if (partnerId == 0 || !(await this.partnerService.GetAllPartners()).Any(o => o.Id == partnerId))
             {
                 ModelState.AddModelError("Partner", "Partner is required!");
             }
-            if (!(await this.warehouseService.GetAllWarehousesAsync()).Any(o => o.Id == int.Parse(model.Warehouse)))
+            OrderType type;
+            if (Enum.TryParse(model.Type, out type))
             {
-                ModelState.AddModelError("Warehouse", "Warehouse is required!");
+                model.TypeOrder = type;
             }
+            else
+            {
+                ModelState.AddModelError("Type", "Type is required!");
+            }
+
 
             if (ModelState.IsValid)
             {
@@ -81,7 +138,7 @@ namespace WHMSWebApp2.Controllers
                     productsQuantityStock.Add(pw, 0);
                 }
                 ApplicationUser user = await this.userManager.GetUserAsync(User);
-                var partner = await this.partnerService.FindByIdAsync(int.Parse(model.Partner));
+                var partner = await this.partnerService.GetByIdAsync(int.Parse(model.Partner));
                 var newOrder = await this.orderService.AddAsync(
                     model.TypeOrder,
                     partner,
@@ -105,7 +162,7 @@ namespace WHMSWebApp2.Controllers
         {
             var order = await this.orderService.GetOrderByIdAsync(id);
             var model = orderMapper.MapFrom(order);
-           
+
             var listProductStock = new Dictionary<Product, int>();
             foreach (var p in model.ProductsQuantitiesOPW.Where(q => q.WantedQuantity == 0))
             {
@@ -121,7 +178,7 @@ namespace WHMSWebApp2.Controllers
                 {
                     Product = await this.productService.GetProductByIdAsync(item.ProductId),
                     InStock = await this.productWarehouseService.GetQuantityAsync(item.ProductId, item.WarehouseId),
-                   WantedQuantity = item.WantedQuantity
+                    WantedQuantity = item.WantedQuantity
                 });
             }
 
@@ -136,7 +193,8 @@ namespace WHMSWebApp2.Controllers
         public async Task<IActionResult> ChooseProduct(OrderViewModel model, int id)
         {
             var order = await this.orderService.GetOrderByIdAsync(id);
-            model.WarehouseId = order.OrderProductsWarehouses.Select(w=>w.WarehouseId).First();
+            model.TypeOrder = order.Type;
+            model.WarehouseId = order.OrderProductsWarehouses.Select(w => w.WarehouseId).First();
             var listProductStock = new List<OrderProductViewModel>();
             foreach (var p in order.OrderProductsWarehouses.Where(q => q.WantedQuantity == 0))
             {
@@ -162,6 +220,15 @@ namespace WHMSWebApp2.Controllers
             var wantedquantity = model.WantedQuantity;
             var selectedProduct = model.ProductId;
             ModelState.Remove("Type");
+            if (model.TypeOrder == OrderType.Buy
+                && model.WantedQuantity > await this.productWarehouseService.GetQuantityAsync(model.ProductId, model.WarehouseId))
+            {
+                ModelState.AddModelError("WantedQuantity", "There are not enough items in stock");
+            }
+            if (model.WantedQuantity < 0)
+            {
+                ModelState.AddModelError("WantedQuantity", "Quantity cannot be negative! ");
+            }
             if (ModelState.IsValid)
             {
                 var opw =
@@ -183,15 +250,20 @@ namespace WHMSWebApp2.Controllers
                     await this.orderService.UpdateAsync(order);
                     await this.productWarehouseService.AddQuantityAsync(opw.ProductId, opw.WarehouseId, opw.WantedQuantity);
                 }
-                
 
+                if (model.RedirectDetails)
+                {
+
+                    return RedirectToAction("Details", new { id = model.Id });
+                }
                 return RedirectToAction("ChooseProduct", id);
             }
             else
             {
-                return RedirectToAction("Details", id);
+                return View(model);
             }
         }
+
 
 
         [HttpGet]
@@ -200,6 +272,16 @@ namespace WHMSWebApp2.Controllers
         {
             OrderViewModel model = this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(id));
 
+            var listOrdered = new List<OrderProductViewModel>();
+            foreach (var opw in model.ProductsQuantitiesOPW.Where(q => q.WantedQuantity > 0))
+            {
+                listOrdered.Add(new OrderProductViewModel()
+                {
+                    Product = await this.productService.GetProductByIdAsync(opw.ProductId),
+                    WantedQuantity = opw.WantedQuantity
+                });
+            }
+            model.SelectedProductsWithQuantities = listOrdered;
             return View(model);
         }
 
@@ -237,7 +319,6 @@ namespace WHMSWebApp2.Controllers
 
                 updatedOrder.Comment = model.Comment;
                 updatedOrder.ModifiedOn = DateTime.Now;
-                //updatedOrder.OrderProductsWarehouses=model.???
                 updatedOrder.Partner = await this.partnerService.GetByNameAsync(model.Partner);
                 updatedOrder.TotalValue = model.TotalValue;
                 updatedOrder.Type = model.TypeOrder;
@@ -257,36 +338,16 @@ namespace WHMSWebApp2.Controllers
         {
             var order = await this.orderService.GetOrderByIdAsync(id);
             var model = orderMapper.MapFrom(order);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            //var orderProductsIdNQuantities = await this.orderProductWarehouseService.GetProductsByOrderIdWhereWantedQuantityIsOverZeroAsync(id);
-            //foreach (var opw in orderProductsIdNQuantities)
-            //{
-            //    model.ProductsQuantity.Add((await this.productService.GetProductByIdAsync(opw.ProductId)), opw.WantedQuantity);
-            //}
-
+            var listOrdered = new List<OrderProductViewModel>();
+            foreach (var opw in model.ProductsQuantitiesOPW.Where(q => q.WantedQuantity > 0))
+            {
+                listOrdered.Add(new OrderProductViewModel()
+                {
+                    Product = await this.productService.GetProductByIdAsync(opw.ProductId),
+                    WantedQuantity = opw.WantedQuantity
+                });
+            }
+            model.SelectedProductsWithQuantities = listOrdered;
             model.CanUserEdit = model.CreatorId == this.User.GetId() || this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
             model.CanUserDelete = this.User.IsInRole("Admin") || this.User.IsInRole("SuperAdmin");
 
