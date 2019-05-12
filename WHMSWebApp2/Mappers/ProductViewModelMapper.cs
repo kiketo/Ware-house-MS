@@ -21,6 +21,7 @@ namespace WHMSWebApp2.Mappers
             Description = entity.Description,
             Unit = entity.Unit?.UnitName,
             UnitId=entity.Unit?.Id,
+            CreatorId=entity.CreatorId,
             Creator=entity.Creator.UserName,
             CreatedOn = entity.CreatedOn,
             ModifiedOn = entity.ModifiedOn

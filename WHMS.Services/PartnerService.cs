@@ -51,7 +51,7 @@ namespace WHMS.Services
                     PastOrders = new List<Order>(),
                     Creator = user
                 };
-                this.context.Partners.Add(newPartner);
+                await this.context.Partners.AddAsync(newPartner);
             }
 
             await this.context.SaveChangesAsync();
@@ -107,10 +107,10 @@ namespace WHMS.Services
             return partner;
         }
 
-        public async Task<Partner> GetByIdAsync(int Id)
+        public async Task<Partner> GetByIdAsync(int id)
         {
             var partner = await this.context.Partners
-                .Where(p => p.Id == Id)
+                .Where(p => p.Id == id)
                 .Include(p => p.Creator)
                 .Include(p => p.PastOrders)
                 .Include(a => a.Address)
@@ -119,7 +119,7 @@ namespace WHMS.Services
 
             if (partner == null || partner.IsDeleted)
             {
-                throw new ArgumentException($"Partner with ID `{Id}` doesn't exist!");
+                throw new ArgumentException($"Partner with ID `{id}` doesn't exist!");
             }
 
             return partner;
