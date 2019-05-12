@@ -21,6 +21,8 @@ namespace WHMSData.Models
         [JsonIgnore]
         public ICollection<Order> PastOrders { get; set; }
 
+        public string CreatorId { get; set; }
+
         public ApplicationUser Creator { get; set; }
 
         public override string ToString()

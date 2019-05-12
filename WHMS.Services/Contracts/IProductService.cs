@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WHMSData.Models;
 
 namespace WHMS.Services.Contracts
 {
-    public interface IProductService 
+    public interface IProductService
     {
         Task<Product> CreateProductAsync(string name, Unit unit, Category category, decimal buyPrice, double margin, string description, ApplicationUser user);
 
@@ -21,6 +20,8 @@ namespace WHMS.Services.Contracts
         Task<Product> DeleteProductAsync(int id);
 
         Task<Product> UpdateAsync(Product product);
+
+        Task<List<Product>> GetProductsByCreatorId(string userId);
 
         //Task<Product> UndeleteProductAsync(string name);
 

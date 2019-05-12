@@ -1,0 +1,31 @@
+﻿@model ProductViewModel
+
+@{
+    ViewData["Title"] = "MyProducts";
+}
+
+<h3>Product created by me:</h3>
+
+<div class="row mt-5">
+    <div class="col-lg-6">
+        @if (Model != null)
+        {
+            if (Model.SearchResults.Count == 0)
+            {
+                <p class="alert alert-info">There are no products created by me yet!</p>
+            }
+            else
+            {
+                foreach (var product in Model.SearchResults)
+                {
+                    <partial name="_ProductPartial" model="product" />
+                }
+            }
+        }
+    </div>
+</div>
+
+@section Scripts
+    {
+    <partial name="_ValidationScriptsPartial" />
+}

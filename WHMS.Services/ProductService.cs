@@ -21,10 +21,6 @@ namespace WHMS.Services
         public async Task<Product> CreateProductAsync(string name, Unit unit, Category category, decimal buyPrice, double margin, string description, ApplicationUser user)
         {
             var newProduct = await this.context.Products.FirstOrDefaultAsync(t => t.Name == name);
-            if (newProduct != null)
-            {
-                return newProduct;
-            }
             if (buyPrice < 0)
             {
                 throw new ArgumentException($"Price cannot be negative number");
@@ -35,6 +31,30 @@ namespace WHMS.Services
             }
             decimal sellPrice = buyPrice * (100 + (decimal)margin) / 100;
             List<Warehouse> wareHouses = await this.context.Warehouses.ToListAsync();
+            if (newProduct != null && newProduct.IsDeleted)
+            {
+                newProduct = new Product()
+                {
+                    Name = name,
+                    Unit = unit,
+                    Category = category,
+                    CreatedOn = DateTime.Now,
+                    ModifiedOn = DateTime.Now,
+                    BuyPrice = buyPrice,
+                    MarginInPercent = margin,
+                    SellPrice = sellPrice,
+                    Warehouses = wareHouses.Select(w => new ProductWarehouse { Warehouse = w }).ToList(),
+                    Description = description,
+                    Creator = user
+                };
+
+                this.context.Attach(newProduct).State =
+               Microsoft.EntityFrameworkCore
+               .EntityState.Modified;
+                await this.context.SaveChangesAsync();
+
+                return newProduct;
+            }
 
             newProduct = new Product()
             {
@@ -121,10 +141,10 @@ namespace WHMS.Services
             return productsByCategory;
         }
 
-        public  Task<List<Product>> GetAllProductsAsync()
+        public Task<List<Product>> GetAllProductsAsync()
         {
-            var task =  this.context.Products
-                .Where(p=>p.IsDeleted==false)
+            var task = this.context.Products
+                .Where(p => p.IsDeleted == false)
                 .ToListAsync();
 
             return task;
@@ -133,7 +153,9 @@ namespace WHMS.Services
         public async Task<Product> DeleteProductAsync(int id)
         {
             var productToDelete = await this.context.Products
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .Where(u => u.Id == id)
+                .Include(p => p.Creator)
+                .FirstOrDefaultAsync();
 
             if (productToDelete == null || productToDelete.IsDeleted)
             {
@@ -143,6 +165,18 @@ namespace WHMS.Services
             productToDelete.IsDeleted = true;
             await this.context.SaveChangesAsync();
             return productToDelete;
+        }
+
+        public Task<List<Product>> GetProductsByCreatorId(string userId)
+        {
+            var products = this.context.Products
+                .Where(p => p.CreatorId == userId && !p.IsDeleted)
+                 .Include(p => p.Category)
+                .Include(p => p.Creator)
+                .Include(p => p.Unit)
+                .ToListAsync();
+
+            return products;
         }
 
         //public async Task<Product> SetMarginAsync(int productId, double newMargin)

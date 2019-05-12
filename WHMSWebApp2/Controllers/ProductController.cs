@@ -11,6 +11,7 @@ using WHMSWebApp2.Models;
 using WHMSWebApp2.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace WHMSWebApp2.Controllers
 {
@@ -54,14 +55,14 @@ namespace WHMSWebApp2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel model)
         {
-            var allProducts = await this.productService.GetAllProductsAsync();
+            //var allProducts = await this.productService.GetAllProductsAsync();
 
             model.ListCategories = (await this.categoryService.GetAllCategoriesAsync()).ToList();
             model.LisUnits = ((await this.unitService.GetAllUnitsAsync()).ToList());
-            if (allProducts.Any(p => p.Name == model.Name))
-            {
-                ModelState.AddModelError("Name", "The name must be unique.");
-            }
+            //if (allProducts.Any(p => p.Name == model.Name))
+            //{
+            //    ModelState.AddModelError("Name", "The name must be unique.");
+            //}
             ModelState.Remove("Unit");
             ModelState.Remove("UnitId");
             ModelState.Remove("CategoryId");
@@ -144,12 +145,12 @@ namespace WHMSWebApp2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProductViewModel model)
         {
-            var allProducts = await this.productService.GetAllProductsAsync();
+            //var allProducts = await this.productService.GetAllProductsAsync();
 
-            if (allProducts.Any(p => p.Name == model.Name))
-            {
-                ModelState.AddModelError("Name", "The name must be unique.");
-            }
+            //if (allProducts.Any(p => p.Name == model.Name))
+            //{
+            //    ModelState.AddModelError("Name", "The name must be unique.");
+            //}
 
             model.Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
                                 .OrderBy(x => x.Text);

@@ -69,7 +69,13 @@ namespace WHMS.Services
 
         public async Task<Partner> DeleteAsync(int id)
         {
-            Partner partnerToDelete = await this.context.Partners.FirstOrDefaultAsync(p => p.Id == id);
+            Partner partnerToDelete = await this.context.Partners
+                .Where(p => p.Id == id)
+                .Include(p => p.PastOrders)
+                .Include(p => p.Address)
+                    .ThenInclude(a => a.Town)
+                .Include(p => p.Creator)
+                .FirstOrDefaultAsync();
 
             if (partnerToDelete == null || partnerToDelete.IsDeleted)
             {
@@ -141,6 +147,18 @@ namespace WHMS.Services
         {
             var partners = this.context.Partners
                 .Where(p => p.IsDeleted == false)
+                .ToListAsync();
+
+            return partners;
+        }
+
+        public Task<List<Partner>> GetPartnersByCreatorId(string userId)
+        {
+            var partners = this.context.Partners
+                .Where(p => p.CreatorId == userId && !p.IsDeleted)
+                .Include(p => p.Address)
+                    .ThenInclude(a=>a.Town)
+                .Include(p => p.Creator)
                 .ToListAsync();
 
             return partners;

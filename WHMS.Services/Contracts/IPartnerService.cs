@@ -19,5 +19,7 @@ namespace WHMS.Services.Contracts
         Task<Partner> GetByVATAsync(string VAT);
 
         Task<List<Partner>> GetAllPartners();
+
+        Task<List<Partner>> GetPartnersByCreatorId(string userId);
     }
 }
