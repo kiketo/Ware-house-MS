@@ -27,5 +27,7 @@ namespace WHMS.Services.Contracts
         Task<ICollection<Order>> GetOrdersByPartnerAsync(Partner partner);
 
         Task<Order> DeleteOrderAsync(int id);
+
+        Task<List<Order>> GetOrdersByCreatorId(string userId);
     }
 }

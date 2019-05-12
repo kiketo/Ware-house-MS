@@ -13,7 +13,7 @@ using WHMSWebApp2.Models;
 
 namespace WHMSWebApp2.Controllers
 {
-    public class MyStaffController : Controller
+    public class MyStuffController : Controller
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IOrderService orderService;
@@ -23,7 +23,7 @@ namespace WHMSWebApp2.Controllers
         private readonly IViewModelMapper<Order, OrderViewModel> orderMapper;
         private readonly IViewModelMapper<Partner, PartnerViewModel> partnerMapper;
 
-        public MyStaffController(UserManager<ApplicationUser> userManager, IOrderService orderService, IProductService productService, IPartnerService partnerService, IViewModelMapper<Product, ProductViewModel> productMapper, IViewModelMapper<Order, OrderViewModel> orderMapper, IViewModelMapper<Partner, PartnerViewModel> partnerMapper)
+        public MyStuffController(UserManager<ApplicationUser> userManager, IOrderService orderService, IProductService productService, IPartnerService partnerService, IViewModelMapper<Product, ProductViewModel> productMapper, IViewModelMapper<Order, OrderViewModel> orderMapper, IViewModelMapper<Partner, PartnerViewModel> partnerMapper)
         {
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.orderService = orderService ?? throw new ArgumentNullException(nameof(orderService));
@@ -52,23 +52,15 @@ namespace WHMSWebApp2.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> MyOrders([FromQuery]OrderViewModel model)
+        public async Task<IActionResult> MyOrders()
         {
-            if (model.Id == 0)
+            var userId = User.GetId();
+            var model = new OrderViewModel
             {
-                return View();
-            }
-            try
-            {
-                model.SearchResults = new List<OrderViewModel>
-            {
-                this.orderMapper.MapFrom(await this.orderService.GetOrderByIdAsync(model.Id))
+                SearchResults = (await this.orderService.GetOrdersByCreatorId(userId))
+                     .Select(this.orderMapper.MapFrom)
+                     .ToList()
             };
-            }
-            catch (ArgumentException)
-            {
-                return View(model);
-            }
 
             return View(model);
         }

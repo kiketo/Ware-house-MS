@@ -1,0 +1,31 @@
+﻿@model OrderViewModel
+
+@{
+    ViewData["Title"] = "MyOrders";
+}
+
+<h3>Orders created by me:</h3>
+
+<div class="row mt-5">
+    <div class="col-lg-6">
+        @if (Model != null)
+        {
+            if (Model.SearchResults.Count == 0)
+            {
+                <p class="alert alert-info">There are no partners created by me yet!</p>
+            }
+            else
+            {
+                foreach (var partner in Model.SearchResults)
+                {
+                    <partial name="_PartnerPartial" model="partner" />
+                }
+            }
+        }
+    </div>
+</div>
+
+@section Scripts
+    {
+    <partial name="_ValidationScriptsPartial" />
+}

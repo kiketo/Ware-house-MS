@@ -126,6 +126,20 @@ namespace WHMS.Services
             return orderToDelete;
         }
 
+        public Task<List<Order>> GetOrdersByCreatorId(string userId)
+        {
+            {
+                var orders = this.context.Orders
+                    .Where(p => p.CreatorId == userId && !p.IsDeleted)
+                    .Include(p => p.Partner)
+                    .Include(p => p.OrderProductsWarehouses)
+                    .Include(o => o.Creator)
+                    .ToListAsync();
+
+                return orders;
+            }
+        }
+
         //public async Task<Order> EditTypeAsync(int orderId, OrderType type)
         //{
         //    Order orderToEdit = await GetOrderByIdAsync(orderId);
