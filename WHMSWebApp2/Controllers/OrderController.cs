@@ -85,33 +85,63 @@ namespace WHMSWebApp2.Controllers
             model.ListAddresses = await this.addressService.GetAllAddressesAsync();
             
             int warehouseId = model.WarehouseId;
-
-            if (warehouseId == 0 && model.Warehouse == null)
+            Warehouse newWarehouse;
+            Address newAddress;
+            Town newTown;
+            if (model.WarehouseId == 0)
             {
-                ModelState.AddModelError("WarehouseId", "Warehouse is required!");
-                ModelState.AddModelError("Warehouse", "Warehouse is required!");
-            }
-
-            if (warehouseId == 0 && User.IsInRole("User"))
-            {
-                ModelState.AddModelError("WarehouseId", "Warehouse is required!");
-            }
-            if (warehouseId != 0 && User.IsInRole("Admin") || model.Warehouse != null && User.IsInRole("Admin")|| warehouseId != 0 && User.IsInRole("SuperAdmin") || model.Warehouse != null && User.IsInRole("SuperAdmin"))
-            {
-                if (model.AddressId == 0 && model.AddressLine == null)
+                
+                if (model.AddressId == 0)
                 {
-                    ModelState.AddModelError("AddressId", "Address is required!");
+                    
+                    if (model.TownId ==0 )
+                    {
+                        
+                        if (model.Town != null && model.AddressLine !=null && model.Warehouse != null)
+                        {
+                            newTown = await this.townService.AddAsync(model.Town);
+                            newAddress = await this.addressService.AddAsync(newTown, model.AddressLine);
+                            newWarehouse = await this.warehouseService.CreateWarehouseAsync(model.Warehouse, newAddress);
 
+                            ModelState.Remove("AddressId");
+                            ModelState.Remove("TownId");
+                            ModelState.Remove("WarehouseId");
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("Warehouse", "Warehouse is required!");
+                        }
+                        
+                    }
+                    else if (model.AddressLine != null)
+                    {
+                        ModelState.Remove("AddressId");
+                        ModelState.Remove("WarehouseId");
+                        newAddress = await this.addressService.AddAsync(await this.townService.GetTownByIdAsync(model.TownId), model.AddressLine);
+                        newWarehouse = await this.warehouseService.CreateWarehouseAsync(model.Warehouse, newAddress);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("Warehouse", "Warehouse is required!");
+                    }
+                   
                 }
-                else if (model.AddressId == 0 && model.TownId == 0 ||
-                    model.AddressId == 0 && model.Town == null)
+                else if (model.AddressId != 0)
                 {
-                    ModelState.AddModelError("TownId", "Town is required!");
-
+                    ModelState.Remove("TownId");
+                    ModelState.Remove("WarehouseId");
+                    newWarehouse = await this.warehouseService.CreateWarehouseAsync(model.Warehouse, await this.addressService.GetAddressByIdAsync(model.AddressId));
                 }
             }
+            else
+            {
+                
+                ModelState.Remove("AddressId");
+                ModelState.Remove("TownId");
+            }
+
+               
            
-
             int partnerId;
             int.TryParse(model.Partner, out partnerId);
             if (partnerId == 0 || !(await this.partnerService.GetAllPartners()).Any(o => o.Id == partnerId))
@@ -131,7 +161,7 @@ namespace WHMSWebApp2.Controllers
 
             if (ModelState.IsValid)
             {
-                var pwList = await this.productWarehouseService.GetAllProductsInWarehouseAsync(int.Parse(model.Warehouse));
+                var pwList = await this.productWarehouseService.GetAllProductsInWarehouseAsync(model.WarehouseId);
                 var productsQuantityStock = new Dictionary<ProductWarehouse, int>();
                 foreach (var pw in pwList)
                 {
