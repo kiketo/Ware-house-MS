@@ -12,13 +12,13 @@
         {
             if (Model.SearchResults.Count == 0)
             {
-                <p class="alert alert-info">There are no partners created by me yet!</p>
+                <p class="alert alert-info">There are no orders created by me yet!</p>
             }
             else
             {
-                foreach (var partner in Model.SearchResults)
+                foreach (var order in Model.SearchResults)
                 {
-                    <partial name="_PartnerPartial" model="partner" />
+                    <partial name="_OrderPartial" model="order" />
                 }
             }
         }
