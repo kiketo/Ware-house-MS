@@ -73,7 +73,6 @@
 
                     </div>
                     <div class="card card-body">
-
                         <select asp-for="TownId" placeholder="Choose an existing city" class="form-control">
                             <option>Choose an existing city</option>
                             @foreach (var town in Model.ListTowns)
@@ -82,11 +81,7 @@
                             }
 
                         </select>
-
-                        <input asp-for="AddressLine" placeholder="Enter New Address" class="form-control" />
-
-
-
+                        
                         <p>or</p>
                         <div class="form-group">
                             <input asp-for="Town" placeholder="Enter new city name" class="form-control" />
