@@ -126,54 +126,6 @@ namespace WHMS.Services
             return orderToDelete;
         }
 
-        //public async Task<Order> EditTypeAsync(int orderId, OrderType type)
-        //{
-        //    Order orderToEdit = await GetOrderByIdAsync(orderId);
-
-        //    orderToEdit.Type = type;
-        //    orderToEdit.ModifiedOn = DateTime.Now;
-
-        //    await this.context.SaveChangesAsync();
-        //    return orderToEdit;
-        //}
-
-        //public async Task<Order> EditPartnerAsync(int orderId, Partner newPartner)
-        //{
-        //    Order orderToEdit = await GetOrderByIdAsync(orderId);
-
-        //    orderToEdit.Partner = newPartner;
-        //    orderToEdit.ModifiedOn = DateTime.Now;
-
-        //    await this.context.SaveChangesAsync();
-        //    return orderToEdit;
-        //}
-
-        //public async Task<Order> AddProductToOrderAsync(int orderId, ProductWarehouse pw)
-        //{
-        //    Order orderToEdit = await GetOrderByIdAsync(orderId);
-
-        //    //decimal totalValue = orderToEdit.TotalValue;
-
-        //    //totalValue +=pw.Product.SellPrice * pw.Quantity;
-
-        //    //orderToEdit.OrderProductsWarehouses.Add(pw);
-        //    //orderToEdit.TotalValue = totalValue;
-        //    //orderToEdit.ModifiedOn = DateTime.Now;
-
-        //    //await this.context.SaveChangesAsync();
-        //    return orderToEdit;
-        //}
-
-        //public async Task<Order> EditCommentAsync(int orderId, string comment)
-        //{
-        //    Order orderToEdit = await GetOrderByIdAsync(orderId);
-
-        //    orderToEdit.Comment = comment;
-        //    orderToEdit.ModifiedOn = DateTime.Now;
-
-        //    await this.context.SaveChangesAsync();
-        //    return orderToEdit;
-        //}
-
+       
     }
 }

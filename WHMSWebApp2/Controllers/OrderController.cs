@@ -222,6 +222,8 @@ namespace WHMSWebApp2.Controllers
         [ActionName(nameof(ChooseProduct))]
         public async Task<IActionResult> ChooseProduct(OrderViewModel model, int id)
         {
+
+
             var order = await this.orderService.GetOrderByIdAsync(id);
             model.TypeOrder = order.Type;
             model.WarehouseId = order.OrderProductsWarehouses.Select(w => w.WarehouseId).First();
@@ -250,14 +252,17 @@ namespace WHMSWebApp2.Controllers
             var wantedquantity = model.WantedQuantity;
             var selectedProduct = model.ProductId;
             ModelState.Remove("Type");
-            if (model.TypeOrder == OrderType.Buy
+            if (model.TypeOrder == OrderType.Sell
                 && model.WantedQuantity > await this.productWarehouseService.GetQuantityAsync(model.ProductId, model.WarehouseId))
             {
                 ModelState.AddModelError("WantedQuantity", "There are not enough items in stock");
+                return RedirectToAction("ChooseProduct", new { id = model.Id }); 
             }
             if (model.WantedQuantity < 0)
             {
                 ModelState.AddModelError("WantedQuantity", "Quantity cannot be negative! ");
+                return RedirectToAction("ChooseProduct", new { id = model.Id });
+
             }
             if (ModelState.IsValid)
             {
@@ -268,15 +273,15 @@ namespace WHMSWebApp2.Controllers
                         model.Id);
                 opw.WantedQuantity = wantedquantity;
                 await this.orderProductWarehouseService.UpdateWantedQuantity(opw);
-                if (model.TypeOrder == OrderType.Buy)
+                if (model.TypeOrder == OrderType.Sell)
                 {
-                    order.TotalValue += wantedquantity * (await this.productService.GetProductByIdAsync(opw.ProductId)).BuyPrice;
+                    order.TotalValue += wantedquantity * (await this.productService.GetProductByIdAsync(opw.ProductId)).SellPrice;
                     await this.orderService.UpdateAsync(order);
                     await this.productWarehouseService.SubstractQuantityAsync(opw.ProductId, opw.WarehouseId, opw.WantedQuantity);
                 }
                 else
                 {
-                    order.TotalValue += wantedquantity * (await this.productService.GetProductByIdAsync(opw.ProductId)).SellPrice;
+                    order.TotalValue += wantedquantity * (await this.productService.GetProductByIdAsync(opw.ProductId)).BuyPrice;
                     await this.orderService.UpdateAsync(order);
                     await this.productWarehouseService.AddQuantityAsync(opw.ProductId, opw.WarehouseId, opw.WantedQuantity);
                 }
@@ -290,7 +295,7 @@ namespace WHMSWebApp2.Controllers
             }
             else
             {
-                return View(model);
+                return RedirectToAction("ChooseProduct", new { id = model.Id });
             }
         }
 

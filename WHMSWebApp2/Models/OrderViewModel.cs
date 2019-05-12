@@ -86,7 +86,8 @@ namespace WHMSWebApp2.Models
 
         public ICollection<OrderProductWarehouse> ProductsQuantitiesOPW { get; set; }
 
-        public int WantedQuantity { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Wanted quantity must be a positive number")]
+        public int WantedQuantity { get; set; } 
 
         public KeyValuePair<Product, int> SelectedProduct { get; set; }
 

@@ -19,7 +19,9 @@ namespace WHMSWebApp2.Mappers
             Address = entity.Address.Text,
             Creator=entity.Creator.UserName,
             CreatedOn=entity.CreatedOn,
-            ModifiedOn=entity.ModifiedOn
+            ModifiedOn=entity.ModifiedOn,
+            CreatorId = entity.CreatorId,
+            
         };
     }
 }
