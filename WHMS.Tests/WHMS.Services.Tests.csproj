@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="OrderServiceTest\**" />
+    <EmbeddedResource Remove="OrderServiceTest\**" />
+    <None Remove="OrderServiceTest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="ProductServiceTest\FindByNameInclncludingDeleted_Should.cs" />
     <Compile Remove="ProductServiceTest\ModifyCategory_Should.cs" />
     <Compile Remove="ProductServiceTest\ModifyProductName_Should.cs" />
