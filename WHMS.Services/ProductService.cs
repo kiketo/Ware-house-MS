@@ -125,7 +125,7 @@ namespace WHMS.Services
 
         public async Task<ICollection<Product>> GetProductsByCategoryAsync(Category category)
         {
-            if (category == null || category.IsDeleted)
+            if (category == null)
             {
                 throw new ArgumentException("Category does not exists");
             }

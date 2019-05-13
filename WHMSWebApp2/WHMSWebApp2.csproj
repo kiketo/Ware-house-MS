@@ -16,9 +16,11 @@
   <ItemGroup>
     <Content Remove="Areas\SuperAdmin\Views\_Layout.cshtml" />
     <Content Remove="Areas\SuperAdmin\Views\_ViewImports.cshtml" />
+    <Content Remove="Views\Order\Create2.cshtml" />
     <Content Remove="Views\Order\NoOrdersFound.cshtml" />
     <Content Remove="Views\Order\OrdersByType.cshtml" />
     <Content Remove="Views\Order\Search.cshtml" />
+    <Content Remove="Views\Order\_productQuantity.cshtml" />
     <Content Remove="Views\Partner\NoPartnerFound.cshtml" />
     <Content Remove="Views\Partner\Search.cshtml" />
     <Content Remove="Views\Product\NoProductFound.cshtml" />
@@ -29,6 +31,7 @@
     <Content Remove="Views\Shared\_SearchOrder.cshtml" />
     <Content Remove="Views\Shared\_SearchPartner.cshtml" />
     <Content Remove="Views\Shared\_SearchProduct.cshtml" />
+    <Content Remove="Views\Shared\_ValidationScriptsPartialVer2.cshtml" />
     <Content Remove="wwwroot\favicon.ico" />
     <Content Remove="wwwroot\js\datatables.js" />
   </ItemGroup>

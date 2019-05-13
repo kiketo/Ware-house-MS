@@ -39,7 +39,7 @@
 
             if (!string.IsNullOrWhiteSpace(Model.Type) && !Model.SearchResults.Any())
             {
-                <p class="alert alert-info">There are no orders with type: @Model.Type, created between @Model.FromDate and @Model.ToDate</p>
+        <p class="alert alert-info">There are no orders with type: @Model.Type, created between @(Model.FromDate.Value.Day).@(Model.FromDate.Value.Month).@(Model.FromDate.Value.Year) and @(Model.ToDate.Value.Day).@(Model.ToDate.Value.Month).@(Model.ToDate.Value.Year)</p>
             }
             else
             {

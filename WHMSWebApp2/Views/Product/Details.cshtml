@@ -5,7 +5,7 @@
     ViewBag.Title = Model.Name;
 }
 
-<h2>@Model.Name</h2>
+<h2>Product Details</h2>
 
 <div>
     <hr />
@@ -79,6 +79,8 @@
     </dl>
 </div>
 <div>
+    <a class="btn btn-secondary" href='javascript:history.go(-1)'>Go Back</a>
+
     @if (Model.CanUserEdit)
     {
         <a class="btn btn-info" asp-action="Edit" style="width:70.59px" asp-route-id="@Model.Id">Edit</a>
@@ -119,6 +121,6 @@
             </div>
         </div>
     }
-    <a class="btn btn-secondary" href='javascript:history.go(-1)'>Go Back</a>
+
 
 </div>

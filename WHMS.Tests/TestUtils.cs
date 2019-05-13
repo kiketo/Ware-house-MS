@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using WHMSData.Context;
+using WHMSData.Models;
 
 namespace WHMS.Services.Tests
 {
@@ -22,21 +23,12 @@ namespace WHMS.Services.Tests
                 .UseInternalServiceProvider(provider)
                 .Options;
         }
-
-        public static async Task ThrowsAsync<TException>(Func<Task> action, bool allowDerivedTypes = true)
+        public static ApplicationUser User()
         {
-            try
-            {
-                await action();
-                Assert.Fail("Delegate did not throw expected exception " + typeof(TException).Name + ".");
-            }
-            catch (Exception ex)
-            {
-                if (allowDerivedTypes && !(ex is TException))
-                    Assert.Fail("Delegate threw exception of type " + ex.GetType().Name + ", but " + typeof(TException).Name + " or a derived type was expected.");
-                if (!allowDerivedTypes && ex.GetType() != typeof(TException))
-                    Assert.Fail("Delegate threw exception of type " + ex.GetType().Name + ", but " + typeof(TException).Name + " was expected.");
-            }
+            ApplicationUser user = new ApplicationUser();
+            user.UserName = "tester";
+            return user;
         }
+
     }
 }

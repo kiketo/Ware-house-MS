@@ -4,11 +4,17 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Overview</h2>
+<h2>Order: @Model.Id Details</h2>
 
 <div>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Type)
         </dt>
@@ -82,8 +88,9 @@
     </table>
 </div>
 <div>
-    
-    @if (Model.CanUserEdit )
+    <a class="btn btn-secondary" href='javascript:history.go(-1)'>Go Back</a>
+
+    @if (Model.CanUserEdit)
     {
         <a class="btn btn-info" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
 
@@ -123,5 +130,5 @@
             </div>
         </div>
     }
-    <a class="btn btn-secondary" href='javascript:history.go(-1)'>Go Back</a>
+
 </div>

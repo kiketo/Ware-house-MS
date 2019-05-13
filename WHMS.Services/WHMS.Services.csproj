@@ -6,7 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DatabaseServices\**" />
+    <EmbeddedResource Remove="DatabaseServices\**" />
+    <None Remove="DatabaseServices\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Contracts\IJSONExplorer.cs" />
+    <Compile Remove="Contracts\IJSONExportService.cs" />
+    <Compile Remove="Contracts\IJSONImportService.cs" />
     <Compile Remove="Contracts\IProductOrderWarehouseService.cs" />
+    <Compile Remove="JSONService.cs" />
     <Compile Remove="ProductOrderWarehouseService.cs" />
   </ItemGroup>
 

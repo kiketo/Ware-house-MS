@@ -6,7 +6,7 @@
 }
 
 <div>
-    <h2>@Model.Name's Details</h2>
+    <h2>Partner: @Model.Name Details</h2>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -63,6 +63,8 @@
     
 </div>
 <div>
+    <a class="btn btn-secondary" href='javascript:history.go(-1)'>Go Back</a>
+
     @if (Model.CanUserEdit)
     {
         <a class="btn btn-info" style="width:70.59px" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
@@ -103,5 +105,5 @@
             </div>
         </div>
     }
-    <a class="btn btn-secondary" href='javascript:history.go(-1)'>Go Back</a>
+
 </div>
