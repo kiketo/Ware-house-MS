@@ -40,10 +40,10 @@ namespace WHMSWebApp2.Controllers
         {
             ProductViewModel product = new ProductViewModel()
             {
-                ListCategories = (await this.categoryService.GetAllCategoriesAsync()).ToList(),
-                LisUnits = ((await this.unitService.GetAllUnitsAsync()).ToList())
-                //Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
-                //.OrderBy(x => x.Text),
+                //ListCategories = (await this.categoryService.GetAllCategoriesAsync()).ToList(),
+                LisUnits = ((await this.unitService.GetAllUnitsAsync()).ToList()),
+                Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
+                .OrderBy(x => x.Text)
                 //Units = new SelectList(await this.unitService.GetAllUnitsAsync(), "Id", "UnitName")
                 //.OrderBy(x => x.Text)
             };
@@ -57,12 +57,15 @@ namespace WHMSWebApp2.Controllers
         {
             //var allProducts = await this.productService.GetAllProductsAsync();
 
-            model.ListCategories = (await this.categoryService.GetAllCategoriesAsync()).ToList();
+            //model.ListCategories = (await this.categoryService.GetAllCategoriesAsync()).ToList();
             model.LisUnits = ((await this.unitService.GetAllUnitsAsync()).ToList());
             //if (allProducts.Any(p => p.Name == model.Name))
             //{
             //    ModelState.AddModelError("Name", "The name must be unique.");
             //}
+            model.Categories = new SelectList(await this.categoryService.GetAllCategoriesAsync(), "Id", "Name")
+                .OrderBy(x => x.Text);
+
             ModelState.Remove("Unit");
             ModelState.Remove("UnitId");
             ModelState.Remove("CategoryId");
@@ -73,7 +76,7 @@ namespace WHMSWebApp2.Controllers
             if (ModelState.IsValid)
             {
                 Unit unit= await this.unitService.GetUnitByIDAsync(model.UnitId);
-                Category category = await this.categoryService.GetCategoryByNameAsync(model.Category);
+                Category category = await this.categoryService.GetCategoryByIdAsync(int.Parse(model.Category));
                 ApplicationUser user = await this.userManager.GetUserAsync(User);
                 if (model.UnitId == null || unit==null)
                 {

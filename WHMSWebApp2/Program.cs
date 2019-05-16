@@ -16,6 +16,7 @@ namespace WHMSWebApp2
         {
             var host = BuildWebHost(args);
             DataSeed.SeedDatabaseWithSuperAdminAsync(host).Wait();
+            DataSeed.SeedDatabaseWithDefaultCategory(host).Wait();
             host.Run();
         }
 

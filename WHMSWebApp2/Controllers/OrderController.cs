@@ -83,21 +83,21 @@ namespace WHMSWebApp2.Controllers
             model.Partners = new SelectList(await this.partnerService.GetAllPartners(), "Id", "Name").OrderBy(x => x.Text);
             model.ListTowns = await this.townService.GetAllTownsAsync();
             model.ListAddresses = await this.addressService.GetAllAddressesAsync();
-            
+
             int warehouseId = model.WarehouseId;
             Warehouse newWarehouse;
             Address newAddress;
             Town newTown;
             if (model.WarehouseId == 0)
             {
-                
+
                 if (model.AddressId == 0)
                 {
-                    
-                    if (model.TownId ==0 )
+
+                    if (model.TownId == 0)
                     {
-                        
-                        if (model.Town != null && model.AddressLine !=null && model.Warehouse != null)
+
+                        if (model.Town != null && model.AddressLine != null && model.Warehouse != null)
                         {
                             newTown = await this.townService.AddAsync(model.Town);
                             newAddress = await this.addressService.AddAsync(newTown, model.AddressLine);
@@ -111,7 +111,7 @@ namespace WHMSWebApp2.Controllers
                         {
                             ModelState.AddModelError("Warehouse", "Warehouse is required!");
                         }
-                        
+
                     }
                     else if (model.AddressLine != null)
                     {
@@ -124,7 +124,7 @@ namespace WHMSWebApp2.Controllers
                     {
                         ModelState.AddModelError("Warehouse", "Warehouse is required!");
                     }
-                   
+
                 }
                 else if (model.AddressId != 0)
                 {
@@ -135,13 +135,13 @@ namespace WHMSWebApp2.Controllers
             }
             else
             {
-                
+
                 ModelState.Remove("AddressId");
                 ModelState.Remove("TownId");
             }
 
-               
-           
+
+
             int partnerId;
             int.TryParse(model.Partner, out partnerId);
             if (partnerId == 0 || !(await this.partnerService.GetAllPartners()).Any(o => o.Id == partnerId))
@@ -196,9 +196,12 @@ namespace WHMSWebApp2.Controllers
             var listProductStock = new Dictionary<Product, int>();
             foreach (var p in model.ProductsQuantitiesOPW.Where(q => q.WantedQuantity == 0))
             {
-                listProductStock.Add(
-                    await this.productService.GetProductByIdAsync(p.ProductId),
-                    await this.productWarehouseService.GetQuantityAsync(p.ProductId, p.WarehouseId));
+                Product product = await this.productService.GetProductByIdAsync(p.ProductId);
+                if (product != null)
+                {
+                    listProductStock.Add(product,
+                        await this.productWarehouseService.GetQuantityAsync(p.ProductId, p.WarehouseId));
+                }
             }
             model.ProductsQuantity = listProductStock;
             model.listProductsWithQuantities = new List<OrderProductViewModel>();
@@ -255,7 +258,7 @@ namespace WHMSWebApp2.Controllers
                 && model.WantedQuantity > await this.productWarehouseService.GetQuantityAsync(model.ProductId, model.WarehouseId))
             {
                 ModelState.AddModelError("WantedQuantity", "There are not enough items in stock");
-                return RedirectToAction("ChooseProduct", new { id = model.Id }); 
+                return RedirectToAction("ChooseProduct", new { id = model.Id });
             }
             if (model.WantedQuantity < 0)
             {

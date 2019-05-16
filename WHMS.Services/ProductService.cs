@@ -20,7 +20,6 @@ namespace WHMS.Services
 
         public async Task<Product> CreateProductAsync(string name, Unit unit, Category category, decimal buyPrice, double margin, string description, ApplicationUser user)
         {
-            var newProduct = await this.context.Products.FirstOrDefaultAsync(t => t.Name == name);
             if (buyPrice < 0)
             {
                 throw new ArgumentException($"Price cannot be negative number");
@@ -31,32 +30,8 @@ namespace WHMS.Services
             }
             decimal sellPrice = buyPrice * (100 + (decimal)margin) / 100;
             List<Warehouse> wareHouses = await this.context.Warehouses.ToListAsync();
-            if (newProduct != null && newProduct.IsDeleted)
-            {
-                newProduct = new Product()
-                {
-                    Name = name,
-                    Unit = unit,
-                    Category = category,
-                    CreatedOn = DateTime.Now,
-                    ModifiedOn = DateTime.Now,
-                    BuyPrice = buyPrice,
-                    MarginInPercent = margin,
-                    SellPrice = sellPrice,
-                    Warehouses = wareHouses.Select(w => new ProductWarehouse { Warehouse = w }).ToList(),
-                    Description = description,
-                    Creator = user
-                };
 
-                this.context.Attach(newProduct).State =
-               Microsoft.EntityFrameworkCore
-               .EntityState.Modified;
-                await this.context.SaveChangesAsync();
-
-                return newProduct;
-            }
-
-            newProduct = new Product()
+            var newProduct = new Product()
             {
                 Name = name,
                 Unit = unit,
@@ -97,10 +72,10 @@ namespace WHMS.Services
                 .Include(p => p.Warehouses)
                 .FirstOrDefaultAsync();
 
-            if (product == null)
-            {
-                throw new ArgumentException($"Product does not exist!");
-            }
+            //if (product == null)
+            //{
+            //    throw new ArgumentException($"Product does not exist!");
+            //}
             return product;
         }
 
